@@ -21,7 +21,11 @@ public class HomeController extends Controller {
      * the top. We will use whatever parameters he specifies in the render() method below.
      */
     public Result index() {
-        return ok(views.html.home.index.render());
+        if (Secured.isLoggedIn(ctx())) {
+            return ok(views.html.home.home.render());
+        } else {
+            return ok(views.html.home.index.render());
+        }
     }
 
     /**
@@ -62,6 +66,15 @@ public class HomeController extends Controller {
 //            session().clear();
 //            session("email", formData.get().email);
 //            return redirect(routes.Application.profile());
+    }
+
+    /**
+     * Takes you back to the page called index. We can change that name if you guys want.
+     *
+     */
+//    @Security.Authenticated(Secured.class)
+    public Result home() {
+        return ok(views.html.home.home.render());
     }
 
     /**

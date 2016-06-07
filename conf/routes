@@ -4,6 +4,7 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
+GET     /home                       controllers.HomeController.home
 
 # This will take us to the login page
 GET     /login                      controllers.HomeController.login
@@ -15,12 +16,10 @@ GET     /register                   controllers.HomeController.register
 POST    /login                      controllers.HomeController.postLogin
 
 # When the user logs out. This redirects to index, as shown above and
-# in the HomeController class and the index.scala.html file.
 GET     /logout                     controllers.HomeController.logout
 
 # Where the user goes after a successful login
 GET     /profile                    controllers.HomeController.profile
-
 
 
 # nonsense that I'm scared to delete...
