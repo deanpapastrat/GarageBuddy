@@ -3,6 +3,7 @@ package controllers;
 import play.mvc.*;
 import play.mvc.Http.Context;
 import views.html.*;
+import views.html.home.*;
 
 /**
  * This controller contains an action to handle HTTP requests
@@ -20,9 +21,7 @@ public class HomeController extends Controller {
      * the top. We will use whatever parameters he specifies in the render() method below.
      */
     public Result index() {
-        return ok(index.render("We can change this filename to 'home' or " +
-                "something if you guys think that would be more appropriate. " +
-                "This is just their little template. - Alex, from HomeController"));
+        return ok(views.html.home.index.render());
     }
 
     /**
@@ -102,4 +101,3 @@ public class HomeController extends Controller {
      */
 
 }
-

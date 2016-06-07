@@ -4,6 +4,7 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
+
 # This will take us to the login page
 GET     /login                      controllers.HomeController.login
 
