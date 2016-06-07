@@ -29,6 +29,23 @@ img {
   }
 }
 
+.spacer {
+  background: none;
+  border: none;
+  display: block;
+  height: 1px;
+  margin: 10px 0;
+  width: 100%;
+
+  &.spacer-thick {
+    margin: 15px 0;
+  }
+}
+
+.thin {
+  font-weight: 200;
+}
+
 .text-muted {
   color: #999;
 }

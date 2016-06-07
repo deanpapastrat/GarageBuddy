@@ -1,40 +1,19 @@
-@*
- * Call the `main` template with two arguments. The first
- * argument is a `String` with the title of the page, the second
- * argument is an `Html` object containing the body of the page.
- *@
 @landing {
- <div class="container centered-container">
-  <div class="logo">
-   <img src="@routes.Assets.versioned("images/logo-inverse.svg")">
-  </div>
-  <div class="modal-dialog modal-sm">
-   <div class="modal-content">
-    <div class="modal-header text-center hidden-xs">
-     <h3>Sign In</h3>
-     <p class="text-muted uppercase"><small>Please provide your credentials</small></p>
-    </div>
-    <form>
-     <div class="modal-body">
-       <div class="form-group">
-        <label>Email Address</label>
-        <input class="form-control" type="email" name="email" placeholder="john@@garagebuddy.org" required>
-       </div>
-       <div class="form-group">
-        <label>Password</label>
-        <input class="form-control" type="password" name="password" placeholder="password" required>
-       </div>
-
-       <div class="login-buttons">
-        <button type="submit" class="btn btn-success btn-block">Log In</button>
-        <div class="row">
-         <div class="col-sm-6"><button type="button" class="btn btn-link btn-block btn-sm forgot">Forgot Password?</button></div>
-         <div class="col-sm-6"><button type="button" class="btn btn-link btn-block btn-sm sign-up">Sign Up</button></div>
-        </div>
-       </div>
-     </div>
-    </form>
-   </div>
+ <div class="modal-body text-center">
+  <h3>Welcome!</h3>
+  <hr class="spacer spacer-thick"/>
+  <p class="thin">
+   GarageBuddy makes your garage sale a success by automating the busy work that you don't want to do.
+  </p>
+  <hr class="spacer"/>
+  <p>
+   Register now!
+  </p>
+ </div>
+ <div class="modal-footer">
+  <div class="row">
+   <div class="col-sm-6"><a href="/register" class="btn btn-link btn-block">Register</a></div>
+   <div class="col-sm-6"><a href="/login" class="btn btn-success btn-block">Log In</a></div>
   </div>
  </div>
 }

@@ -31,8 +31,11 @@ public class HomeController extends Controller {
      * @return HTTP result
      */
     public Result login() {
-        return TODO;
-        // return ok(Login.render("Dean will write this file as well."));
+        return ok(views.html.home.login.render());
+    }
+
+    public Result register() {
+        return ok(views.html.home.register.render());
     }
 
     /**
