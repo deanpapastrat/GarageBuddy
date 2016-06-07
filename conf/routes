@@ -4,6 +4,22 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
+# This will take us to the login page
+GET     /login                      controllers.HomeController.login
+
+# Once the user has entered information into the boxes and hit submit
+POST    /login                      controllers.HomeController.postLogin
+
+# When the user logs out. This redirects to index, as shown above and
+# in the HomeController class and the index.scala.html file.
+GET     /logout                     controllers.HomeController.logout
+
+# Where the user goes after a successful login
+GET     /profile                    controllers.HomeController.profile
+
+
+
+# nonsense that I'm scared to delete...
 # An example controller showing how to use dependency injection
 GET     /count                      controllers.CountController.count
 # An example controller showing how to write asynchronous code
