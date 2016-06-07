@@ -4,8 +4,12 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
+
 # This will take us to the login page
 GET     /login                      controllers.HomeController.login
+
+# This will take us to the login page
+GET     /register                   controllers.HomeController.register
 
 # Once the user has entered information into the boxes and hit submit
 POST    /login                      controllers.HomeController.postLogin
