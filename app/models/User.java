@@ -7,8 +7,8 @@ import play.data.format.*;
 import play.data.validation.*;
 
 /**
- * A simple representation of a user.
- * @author Philip Johnson
+ * A User
+ * likely that more Id vars get added as we move forwards
  */
 @Entity
 @Table(name="users")
@@ -20,10 +20,9 @@ public class User extends Model {
     public String password;
 
     /**
-     * Creates a new User instance.
-     * @param name The name.
-     * @param email The email.
-     * @param password The password.
+     * @param name name of the User
+     * @param email email of the User
+     * @param password password of the User
      */
     public User(String name, String email, String password) {
         this.name = name;
@@ -36,7 +35,7 @@ public class User extends Model {
     }
 
     /**
-     * @param password the password to set
+     * @param password the password to set in place of the existing password
      */
     public void setPassword(String password) {
         try {

@@ -8,6 +8,11 @@ import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
 import javax.xml.bind.DatatypeConverter;
 
+/**
+ * from defuse
+ * https://github.com/defuse/password-hashing
+ */
+
 public class PasswordStorage
 {
 

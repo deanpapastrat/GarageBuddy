@@ -4,12 +4,15 @@ import play.mvc.*;
 import play.mvc.Http.Context;
 import views.html.*;
 import views.html.home.*;
+import models.User;
 
 /**
  * This controller contains an action to handle HTTP requests
  * to the application's home page.
  */
 public class HomeController extends Controller {
+
+   public static boolean startup = true;
 
     /**
      * An action that renders an HTML page with a welcome message.
@@ -21,6 +24,13 @@ public class HomeController extends Controller {
      * the top. We will use whatever parameters he specifies in the render() method below.
      */
     public Result index() {
+        
+        if (startup) {
+            User test = new User("user", "user@gatech.edu", "pass");
+            test.save();
+            startup = false;
+        }
+        
         if (Secured.isLoggedIn(ctx())) {
             return ok(views.html.home.home.render());
         } else {
