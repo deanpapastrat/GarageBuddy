@@ -42,11 +42,11 @@ public class HomeController extends Controller {
 
         // TODO there is a problem in this block of code
         // I put the existing values in the form, hopefully that will make this unnecessary
-//        if (startup) {
-//            User test = new User("user", "user@gatech.edu", "pass");
-//            test.save();
-//            startup = false;
-//        }
+        if (startup) {
+            User test = new User("user", "user@gatech.edu", "pass");
+            test.save();
+            startup = false;
+        }
         
         if (Secured.isLoggedIn(ctx())) {
             return ok(views.html.home.home.render("Home", "Home"));
@@ -108,19 +108,28 @@ public class HomeController extends Controller {
         return redirect(routes.HomeController.index());
     }
 
-    /**
+    /******************** Everything below here is TODO!
      *
-     * Please be aware of the routes file and HomeController as you write your scala.html files.
      *
-     * A profile.scala.html file for whatever we're going to display
-     * once the user is logged in.
-     *
-     * An edited version of index.scala.html that will display the page the user is
-     * automatically taken to when they arrive.
-     *
-     * A Login.scala.html file, which represents the page where the user will login.
-     * 
      *
      */
+
+    public Result events() {
+        return TODO;
+    }
+
+
+    public Result reports() {
+        return TODO;
+    }
+
+    public Result users() {
+        return TODO;
+    }
+
+    public Result profile() {
+        return TODO;
+    }
+
 
 }

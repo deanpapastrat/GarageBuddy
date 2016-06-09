@@ -16,8 +16,11 @@ POST    /register                   controllers.HomeController.postRegister
 # When the user logs out. This redirects to index, as shown above and
 GET     /logout                     controllers.HomeController.logout
 
-# Where the user goes after a successful login...useless, called home now
-# GET     /profile                    controllers.HomeController.profile
+# TODO..future pages!!!
+GET     /events                     controllers.HomeController.events
+GET     /reports                    controllers.HomeController.reports
+GET     /users                      controllers.HomeController.users
+GET     /profile                    controllers.HomeController.profile
 
 
 # nonsense that I'm scared to delete...
