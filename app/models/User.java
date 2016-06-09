@@ -1,8 +1,10 @@
 package models;
 
 import javax.persistence.*;
+import javax.validation.Constraint;
 
 import com.avaje.ebean.Model;
+import play.Logger;
 import play.data.format.*;
 import play.data.validation.*;
 import java.util.*;
@@ -15,9 +17,13 @@ import java.util.*;
 @Table(name="users")
 public class User extends Model {
 
-    @Id
+    @Id @Constraints.Email @Constraints.Required
     public String email;
+
+    @Constraints.Required
     public String name;
+
+    @Constraints.Required
     public String password;
 
     /**
@@ -31,7 +37,7 @@ public class User extends Model {
         try {
             this.password = PasswordStorage.createHash(password);
         } catch (Exception echo) {
-            System.out.println("uh oh");
+            Logger.error("Password hashing failed.", password);
         }
     }
 
@@ -49,7 +55,7 @@ public class User extends Model {
      * @param login string of the password the user tries to log in with
      * @return true or false: is supplied password is the correct password?
      */
-    public boolean validate(String login) {
+    public boolean checkPassword(String login) {
         try {
             return PasswordStorage.verifyPassword(login, this.password);
         } catch (Exception echo) {

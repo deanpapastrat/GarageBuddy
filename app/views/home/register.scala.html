@@ -1,17 +1,33 @@
+@(userForm: Form[User])
+
 @landing {
   <div class="modal-header text-center hidden-xs">
     <h3>Register</h3>
     <p class="text-muted uppercase"><small>Please provide your information</small></p>
   </div>
-  <form>
+  <form action="/register" method="POST">
     <div class="modal-body">
+      @if(userForm.hasErrors) {
+        <div class="alert alert-danger">
+          @if(userForm.errors.size() > 0) {
+            @for((key, value) <- userForm.errors) {
+              <p>
+                @key.toString().capitalize:
+                @for(err <- value) {
+                  @err.message
+                }
+              </p>
+            }
+          } else {No error returned.}
+        </div>
+      }
       <div class="form-group">
         <label>Name</label>
-        <input class="form-control" type="text" name="name" required placeholder="John Doe">
+        <input class="form-control" type="text" name="name" required placeholder="John Doe" value="@userForm("name").value()">
       </div>
       <div class="form-group">
         <label>Email Address</label>
-        <input class="form-control" type="email" name="email" placeholder="john@@garagebuddy.org" required>
+        <input class="form-control" type="email" name="email" placeholder="john@@garagebuddy.org" required value="@userForm("email").value()">
       </div>
       <div class="form-group">
         <label>Password</label>

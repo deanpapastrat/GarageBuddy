@@ -6,20 +6,18 @@
 GET     /                           controllers.HomeController.index
 GET     /home                       controllers.HomeController.home
 
-# This will take us to the login page
 GET     /login                      controllers.HomeController.login
-
-# This will take us to the login page
-GET     /register                   controllers.HomeController.register
-
-# Once the user has entered information into the boxes and hit submit
 POST    /login                      controllers.HomeController.postLogin
+
+
+GET     /register                   controllers.HomeController.register
+POST    /register                   controllers.HomeController.postRegister
 
 # When the user logs out. This redirects to index, as shown above and
 GET     /logout                     controllers.HomeController.logout
 
-# Where the user goes after a successful login
-GET     /profile                    controllers.HomeController.profile
+# Where the user goes after a successful login...useless, called home now
+# GET     /profile                    controllers.HomeController.profile
 
 
 # nonsense that I'm scared to delete...

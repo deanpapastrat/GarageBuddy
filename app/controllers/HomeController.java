@@ -1,10 +1,18 @@
 package controllers;
 
+import java.util.Map;
+import java.util.HashMap;
 import play.mvc.*;
 import play.mvc.Http.Context;
 import views.html.*;
 import views.html.home.*;
 import models.User;
+import javax.inject.Inject;
+import play.data.FormFactory;
+import play.data.Form;
+import play.data.DynamicForm;
+import play.Logger;
+
 
 /**
  * This controller contains an action to handle HTTP requests
@@ -12,7 +20,13 @@ import models.User;
  */
 public class HomeController extends Controller {
 
-   public static boolean startup = true;
+
+    // injecting formFactory so I can use it later in the login and postLogin methods
+    @Inject
+    public FormFactory formFactory;
+
+    public static boolean startup = true;
+
 
     /**
      * An action that renders an HTML page with a welcome message.
@@ -24,67 +38,64 @@ public class HomeController extends Controller {
      * the top. We will use whatever parameters he specifies in the render() method below.
      */
     public Result index() {
-        
-        if (startup) {
-            User test = new User("user", "user@gatech.edu", "pass");
-            test.save();
-            startup = false;
-        }
+
+
+        // TODO there is a problem in this block of code
+        // I put the existing values in the form, hopefully that will make this unnecessary
+//        if (startup) {
+//            User test = new User("user", "user@gatech.edu", "pass");
+//            test.save();
+//            startup = false;
+//        }
         
         if (Secured.isLoggedIn(ctx())) {
-            return ok(views.html.home.home.render());
+            return ok(views.html.home.home.render("Home", "Home"));
         } else {
             return ok(views.html.home.index.render());
         }
     }
 
-    /**
-     * This method will render the login page that Dean writes.
-     * Right now it simply returns a to do object. Play is pretty cool.
-     * Let's be clear - this renders the login page. It does not do anything with the data the user enters.
-     * @return HTTP result
-     */
     public Result login() {
         return ok(views.html.home.login.render());
     }
 
-    public Result register() {
-        return ok(views.html.home.register.render());
-    }
-
-    /**
-     * Once I get the data, I will bind it to a Form (play.data.Form), in whatever basic Java form it is
-     * given to me, via Andre and Taj.
-     *
-     * If the form has errors, the method below will flash an error and return a badRequest().
-     *
-     * If the information is validated, it will clear the session, and return a redirect result
-     * to profile, or home, or whatever we decide to call it.
-     *
-     * Probably the hardest method to write.
-     *
-     */
     public Result postLogin() {
-        return TODO;
+        DynamicForm formData = formFactory.form().bindFromRequest();
+        User user = User.find.where().ieq("email", formData.get("email")).findUnique();
 
-//        if (formData.hasErrors()) {
-//            flash("error", "Login credentials not valid.");
-//            return badRequest(Login.render("Login", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), formData));
-//        }
-//        else {
-//            // things have been validated, now we go to the "home" page.
-//            session().clear();
-//            session("email", formData.get().email);
-//            return redirect(routes.Application.profile());
+        if (user != null && user.checkPassword(formData.get("password"))) {
+            session().clear();
+            session("email", formData.get("email"));
+            return redirect("/home");
+        }
+        else {
+            flash("error", "Wrong email or password. Please try again.");
+            return badRequest(views.html.home.login.render());
+        }
+    }
+
+    public Result register() {
+        return ok(views.html.home.register.render(formFactory.form(User.class)));
+    }
+
+    public Result postRegister() {
+        Form<User> userForm = formFactory.form(User.class).bindFromRequest();
+        if (userForm.hasErrors()) {
+            return badRequest(views.html.home.register.render(userForm));
+        } else {
+            User user = userForm.get();
+            user.save();
+            return redirect("/home");
+        }
     }
 
     /**
-     * Takes you back to the page called index. We can change that name if you guys want.
+     * Takes the user inside to their profile.
      *
      */
-//    @Security.Authenticated(Secured.class)
+    @Security.Authenticated(Secured.class)
     public Result home() {
-        return ok(views.html.home.home.render());
+        return ok(views.html.home.home.render("Home", "Home"));
     }
 
     /**
@@ -96,20 +107,6 @@ public class HomeController extends Controller {
         session().clear();
         return redirect(routes.HomeController.index());
     }
-
-    /**
-     *
-     * This will render the profile.scala.html file that Dean writes.
-     * It is where the user goes after a successful login. We need
-     * to use this method for session storing.
-     */
-    @Security.Authenticated(Secured.class)
-    public Result profile() {
-        return TODO;
-        // return ok(Profile.render("Profile", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
-    }
-
-
 
     /**
      *
