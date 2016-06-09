@@ -18,8 +18,8 @@ POST    /login                      controllers.HomeController.postLogin
 # When the user logs out. This redirects to index, as shown above and
 GET     /logout                     controllers.HomeController.logout
 
-# Where the user goes after a successful login
-GET     /profile                    controllers.HomeController.profile
+# Where the user goes after a successful login...useless, called home now
+# GET     /profile                    controllers.HomeController.profile
 
 
 # nonsense that I'm scared to delete...

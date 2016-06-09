@@ -5,6 +5,10 @@ import play.mvc.Http.Context;
 import views.html.*;
 import views.html.home.*;
 import models.User;
+import javax.inject.Inject;
+import play.data.FormFactory;
+import play.data.Form;
+
 
 /**
  * This controller contains an action to handle HTTP requests
@@ -12,7 +16,13 @@ import models.User;
  */
 public class HomeController extends Controller {
 
-   public static boolean startup = true;
+
+    // injecting formFactory so I can use it later in the login and postLogin methods
+    @Inject
+    public FormFactory formFactory;
+
+    public static boolean startup = true;
+
 
     /**
      * An action that renders an HTML page with a welcome message.
@@ -24,15 +34,18 @@ public class HomeController extends Controller {
      * the top. We will use whatever parameters he specifies in the render() method below.
      */
     public Result index() {
-        
-        if (startup) {
-            User test = new User("user", "user@gatech.edu", "pass");
-            test.save();
-            startup = false;
-        }
+
+
+        // TODO there is a problem in this block of code
+        // I put the existing values in the form, hopefully that will make this unnecessary
+//        if (startup) {
+//            User test = new User("user", "user@gatech.edu", "pass");
+//            test.save();
+//            startup = false;
+//        }
         
         if (Secured.isLoggedIn(ctx())) {
-            return ok(views.html.home.home.render());
+            return ok(views.html.home.home.render("Home", "Home", Secured.isLoggedIn(ctx()), Secured.getUser(ctx())));
         } else {
             return ok(views.html.home.index.render());
         }
@@ -45,6 +58,8 @@ public class HomeController extends Controller {
      * @return HTTP result
      */
     public Result login() {
+        Form<User> userForm = formFactory.form(User.class);
+        userForm = userForm.fill(new User("user", "user@gatech.edu", "pass"));
         return ok(views.html.home.login.render());
     }
 
@@ -79,12 +94,13 @@ public class HomeController extends Controller {
     }
 
     /**
-     * Takes you back to the page called index. We can change that name if you guys want.
+     * Takes the user inside to their profile.
      *
      */
 //    @Security.Authenticated(Secured.class)
     public Result home() {
-        return ok(views.html.home.home.render());
+        return ok(views.html.home.home.render("Home", "Home",
+                Secured.isLoggedIn(ctx()), Secured.getUser(ctx())));
     }
 
     /**
@@ -97,17 +113,7 @@ public class HomeController extends Controller {
         return redirect(routes.HomeController.index());
     }
 
-    /**
-     *
-     * This will render the profile.scala.html file that Dean writes.
-     * It is where the user goes after a successful login. We need
-     * to use this method for session storing.
-     */
-    @Security.Authenticated(Secured.class)
-    public Result profile() {
-        return TODO;
-        // return ok(Profile.render("Profile", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx())));
-    }
+
 
 
 
