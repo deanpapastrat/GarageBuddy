@@ -15,21 +15,19 @@ import lib.GBController;
 public class HomeController extends GBController {
     public static boolean startup = true;
 
-
     /**
      * Renders the welcome page or home page depending on auth status
      * @return if authenticated, home page HTML, else welcome page HTML
      */
     public Result index() {
-
-        // TODO: there is a problem in this block of code
-        // I put the existing values in the form, hopefully that will make this unnecessary
-//        if (startup) {
-//            User test = new User("user", "user@gatech.edu", "pass");
-//            test.save();
-//            startup = false;
-//        }
-
+        if (startup) {
+            User test = new User("user", "user@gatech.edu", "pass");
+            if (test.validate() == null) {
+                test.save();
+            }
+            startup = false;
+        }
+        
         if (Secured.isLoggedIn(ctx())) {
             return ok(views.html.home.home.render("Home", "Home"));
         } else {
@@ -104,5 +102,39 @@ public class HomeController extends GBController {
     public Result logout() {
         session().clear();
         return redirect(routes.HomeController.index());
+    }
+
+    /************** Everything below here is TODO! **************/
+
+    /**
+     * Renders the events page with a list of garage sale events
+     * @return events page HTML
+     */
+    public Result events() {
+        return TODO;
+    }
+
+    /**
+     * Renders the reports page with options for generating types of reports
+     * @return reports page HTML
+     */
+    public Result reports() {
+        return TODO;
+    }
+
+    /**
+     * Renders the users page with a list of users
+     * @return users page HTML
+     */
+    public Result users() {
+        return TODO;
+    }
+
+    /**
+     * Renders the profile page with profile data
+     * @return profile page HTML
+     */
+    public Result profile() {
+        return TODO;
     }
 }
