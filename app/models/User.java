@@ -5,6 +5,7 @@ import javax.persistence.*;
 import com.avaje.ebean.Model;
 import play.data.format.*;
 import play.data.validation.*;
+import java.util.*;
 
 /**
  * A User
@@ -56,4 +57,31 @@ public class User extends Model {
         }
     }
 
+    /**
+     *
+     * @return true or false: this user is not null, i.e., it has values for all fields
+     */
+
+    public boolean exists() {
+        return ((this.name != null) &&
+                (this.email != null) &&
+                (this.password != null));
+    }
+
+    /**
+     * This is needed to specify the find method, used to search the User database for users
+     */
+    public static Finder<String, User> find = new Finder<String, User>(User.class);
+
+
+    /**
+     * This is a query that uses email as the key to search for a particular user
+     * Side note, we're going to want to make sure we don't add multiple users with the same email
+     * @param email
+     * @return true if we find a user with email, and false otherwise
+     */
+    public boolean isUser(String email) {
+        User testUser = User.find.byId(email);
+        return testUser.exists();
+    }
 }
