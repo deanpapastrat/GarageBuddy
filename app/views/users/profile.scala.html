@@ -1,0 +1,49 @@
+@(page: String, nav:String, userForm: Form[User])
+
+@main(page, nav) {
+    <div class="page-header">
+        <h1>Profile <small>it's all about you</small></h1>
+    </div>
+    <form action="/profile" method="POST">
+        @common.flashNotification()
+        @common.formErrors(userForm.asInstanceOf[Form[Object]])
+        <div class="row">
+            <div class="col-sm-8">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input class="form-control" type="text" name="name" required placeholder="John Doe" value="@userForm("name").value()">
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input class="form-control" type="text" name="name" required placeholder="john@@garagebuddy.org" value="@userForm("email").value()">
+                </div>
+                <div class="form-group">
+                    <label>New Password (leave blank unless you want to change it)</label>
+                    <input class="form-control" type="password" name="newPassword" placeholder="new password">
+                </div>
+                <div class="form-group">
+                    <label>Current Password (required to edit profile)</label>
+                    <input class="form-control" type="password" name="currentPassword" required placeholder="current password">
+                </div>
+                <button class="btn btn-success" type="submit">Save Changes</button>
+            </div>
+            <div class="col-sm-4 hidden-xs">
+                <div class="panel panel-default text-center">
+                    <div class="panel-body">
+                        <img src="@routes.Assets.versioned("images/logo-color.svg")" width="240">
+                        <hr class="spacer"/>
+                        <hr class="spacer"/>
+                        <p>
+                            <strong>GarageBuddy 1.0.0.alpha-3</strong>
+                            <small><br /><a href="https://github.com/deanpapastrat/GarageBuddy" target="_blank">Source Code</a></small>
+                        </p>
+                        <hr/>
+                        <p><small>
+                            <i class="fa fa-heart text-danger"></i> Crafted with love by Andre Allen, Taj Gillani, Junyoung Jang, Zhiqiang Lin, Dean Papastrat, and Alex Woods
+                        </small></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+}

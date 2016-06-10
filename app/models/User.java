@@ -75,6 +75,11 @@ public class User extends Model {
      */
     public static Finder<String, User> find = new Finder<String, User>(User.class);
 
+    /**
+     * Find a user by email
+     * @param email email address of user
+     * @return the user matching the email
+     */
     public static User findByEmail(String email) {
         if (email == null) {
             return null;
@@ -84,7 +89,7 @@ public class User extends Model {
 
     /**
      * Ad-hoc validation for the user; ensures there isn't a user with the same email (uniqueness).
-     * @return
+     * @return null if valid, message if not
      */
     public String validate() {
         User user = User.findByEmail(email);

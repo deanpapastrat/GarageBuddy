@@ -7,9 +7,9 @@ import play.mvc.Security;
 import models.User;
 
 /**
- * Created by alexwoods on 6/6/16.
  * This class will implement session storing. When you see @Security.Authentication(Secured)
  * above a method, it's invoking this class, and securing things.
+ * @author Alex Woods
  */
 public class Secured extends Security.Authenticator{
 
@@ -17,10 +17,21 @@ public class Secured extends Security.Authenticator{
      * Used by authentication to determine if a user is logged in.
      * This method gets the username of the current logged in user.
      * If it is the email, as below, we set that as the "email" attribute of the session.
+     *
+     * @param ctx the context
+     */
+    public static String getCurrentUsername(Context ctx) {
+        return ctx.session().get("email");
+    }
+
+    /**
+     * Non-static implementation of getCurrentUsername for Security.Authenticator superclass
+     * @param ctx
+     * @return
      */
     @Override
     public String getUsername(Context ctx) {
-        return ctx.session().get("email");
+        return getCurrentUsername(ctx);
     }
 
     /**
@@ -48,17 +59,9 @@ public class Secured extends Security.Authenticator{
     /**
      * Determines whether or not the current user is logged in or not
      * @param ctx
-     * @return
+     * @return whether or not the user is currently logged in
      */
     public static boolean isLoggedIn(Http.Context ctx) {
         return (getUser(ctx) != null);
     }
-
-    /**
-     * TODO I want to write another method that returns the user's info,
-     * but I need a UserInfo class, by Andre and Taj.
-     */
-
-
-
 }
