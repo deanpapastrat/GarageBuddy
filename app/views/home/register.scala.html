@@ -1,0 +1,61 @@
+@(userForm: Form[User])
+
+@landing {
+  <div class="modal-header text-center hidden-xs">
+    <h3>Register</h3>
+    <p class="text-muted uppercase"><small>Please provide your information</small></p>
+  </div>
+  <form action="/register" method="POST">
+    <div class="modal-body">
+      @if(userForm.hasErrors) {
+        <div class="alert alert-danger">
+          @if(userForm.errors.size() > 0) {
+            @for((key, value) <- userForm.errors) {
+              <p>
+                @if(key != null && key != "") {
+                  @key.toString().capitalize:
+                }
+                @for(err <- value) {
+                  @err.message
+                }
+              </p>
+            }
+          } else {No error returned.}
+        </div>
+      }
+      <div class="form-group">
+        <label>Name</label>
+        <input class="form-control" type="text" name="name" required placeholder="John Doe" value="@userForm("name").value()">
+      </div>
+      <div class="form-group">
+        <label>Email Address</label>
+        <input class="form-control" type="email" name="email" placeholder="john@@garagebuddy.org" required value="@userForm("email").value()">
+      </div>
+      <div class="form-group">
+        <label>Password</label>
+        <input class="form-control" type="password" name="password" placeholder="password" required>
+      </div>
+      <div class="form-group">
+        <label>Confirm Password</label>
+        <input class="form-control" type="password" name="confirmPassword" placeholder="repeat password" required>
+      </div>
+      <div class="login-buttons">
+        <button type="submit" class="btn btn-success btn-block">Sign Up</button>
+        <div class="row">
+          <div class="col-sm-6">
+            <a href="/" class="btn btn-link btn-block btn-sm forgot">
+              <i class="fa fa-angle-left">&nbsp;</i>
+              Back to Welcome
+            </a>
+          </div>
+          <div class="col-sm-6 hidden-xs">
+            <a href="/login" class="btn btn-link btn-block btn-sm sign-up">
+              Log In&nbsp;
+              <i class="fa fa-angle-right hidden-xs"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+}

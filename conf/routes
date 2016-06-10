@@ -4,10 +4,23 @@
 
 # An example controller showing a sample home page
 GET     /                           controllers.HomeController.index
-# An example controller showing how to use dependency injection
-GET     /count                      controllers.CountController.count
-# An example controller showing how to write asynchronous code
-GET     /message                    controllers.AsyncController.message
+GET     /home                       controllers.HomeController.home
+
+GET     /login                      controllers.HomeController.login
+POST    /login                      controllers.HomeController.postLogin
+
+
+GET     /register                   controllers.HomeController.register
+POST    /register                   controllers.HomeController.postRegister
+
+# When the user logs out. This redirects to index, as shown above and
+GET     /logout                     controllers.HomeController.logout
+
+# TODO..future pages!!!
+GET     /events                     controllers.HomeController.events
+GET     /reports                    controllers.HomeController.reports
+GET     /users                      controllers.HomeController.users
+GET     /profile                    controllers.HomeController.profile
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
