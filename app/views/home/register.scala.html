@@ -7,22 +7,7 @@
   </div>
   <form action="/register" method="POST">
     <div class="modal-body">
-      @if(userForm.hasErrors) {
-        <div class="alert alert-danger">
-          @if(userForm.errors.size() > 0) {
-            @for((key, value) <- userForm.errors) {
-              <p>
-                @if(key != null && key != "") {
-                  @key.toString().capitalize:
-                }
-                @for(err <- value) {
-                  @err.message
-                }
-              </p>
-            }
-          } else {No error returned.}
-        </div>
-      }
+      @common.formErrors(userForm.asInstanceOf[Form[Object]])
       <div class="form-group">
         <label>Name</label>
         <input class="form-control" type="text" name="name" required placeholder="John Doe" value="@userForm("name").value()">

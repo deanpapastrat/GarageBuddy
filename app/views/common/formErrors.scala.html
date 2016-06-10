@@ -1,0 +1,18 @@
+@(form: Form[Object])
+
+@if(form.hasErrors) {
+    <div class="alert alert-danger">
+    @if(form.errors.size() > 0) {
+        @for((key, value) <- form.errors) {
+            <p>
+                @if(key != null && key != "") {
+                    @key.toString().capitalize:
+                }
+                @for(err <- value) {
+                    @err.message
+                }
+            </p>
+        }
+    } else {No error returned.}
+    </div>
+}
