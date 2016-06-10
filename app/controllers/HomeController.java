@@ -1,53 +1,35 @@
 package controllers;
 
-import java.util.Map;
-import java.util.HashMap;
 import play.mvc.*;
-import play.mvc.Http.Context;
 import views.html.*;
 import views.html.home.*;
 import models.User;
-import javax.inject.Inject;
-import play.data.FormFactory;
 import play.data.Form;
 import play.data.DynamicForm;
-import play.Logger;
-
+import lib.GBController;
 
 /**
- * This controller contains an action to handle HTTP requests
- * to the application's home page.
+ * Manages authentication, welcome, and application home page routes
+ * @author Dean Papastrat, Alex Woods
  */
-public class HomeController extends Controller {
-
-
-    // injecting formFactory so I can use it later in the login and postLogin methods
-    @Inject
-    public FormFactory formFactory;
-
+public class HomeController extends GBController {
     public static boolean startup = true;
 
 
     /**
-     * An action that renders an HTML page with a welcome message.
-     * The configuration in the <code>routes</code> file means that
-     * this method will be called when the application receives a
-     * <code>GET</code> request with a path of <code>/</code>.
-     *
-     * Dean will edit index.scala.html, and in the process will edit the @main method thing at
-     * the top. We will use whatever parameters he specifies in the render() method below.
+     * Renders the welcome page or home page depending on auth status
+     * @return if authenticated, home page HTML, else welcome page HTML
      */
     public Result index() {
 
-
-        // TODO there is a problem in this block of code
+        // TODO: there is a problem in this block of code
         // I put the existing values in the form, hopefully that will make this unnecessary
 //        if (startup) {
 //            User test = new User("user", "user@gatech.edu", "pass");
 //            test.save();
 //            startup = false;
 //        }
-        
+
         if (Secured.isLoggedIn(ctx())) {
             return ok(views.html.home.home.render("Home", "Home"));
         } else {
@@ -55,12 +37,20 @@ public class HomeController extends Controller {
         }
     }
 
+    /**
+     * Renders the login page for a user
+     * @return login page HTML
+     */
     public Result login() {
         return ok(views.html.home.login.render());
     }
 
+    /**
+     * Finds an existing user and authenticates them if credentials are correct.
+     * @return redirect to home page or renders login form with invalid credentials error
+     */
     public Result postLogin() {
-        DynamicForm formData = formFactory.form().bindFromRequest();
+        DynamicForm formData = formParams();
         User user = User.find.where().ieq("email", formData.get("email")).findUnique();
 
         if (user != null && user.checkPassword(formData.get("password"))) {
@@ -74,10 +64,18 @@ public class HomeController extends Controller {
         }
     }
 
+    /**
+     * Renders the registration page for the user with a blank user form
+     * @return register page HTML
+     */
     public Result register() {
         return ok(views.html.home.register.render(formFactory.form(User.class)));
     }
 
+    /**
+     * Validates registration form and creates a user with the provided data
+     * @return redirect to home page or renders register form with validation errors
+     */
     public Result postRegister() {
         Form<User> userForm = formFactory.form(User.class).bindFromRequest();
         if (userForm.hasErrors()) {
@@ -90,8 +88,8 @@ public class HomeController extends Controller {
     }
 
     /**
-     * Takes the user inside to their profile.
-     *
+     * Renders the home page for the user
+     * @return home page HTML
      */
     @Security.Authenticated(Secured.class)
     public Result home() {
@@ -99,28 +97,12 @@ public class HomeController extends Controller {
     }
 
     /**
-     * Takes you back to the page called index. We can change that name if you guys want.
-     *
+     * Clears the session for the user and redirects to welcome page
+     * @return redirect to the welcome page
      */
     @Security.Authenticated(Secured.class)
     public Result logout() {
         session().clear();
         return redirect(routes.HomeController.index());
     }
-
-    /**
-     *
-     * Please be aware of the routes file and HomeController as you write your scala.html files.
-     *
-     * A profile.scala.html file for whatever we're going to display
-     * once the user is logged in.
-     *
-     * An edited version of index.scala.html that will display the page the user is
-     * automatically taken to when they arrive.
-     *
-     * A Login.scala.html file, which represents the page where the user will login.
-     * 
-     *
-     */
-
 }

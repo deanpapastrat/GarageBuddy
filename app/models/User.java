@@ -1,13 +1,9 @@
 package models;
 
 import javax.persistence.*;
-import javax.validation.Constraint;
-
 import com.avaje.ebean.Model;
 import play.Logger;
-import play.data.format.*;
 import play.data.validation.*;
-import java.util.*;
 
 /**
  * A User
@@ -64,7 +60,7 @@ public class User extends Model {
     }
 
     /**
-     *
+     * Checks if the user has all non-null fields.
      * @return true or false: this user is not null, i.e., it has values for all fields
      */
 
@@ -79,6 +75,24 @@ public class User extends Model {
      */
     public static Finder<String, User> find = new Finder<String, User>(User.class);
 
+    public static User findByEmail(String email) {
+        if (email == null) {
+            return null;
+        }
+        return find.where().ieq("email", email).findUnique();
+    }
+
+    /**
+     * Ad-hoc validation for the user; ensures there isn't a user with the same email (uniqueness).
+     * @return
+     */
+    public String validate() {
+        User user = User.find.where().eq("email", email).findUnique();
+        if (user != null && user.email!= email) {
+            return "Email " + email + " is already taken.";
+        }
+        return null;
+    }
 
     /**
      * This is a query that uses email as the key to search for a particular user

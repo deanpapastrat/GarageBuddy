@@ -1,10 +1,10 @@
 package controllers;
 
-// TODO import stuff from model, however I'm going to interact with the user.
 import play.mvc.Http;
 import play.mvc.Http.*;
 import play.mvc.Result;
 import play.mvc.Security;
+import models.User;
 
 /**
  * Created by alexwoods on 6/6/16.
@@ -24,10 +24,12 @@ public class Secured extends Security.Authenticator{
     }
 
     /**
-     * a static version of the above method, used below
+     * Retrieves a user object for the given context
+     * @param ctx The context
+     * @return a user for the given context
      */
-    public static String getUser(Context ctx) {
-        return ctx.session().get("email");
+    public static User getUser(Context ctx) {
+        return User.findByEmail(ctx.session().get("email"));
     }
 
     /**
@@ -43,6 +45,11 @@ public class Secured extends Security.Authenticator{
         return redirect(routes.HomeController.login());
     }
 
+    /**
+     * Determines whether or not the current user is logged in or not
+     * @param ctx
+     * @return
+     */
     public static boolean isLoggedIn(Http.Context ctx) {
         return (getUser(ctx) != null);
     }
