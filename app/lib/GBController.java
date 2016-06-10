@@ -42,4 +42,14 @@ public abstract class GBController extends play.mvc.Controller {
     public <T> play.data.Form<T> modelForm(Class klass) {
         return (play.data.Form<T>) formFactory.form(klass).bindFromRequest();
     }
+
+    /**
+     * Creates a model form via the formFactory with no binding
+     * @param klass The class to make a model form for
+     * @param <T> A model object type
+     * @return a play form to use in requests
+     */
+    public <T> play.data.Form<T> emptyModelForm(Class klass) {
+        return (play.data.Form<T>) formFactory.form(klass);
+    }
 }

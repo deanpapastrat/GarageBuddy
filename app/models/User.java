@@ -87,8 +87,8 @@ public class User extends Model {
      * @return
      */
     public String validate() {
-        User user = User.find.where().eq("email", email).findUnique();
-        if (user != null && user.email!= email) {
+        User user = User.findByEmail(email);
+        if (user != null && user.email == email) {
             return "Email " + email + " is already taken.";
         }
         return null;

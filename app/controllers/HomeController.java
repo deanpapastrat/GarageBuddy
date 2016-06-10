@@ -5,7 +5,6 @@ import views.html.*;
 import views.html.home.*;
 import models.User;
 import play.data.Form;
-import play.data.DynamicForm;
 import lib.GBController;
 
 /**
@@ -48,12 +47,11 @@ public class HomeController extends GBController {
      * @return redirect to home page or renders login form with invalid credentials error
      */
     public Result postLogin() {
-        DynamicForm formData = formParams();
-        User user = User.find.where().ieq("email", formData.get("email")).findUnique();
+        User user = User.findByEmail(formParams().get("email"));
 
-        if (user != null && user.checkPassword(formData.get("password"))) {
+        if (user != null && user.checkPassword(formParams().get("password"))) {
             session().clear();
-            session("email", formData.get("email"));
+            session("email", formParams().get("email"));
             return redirect("/home");
         }
         else {
@@ -67,7 +65,7 @@ public class HomeController extends GBController {
      * @return register page HTML
      */
     public Result register() {
-        return ok(views.html.home.register.render(formFactory.form(User.class)));
+        return ok(views.html.home.register.render(emptyModelForm(User.class)));
     }
 
     /**
@@ -75,12 +73,13 @@ public class HomeController extends GBController {
      * @return redirect to home page or renders register form with validation errors
      */
     public Result postRegister() {
-        Form<User> userForm = formFactory.form(User.class).bindFromRequest();
+        Form<User> userForm = modelForm(User.class);
         if (userForm.hasErrors()) {
             return badRequest(views.html.home.register.render(userForm));
         } else {
             User user = userForm.get();
             user.save();
+            session("email", user.email);
             return redirect("/home");
         }
     }
