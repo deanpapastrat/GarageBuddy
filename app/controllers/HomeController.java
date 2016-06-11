@@ -74,6 +74,11 @@ public class HomeController extends GBController {
      */
     public Result postRegister() {
         Form<User> userForm = modelForm(User.class);
+
+        if (!userForm.data().get("password").equals(userForm.data().get("confirmPassword"))) {
+            userForm.reject("Password and confirmation do not match.");
+        }
+
         if (userForm.hasErrors()) {
             return badRequest(views.html.home.register.render(userForm));
         } else {

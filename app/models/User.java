@@ -88,7 +88,7 @@ public class User extends Model {
      */
     public String validate() {
         User user = User.findByEmail(email);
-        if (user != null && user.email == email) {
+        if (user != null && user.email.equals(email)) {
             return "Email " + email + " is already taken.";
         }
         return null;
