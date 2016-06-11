@@ -27,7 +27,7 @@
                         @for(tab <- Array("Home","Events", "Reports", "Users", "Profile")) {
                             @if(tab.equals(nav)) {
                                 <li class="active">
-                                    <a href="@tab.toLowerCase()">@tab</a>
+                                    <a href="/@tab.toLowerCase()">@tab</a>
                                 </li>
                             } else {
                                 <li>
