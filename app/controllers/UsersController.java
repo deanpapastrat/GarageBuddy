@@ -14,6 +14,7 @@ public class UsersController extends GBController {
      * Renders an index of all users
      * @return user index page HTML
      */
+    @Security.Authenticated(Secured.class)
     public Result index() {
         return ok(views.html.users.index.render("Users", "Users", User.find.all()));
     }
@@ -22,6 +23,7 @@ public class UsersController extends GBController {
      * Renders a profile page with user details
      * @return profile page HTML
      */
+    @Security.Authenticated(Secured.class)
     public Result profile() {
         return ok(views.html.users.profile.render("Profile", "Profile", modelForm(currentUser())));
     }
@@ -30,6 +32,7 @@ public class UsersController extends GBController {
      * Processes profile updates for a user
      * @return redirect to profile page or renders profile form with errors
      */
+    @Security.Authenticated(Secured.class)
     public Result postProfile() {
         if (!currentUser().checkPassword(formParams().get("currentPassword"))) {
             flash("error", "Current password is not valid. Please try again.");
@@ -38,6 +41,10 @@ public class UsersController extends GBController {
 
         currentUser().email = formParams().get("email");
         currentUser().name = formParams().get("name");
+        currentUser().postalCode = formParams().get("postalCode");
+        currentUser().state = formParams().get("state");
+        currentUser().address = formParams().get("address");
+        currentUser().city = formParams().get("city");
 
         if (formParams().get("newPassword") != null && !formParams().get("newPassword").isEmpty()) {
             currentUser().setPassword(formParams().get("newPassword"));
@@ -52,5 +59,24 @@ public class UsersController extends GBController {
         } else {
             return badRequest(views.html.users.profile.render("Profile", "Profile", userForm));
         }
+    }
+
+    /**
+     * Renders a confirmation to delete current user
+     * @return delete confirmation page HTML
+     */
+    @Security.Authenticated(Secured.class)
+    public Result deleteProfile() {
+        return ok(views.html.users.deleteProfile.render("Profile", "Profile"));
+    }
+
+    /**
+     * Permanently deletes a user
+     * @return redirect to welcome page
+     */
+    @Security.Authenticated(Secured.class)
+    public Result postDeleteProfile() {
+        currentUser().delete();
+        return redirect("/logout");
     }
 }

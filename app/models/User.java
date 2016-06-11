@@ -22,6 +22,11 @@ public class User extends Model {
     @Constraints.Required
     public String password;
 
+    public String address;
+    public String city;
+    public String state;
+    public String postalCode;
+
     /**
      * @param name name of the User
      * @param email email of the User

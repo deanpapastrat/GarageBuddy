@@ -6,6 +6,12 @@ img {
   max-width: 100%;
 }
 
+.action-btns {
+  .btn {
+    margin-left: 10px;
+  }
+}
+
 .centered-container {
   align-items: center;
   display: flex;
@@ -39,6 +45,10 @@ img {
 
   &.spacer-thick {
     margin: 15px 0;
+  }
+
+  &.spacer-huge {
+    margin: 30px 0;
   }
 }
 

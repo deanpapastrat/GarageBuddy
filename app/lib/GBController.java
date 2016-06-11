@@ -4,7 +4,6 @@ import models.User;
 import controllers.Secured;
 import play.data.DynamicForm;
 import play.data.FormFactory;
-
 import javax.inject.Inject;
 
 /**
@@ -53,7 +52,6 @@ public abstract class GBController extends play.mvc.Controller {
      * @param <T> A model object type
      * @return a play form to use in requests
      */
-    @SuppressWarnings("unchecked")
     public <T> play.data.Form<T> modelForm(T object) {
         return ((play.data.Form<T>) formFactory.form(object.getClass())).fill(object);
     }

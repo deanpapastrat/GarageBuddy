@@ -17,6 +17,8 @@ POST    /register                   controllers.HomeController.postRegister
 GET     /users                      controllers.UsersController.index
 GET     /profile                    controllers.UsersController.profile
 POST    /profile                    controllers.UsersController.postProfile
+GET     /profile/delete             controllers.UsersController.deleteProfile
+POST    /profile/delete             controllers.UsersController.postDeleteProfile
 
 # TODO..future pages!!!
 GET     /events                     controllers.HomeController.events
