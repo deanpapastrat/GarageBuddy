@@ -27,6 +27,9 @@ public class User extends Model {
     public String state;
     public String postalCode;
 
+    public boolean isSuperUser;
+
+
     /**
      * @param name name of the User
      * @param email email of the User

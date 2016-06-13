@@ -1,12 +1,13 @@
 package models;
 
+import com.avaje.ebean.Model;
 
 import java.util.HashMap;
 
 /**
  * Created by Lin on 6/13/16.
  */
-public class Sale {
+public class Sale extends Model {
     private int saleId;
     public static int numberOfSale;
     private HashMap<String, Role> users;
