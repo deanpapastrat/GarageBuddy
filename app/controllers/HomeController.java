@@ -7,6 +7,8 @@ import models.User;
 import play.data.Form;
 import lib.GBController;
 
+import javax.xml.transform.Result;
+
 /**
  * Manages authentication, welcome, and application home page routes
  * @author Dean Papastrat, Alex Woods

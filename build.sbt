@@ -14,3 +14,6 @@ libraryDependencies ++= Seq(
   "org.webjars.bower" % "bootswatch" % "3.3.6",
   "org.webjars" % "autoprefixer" % "5.2.0"
 )
+
+
+fork in run := true
