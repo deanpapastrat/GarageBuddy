@@ -11,6 +11,7 @@ create table users (
   city                      varchar(255),
   state                     varchar(255),
   postal_code               varchar(255),
+  is_super_user             boolean,
   constraint pk_users primary key (email))
 ;
 

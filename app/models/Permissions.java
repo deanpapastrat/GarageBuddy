@@ -41,57 +41,57 @@ public class Permissions extends Model {
      */
     public static boolean canAssignRole (Sale sale, User user) {
         return user.isSuperUser ||
-                (sale.getUserRole(user.email) == Role.SALE_ADMIN);
+                (sale.getUserRole(user.email) == Sale.Role.SALE_ADMIN);
     }
 
     public static boolean canCloseSale (Sale sale, User user) {
         return user.isSuperUser ||
-                (sale.getUserRole(user.email) == Role.SALE_ADMIN);
+                (sale.getUserRole(user.email) == Sale.Role.SALE_ADMIN);
     }
 
     public static boolean canUpdateCatalog (Sale sale, User user) {
         return user.isSuperUser ||
-                (sale.getUserRole(user.email) == Role.SALE_ADMIN) ||
-                (sale.getUserRole(user.email) == Role.SELLER);
+                (sale.getUserRole(user.email) == Sale.Role.SALE_ADMIN) ||
+                (sale.getUserRole(user.email) == Sale.Role.SELLER);
     }
 
     public static boolean canUpdatePrices (Sale sale, User user) {
         return user.isSuperUser ||
-                (sale.getUserRole(user.email) == Role.SALE_ADMIN) ||
-                (sale.getUserRole(user.email) == Role.SELLER);
+                (sale.getUserRole(user.email) == Sale.Role.SALE_ADMIN) ||
+                (sale.getUserRole(user.email) == Sale.Role.SELLER);
     }
 
     public static boolean canAdvertise (Sale sale, User user) {
         return user.isSuperUser ||
-            (sale.getUserRole(user.email) == Role.SALE_ADMIN) ||
-            (sale.getUserRole(user.email) == Role.SELLER);
+            (sale.getUserRole(user.email) == Sale.Role.SALE_ADMIN) ||
+            (sale.getUserRole(user.email) == Sale.Role.SELLER);
     }
 
     public static boolean canPrintTags (Sale sale, User user) {
         return user.isSuperUser ||
-                (sale.getUserRole(user.email) == Role.SALE_ADMIN) ||
-                (sale.getUserRole(user.email) == Role.SELLER) ||
-                (sale.getUserRole(user.email) == Role.CLERK);
+                (sale.getUserRole(user.email) == Sale.Role.SALE_ADMIN) ||
+                (sale.getUserRole(user.email) == Sale.Role.SELLER) ||
+                (sale.getUserRole(user.email) == Sale.Role.CLERK);
     }
 
     public static boolean canSellItems (Sale sale, User user) {
         return user.isSuperUser ||
-                (sale.getUserRole(user.email) == Role.SALE_ADMIN) ||
-                (sale.getUserRole(user.email) == Role.SELLER) ||
-                (sale.getUserRole(user.email) == Role.CASHIER);
+                (sale.getUserRole(user.email) == Sale.Role.SALE_ADMIN) ||
+                (sale.getUserRole(user.email) == Sale.Role.SELLER) ||
+                (sale.getUserRole(user.email) == Sale.Role.CASHIER);
     }
 
     public static boolean canCreateReceipts (Sale sale, User user) {
         return user.isSuperUser ||
-                (sale.getUserRole(user.email) == Role.SALE_ADMIN) ||
-                (sale.getUserRole(user.email) == Role.SELLER) ||
-                (sale.getUserRole(user.email) == Role.CASHIER);
+                (sale.getUserRole(user.email) == Sale.Role.SALE_ADMIN) ||
+                (sale.getUserRole(user.email) == Sale.Role.SELLER) ||
+                (sale.getUserRole(user.email) == Sale.Role.CASHIER);
     }
 
     public static boolean canAccessFinances (Sale sale, User user) {
         return user.isSuperUser ||
-                (sale.getUserRole(user.email) == Role.SALE_ADMIN) ||
-                (sale.getUserRole(user.email) == Role.SELLER) ||
-                (sale.getUserRole(user.email) == Role.BOOKKEEPER);
+                (sale.getUserRole(user.email) == Sale.Role.SALE_ADMIN) ||
+                (sale.getUserRole(user.email) == Sale.Role.SELLER) ||
+                (sale.getUserRole(user.email) == Sale.Role.BOOK_KEEPER);
     }
 }
