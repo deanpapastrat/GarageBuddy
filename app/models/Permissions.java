@@ -1,6 +1,7 @@
 package models;
 
 import com.avaje.ebean.Model;
+import models.Sale.Role;
 
 public class Permissions extends Model {
 
@@ -92,6 +93,6 @@ public class Permissions extends Model {
         return user.isSuperUser ||
                 (sale.getUserRole(user.email) == Role.SALE_ADMIN) ||
                 (sale.getUserRole(user.email) == Role.SELLER) ||
-                (sale.getUserRole(user.email) == Role.BOOKKEEPER);
+                (sale.getUserRole(user.email) == Role.BOOK_KEEPER);
     }
 }
