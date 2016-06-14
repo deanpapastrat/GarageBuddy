@@ -22,6 +22,8 @@ public class User extends Model {
     @Constraints.Required
     public String password;
 
+    public int loginAttempts = 0;
+
     /**
      * @param name name of the User
      * @param email email of the User
@@ -30,6 +32,7 @@ public class User extends Model {
     public User(String name, String email, String password) {
         this.name = name;
         this.email = email;
+        this.loginAttempts = 0;
         try {
             this.password = PasswordStorage.createHash(password);
         } catch (Exception echo) {
