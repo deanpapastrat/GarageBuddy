@@ -7,6 +7,7 @@
         <title>@title</title>
         <link rel="stylesheet" media="screen" href="@routes.Assets.versioned("stylesheets/landing.css")">
         <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+        <script src="https://use.fontawesome.com/dccf50d8f3.js"></script>
         <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
     </head>
@@ -26,7 +27,7 @@
                         @for(tab <- Array("Home","Events", "Reports", "Users", "Profile")) {
                             @if(tab.equals(nav)) {
                                 <li class="active">
-                                    <a href="@tab.toLowerCase()">@tab</a>
+                                    <a href="/@tab.toLowerCase()">@tab</a>
                                 </li>
                             } else {
                                 <li>
@@ -43,7 +44,7 @@
                 </div>
             </div>
         </nav>
-        <div class="container-fluid">
+        <div class="container">
             @content
         </div>
     </body>

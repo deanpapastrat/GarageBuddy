@@ -5,11 +5,13 @@
   </div>
   <form method="POST" action="/login">
     <div class="modal-body">
-      @if(flash.containsKey("error")) {
-        <div class="alert alert-danger">
-          @flash.get("error")
-        </div>
-      }
+      @common.flashNotification()
+      <p class="text-center">
+        <strong>Quick Note for TA:</strong>
+      </p>
+      <p class="text-center"><small>
+        Since we use email to authenticate users, please type in <i class="text-warning">user@@gatech.edu</i> instead of just user. Thanks!
+      </small></p>
       <div class="form-group">
         <label>Email Address</label>
         <input class="form-control" type="email" name="email" placeholder="john@@garagebuddy.org" required>
