@@ -10,6 +10,7 @@ libraryDependencies ++= Seq(
   javaJdbc,
   cache,
   javaWs,
+  "org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
   "org.webjars.bower" % "bootstrap-sass" % "3.3.6",
   "org.webjars.bower" % "bootswatch" % "3.3.6",
   "org.webjars" % "autoprefixer" % "5.2.0"
