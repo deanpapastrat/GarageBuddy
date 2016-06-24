@@ -141,4 +141,15 @@ public class HomeController extends GBController {
     public Result profile() {
         return TODO;
     }
+
+    /**
+     * Creates a sale in the database.
+     * @return a webpage representing that sale
+     */
+    public Result addSale() {
+        return TODO;
+    }
+
+
+
 }
