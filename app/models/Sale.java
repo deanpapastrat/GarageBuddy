@@ -1,7 +1,12 @@
 package models;
 
 import com.avaje.ebean.Model;
+import com.avaje.ebean.annotation.DbEnumType;
+import com.avaje.ebean.annotation.DbEnumValue;
+import com.avaje.ebean.annotation.DbJsonB;
+
 import javax.persistence.*;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -27,11 +32,17 @@ public class Sale extends Model {
         GUEST(1), BOOK_KEEPER(2), CASHIER(3), CLERK(4), SELLER(5), SALE_ADMIN(6), SUPER_USER(7);
 
         int permit;
+
         Role(int p) {
             permit = p;
         }
 
         int showPermission() {
+            return permit;
+        }
+
+        @DbEnumValue(storage = DbEnumType.INTEGER)
+        public int getValue() {
             return permit;
         }
     }
@@ -58,7 +69,7 @@ public class Sale extends Model {
      * Get all the active users in this sale
      * @return all the users
      */
-    public HashMap<String, Role> getUsers(){
+    public Map<String, Role> getUsers(){
         return this.users;
     }
 
