@@ -1,0 +1,49 @@
+@(page: String, nav:String, items: List[Item])
+
+@main(page, nav) {
+    <html lang="en">
+    <head>
+        <title>New Sale</title>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+        <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+
+    <div class="container">
+        <h2>New Sale</h2>
+        <p>The following items are for sale.</p>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>ID</th>
+                <th>Created By</th>
+            </tr>
+            </thead>
+            @for(item <- items) {
+            <tr>
+                <td>@item.name</td>
+                <td>@item.price</td>
+                <td>@item.description</td>
+                <td>@item.id</td>
+                <td>@item.createdBy.email</td>
+            </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+
+
+
+    </body>
+    </html>
+}
+
+
+
+

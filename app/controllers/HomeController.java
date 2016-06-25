@@ -4,8 +4,13 @@ import play.mvc.*;
 import views.html.*;
 import views.html.home.*;
 import models.User;
+import models.Sale;
+import models.Item;
 import play.data.Form;
 import lib.GBController;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Manages authentication, welcome, and application home page routes
@@ -147,7 +152,32 @@ public class HomeController extends GBController {
      * @return a webpage representing that sale
      */
     public Result addSale() {
-        return TODO;
+        Sale sale = new Sale();
+        String userEmail = session("email");
+        sale.addUser(userEmail, Sale.Role.SALE_ADMIN);
+        // currently broken
+//        sale.save()
+
+        return redirect("/sale");
+    }
+
+    public Result sale() {
+        // need a way to access the current sale
+//        return ok(views.html.sale.sale.render("Sale", "Sale", currentSale.getSaleItems()));
+
+        // below is a temp list of items just so I can have it communicate and set up the view. I really need
+        // a method to access the current sale and get it's items.
+        User Jodie = new User("Jodie", "Jodie@gatech.edu", "sunglasses");
+        List<Item> itemsTemp = new ArrayList<>();
+
+        Item item1 = new Item(Jodie, "Car", 3000.00);
+        Item item2 = new Item(Jodie, "Phone", 200.00);
+        Item item3 = new Item(Jodie, "Shirt", 20.00);
+        itemsTemp.add(item1);
+        itemsTemp.add(item2);
+        itemsTemp.add(item3);
+
+        return ok(views.html.sale.sale.render("Sale", "Sale", itemsTemp));
     }
 
 
