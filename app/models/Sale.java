@@ -50,8 +50,23 @@ public class Sale extends Model {
     /**
      * Create a sale object
      */
-    public Sale() {
+    public Sale(User sale_admin) {
         this.users = new HashMap<>();
+        this.addUser(sale_admin.email, Role.SALE_ADMIN);
+        this.save();
+    }
+
+    /**
+     * This is needed to specify the find method, used to search the Sale database for sales
+     */
+    public static Finder<Integer, Sale> find = new Finder<Integer, Sale>(Sale.class);
+
+    /**
+     * Delete a sale object
+     */
+    public void deleteSale() {
+        Sale sale = find.byId(this.saleId);
+        sale.delete();
     }
 
     /**
@@ -62,6 +77,7 @@ public class Sale extends Model {
      */
     public boolean addUser(String email, Role role) {
         users.put(email, role);
+        this.save();
         return true;
     }
 
@@ -127,15 +143,8 @@ public class Sale extends Model {
     
     
     
-    /* Used for debugging
-    public static void main(String args[]) {
-        Sale s1 = new Sale();
-        s1.addUser("user@gatech.edu", Role.CLERK);
-        //HashMap<String, Role> alls = s1.getUsers();
-        System.out.println(s1.getUserRole("user@gatech.edu"));
-        System.out.println(s1.getUserPermit("user@gatech.edu"));
-    }
-    */
+    //Used for debugging
+
 
 }
 
