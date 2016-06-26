@@ -18,9 +18,12 @@ create table items (
 );
 
 create table sales (
-  sale_id                       serial not null,
+  id                            serial not null,
+  name                          varchar(255),
+  start_date                    timestamp,
+  end_date                      timestamp,
   users                         jsonb,
-  constraint pk_sales primary key (sale_id)
+  constraint pk_sales primary key (id)
 );
 
 create table users (
@@ -41,7 +44,7 @@ create index ix_items_created_by_email on items (created_by_email);
 alter table items add constraint fk_items_sold_by_email foreign key (sold_by_email) references users (email) on delete restrict on update restrict;
 create index ix_items_sold_by_email on items (sold_by_email);
 
-alter table items add constraint fk_items_sale_id foreign key (sale_id) references sales (sale_id) on delete restrict on update restrict;
+alter table items add constraint fk_items_sale_id foreign key (sale_id) references sales (id) on delete restrict on update restrict;
 create index ix_items_sale_id on items (sale_id);
 
 

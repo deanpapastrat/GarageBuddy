@@ -20,12 +20,16 @@ POST    /profile                    controllers.UsersController.postProfile
 GET     /profile/delete             controllers.UsersController.deleteProfile
 POST    /profile/delete             controllers.UsersController.postDeleteProfile
 
+# Sales Routes
+GET     /sales                      controllers.SalesController.index
+GET     /sales/new                  controllers.SalesController.create
+POST    /sales/new                  controllers.SalesController.postCreate
+GET     /sales/:id                  controllers.SalesController.show(id: Integer)
+GET     /sales/:id/edit             controllers.SalesController.edit(id: Integer)
+POST    /sales/:id/edit             controllers.SalesController.postEdit(id: Integer)
+
 # TODO..future pages!!!
-GET     /events                     controllers.HomeController.events
 GET     /reports                    controllers.HomeController.reports
 
 # Map static resources from the /public folder to the /assets URL path
 GET     /assets/*file               controllers.Assets.versioned(path="/public", file: Asset)
-
-GET     /addSale                    controllers.HomeController.addSale
-GET     /sale                       controllers.HomeController.sale

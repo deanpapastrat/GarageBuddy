@@ -1,0 +1,62 @@
+@(page: String, nav:String, sale: Sale, items: List[Item], searchForm: Form[Item], addItemForm: Form[Item])
+
+@main(page, nav) {
+    <div class="page-header">
+        <h1>
+            @sale.name <small>@sale.getFormattedStartDate to @sale.getFormattedEndDate</small>
+            <a class="pull-right btn btn-warning" href="/sales/@sale.id/edit">
+                <i class="fa fa-pencil">&nbsp;</i>
+                Edit Sale
+            </a>
+        </h1>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>Item Name</th>
+            <th>Price</th>
+            <th>Description</th>
+            <th>ID</th>
+            <th>Created By</th>
+        </tr>
+        </thead>
+        @for(item <- items) {
+        <tr>
+            <td>@item.name</td>
+            <td>@item.price</td>
+            <td>@item.description</td>
+            <td>@item.id</td>
+            <td>@item.createdBy.email</td>
+        </tr>
+        }
+        </tbody>
+    </table>
+
+    @* the form to add a new item *@
+    <form action="/addItem">
+        <input type="Item name" placeholder="Item name" value="@addItemForm("name").value()">
+        <input type="Price"  placeholder="Price" value="@addItemForm("price").value()">
+        <input class="enter" type="submit" value="Add Item"/>
+    </form>
+
+
+
+
+    @* the search box *@
+    <div class="container">
+        <form class="form-search">
+            <h3>Want to find an item?</h3>
+            <div id="custom-search-input">
+                <div class="input-group col-md-12">
+                    <input type="text" name="name" class="  search-query form-control"
+                           placeholder="Search" value="@searchForm("name").value()">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-danger" type="button">
+                                            <span class=" glyphicon glyphicon-search"></span>
+                                        </button>
+                                    </span>
+                </div>
+            </div>
+        </form>
+    </div>
+}

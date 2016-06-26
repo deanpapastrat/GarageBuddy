@@ -5,8 +5,16 @@ import com.avaje.ebean.Model;
 import com.avaje.ebean.annotation.DbEnumType;
 import com.avaje.ebean.annotation.DbEnumValue;
 import com.avaje.ebean.annotation.DbJsonB;
+import com.avaje.ebean.annotation.EnumValue;
+import play.Logger;
+import play.data.format.*;
+import play.data.validation.*;
 
 import javax.persistence.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,8 +34,17 @@ public class Sale extends Model {
     @Id
     public int id;
 
+    @Constraints.Required
+    public String name;
+
+    @Constraints.Required @Formats.DateTime(pattern="yyyy-MM-dd")
+    public Date startDate = new Date();
+
+    @Constraints.Required @Formats.DateTime(pattern="yyyy-MM-dd")
+    public Date endDate = new Date();
+
     @DbJsonB
-    public Map<String, Role> users;
+    public Map<String, Long> users = new HashMap<>();
 
     @OneToMany(mappedBy = "sale")
     public List<Item> items;
@@ -41,13 +58,43 @@ public class Sale extends Model {
             permit = p;
         }
 
-        int showPermission() {
+        Long showPermission() {
+            return ((Integer) permit).longValue();
+        }
+
+        int showPermissionInt() {
             return permit;
         }
 
-        @DbEnumValue(storage = DbEnumType.INTEGER)
-        public int getValue() {
-            return permit;
+        static Role fromPermit(Long permit) {
+            for (Role role : values()) {
+                if (permit.equals(((Integer) role.permit).longValue())) {
+                    return role;
+                }
+            }
+
+            return GUEST;
+        }
+
+        public String toString() {
+            String result;
+            switch (permit) {
+                case 7: result = "Super User";
+                    break;
+                case 6: result = "Sale Administrator";
+                    break;
+                case 5: result = "Seller";
+                    break;
+                case 4: result = "Clerk";
+                    break;
+                case 3: result = "Cashier";
+                    break;
+                case 2: result = "Book Keeper";
+                    break;
+                default: result = "Guest";
+                    break;
+            }
+            return result;
         }
     }
 
@@ -58,9 +105,9 @@ public class Sale extends Model {
     /**
      * Create a sale object
      */
-    public Sale(User sale_admin) {
+    public Sale(User saleAdmin) {
         this.users = new HashMap<>();
-        this.addUser(sale_admin.email, Role.SALE_ADMIN);
+        this.addUser(saleAdmin.email, Role.SALE_ADMIN);
         this.save();
     }
 
@@ -125,7 +172,11 @@ public class Sale extends Model {
      * @return true if the user is added
      */
     public boolean addUser(String email, Role role) {
-        users.put(email, role);
+        if (users == null) {
+            this.users = new HashMap<>();
+        }
+
+        users.put(email, role.showPermission());
         this.save();
         return true;
     }
@@ -134,7 +185,7 @@ public class Sale extends Model {
      * Get all the active users in this sale
      * @return all the users
      */
-    public Map<String, Role> getUsers(){
+    public Map<String, Long> getUsers(){
         return this.users;
     }
 
@@ -144,7 +195,7 @@ public class Sale extends Model {
      * @return the user role(***Which is a enum)
      */
     public Role getUserRole(String email) {
-        return users.get(email);
+        return Role.fromPermit(users.get(email));
     }
 
     /**
@@ -153,8 +204,69 @@ public class Sale extends Model {
      * @return the permission level from 1 to 7, 7 is the highest
      */
     public int getUserPermission(String email) {
-        return users.get(email).showPermission();
+        return getUserRole(email).showPermissionInt();
 
+    }
+
+    /* DATE GETTERS & SETTERS */
+
+    /**
+     * Get the start date in human format
+     *
+     * @return a date in the pattern "MMM d, YYYY"
+     */
+    public String getFormattedStartDate() {
+        return formattedDate(startDate);
+    }
+
+    /**
+     * Set the start date from string
+     *
+     * @param input a date in the pattern "yyyy-mm-dd"
+     * @return if startDate was set successfully or not
+     */
+    public boolean setFormattedStartDate(String input) {
+        try {
+            this.startDate = new SimpleDateFormat("yyyy-mm-dd").parse(input);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Get the end date in human format
+     *
+     * @return a date in the pattern "MMM d, YYYY"
+     */
+    public String getFormattedEndDate() {
+        return formattedDate(endDate);
+    }
+
+    /**
+     * Set the end date from string
+     *
+     * @param input a date in the pattern "yyyy-mm-dd"
+     * @return if endDate was set successfully or not
+     */
+    public boolean setFormattedEndDate(String input) {
+        try {
+            this.endDate = new SimpleDateFormat("yyyy-mm-dd").parse(input);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Formats a date to the MMM d, YYYY pattern
+     *
+     * @param date date to format
+     * @return a date in the pattern "MMM d, YYYY"
+     */
+    private static String formattedDate(Date date) {
+        String format = "MMM d, yyyy";
+        return new SimpleDateFormat(format).format(date);
     }
 
     /* PREBUILT QUERIES */

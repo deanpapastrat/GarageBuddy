@@ -1,0 +1,28 @@
+@(page: String, nav:String, sales: List[Sale], currentUser: User)
+
+@main(page, nav) {
+    <div class="page-header">
+        <h1>
+            Sales <small>all sales in the GarageBuddy platform</small>
+            <a class="pull-right btn btn-success" href="/sales/new">Add Sale</a>
+        </h1>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>My Role</th>
+            </tr>
+        </thead>
+        <tbody>
+        @for(sale <- sales) {
+            <tr>
+                <td>
+                    <a href="/sales/@sale.id">@sale.name</a>
+                </td>
+                <td>@sale.getUserRole(currentUser.email)</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

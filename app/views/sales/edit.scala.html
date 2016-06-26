@@ -1,0 +1,33 @@
+@(page: String, nav:String, sale: Sale, saleForm: Form[Sale])
+
+@main(page, nav) {
+  <div class="page-header">
+    <h1>
+      Updating @sale.name <small>@sale.getFormattedStartDate to @sale.getFormattedEndDate</small>
+    </h1>
+  </div>
+  <div class="row">
+    <div class="col-sm-8">
+      <form action="/sales/@sale.id/edit" method="POST">
+        @common.flashNotification()
+        @common.formErrors(saleForm.asInstanceOf[Form[Object]])
+        <div class="form-group">
+          <label>Name</label>
+          <input class="form-control" type="text" name="name" required placeholder="My Wonderful Sale" value="@saleForm("name").value()">
+        </div>
+        <div class="form-group">
+          <label>Start Date</label>
+          <input class="form-control" type="date" name="startDate" required value="@saleForm("startDate").value()">
+        </div>
+        <div class="form-group">
+          <label>End Date</label>
+          <input class="form-control" type="date" name="endDate" required value="@saleForm("endDate").value()">
+        </div>
+        <div class="action-btns">
+          <button class="btn btn-success pull-right" type="submit">Save Changes</button>
+          <a class="btn btn-default pull-right" href="/sales/@sale.id">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+}
