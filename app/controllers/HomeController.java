@@ -152,12 +152,9 @@ public class HomeController extends GBController {
      * @return a webpage representing that sale
      */
     public Result addSale() {
-        Sale sale = new Sale();
         String userEmail = session("email");
-        sale.addUser(userEmail, Sale.Role.SALE_ADMIN);
-        // currently broken
-//        sale.save()
-
+        User currentUser = User.findByEmail(userEmail);
+        new Sale(currentUser);
         return redirect("/sale");
     }
 
@@ -177,9 +174,32 @@ public class HomeController extends GBController {
         itemsTemp.add(item2);
         itemsTemp.add(item3);
 
-        return ok(views.html.sale.sale.render("Sale", "Sale", itemsTemp));
+        Form<Item> searchForm = modelForm(Item.class);
+        Form<Item> addItemForm = modelForm(Item.class);
+
+
+        return ok(views.html.sale.sale.render("Sale", "Sale", itemsTemp, searchForm, addItemForm));
+//        return ok(views.html.sale.sale.render("Sale", "Sale", itemsTemp));
     }
 
+
+    /**
+     * TODO
+     * @return not sure
+     */
+    public Result searchItem() {
+        return TODO;
+    }
+
+    /**
+     * TODO
+     * We need a method that adds an item to a given sale!
+     * I'm not sure how to associate the item with the sale the user is working on.
+     *
+     */
+    public Result addItem() {
+        return TODO;
+    }
 
 
 }
