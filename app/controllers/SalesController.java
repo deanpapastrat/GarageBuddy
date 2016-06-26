@@ -11,7 +11,7 @@ import java.util.List;
 /**
  * Manages endpoints
  *
- * @author Dean Papastrat
+ * @author Dean Papastrat and Alex Woods
  */
 public class SalesController extends GBController {
 
@@ -86,19 +86,10 @@ public class SalesController extends GBController {
         // below is a temp list of items just so I can have it communicate and set up the view. I really need
         // a method to access the current sale and get it's items.
         Sale sale = Sale.findById(id);
-        User Jodie = new User("Jodie", "Jodie@gatech.edu", "sunglasses");
-        List<Item> itemsTemp = new ArrayList<>();
-
-        Item item1 = new Item(Jodie, "Car", 3000.00);
-        Item item2 = new Item(Jodie, "Phone", 200.00);
-        Item item3 = new Item(Jodie, "Shirt", 20.00);
-        itemsTemp.add(item1);
-        itemsTemp.add(item2);
-        itemsTemp.add(item3);
 
         Form<Item> searchForm = modelForm(Item.class);
         Form<Item> addItemForm = modelForm(Item.class);
 
-        return ok(views.html.sales.show.render(sale.name, "Sales", sale, itemsTemp, searchForm, addItemForm));
+        return ok(views.html.sales.show.render(sale.name, "Sales", sale, sale.items, searchForm, addItemForm));
     }
 }

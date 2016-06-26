@@ -3,6 +3,7 @@ package models;
 import javax.persistence.*;
 import com.avaje.ebean.Model;
 import play.data.validation.*;
+import java.text.DecimalFormat;
 
 /**
  * Represents an item in GarageBuddy
@@ -42,18 +43,27 @@ public class Item extends Model {
     public static Finder<String, Item> find = new Finder<String, Item>(Item.class);
 
     /* CONSTRUCTORS & EQUIVALENCY */
-
     /**
      * @param creator the user adding the item to GarageBuddy
      * @param name name of the item
      * @param price sell price of the item
      */
     public Item(User creator, String name, double price) {
+        this(creator, name, price, "No Description");
+    }
+
+    /**
+     * @param creator the user adding the item to GarageBuddy
+     * @param name name of the item
+     * @param price sell price of the item
+     * @param description a brief description of the item
+     */
+    public Item(User creator, String name, double price, String description) {
         this.createdBy = creator;
         this.name = name;
         this.price = price;
         this.minprice = price;
-        this.description = "No description";
+        this.description = description;
     }
 
     @Override
@@ -121,7 +131,7 @@ public class Item extends Model {
         if (saleToAddTo == null) {
             throw new IllegalArgumentException("Sale to add to must be non-null.");
         }
-        if (this.sale.equals(saleToAddTo)) {
+        if (this.sale != null && this.sale.equals(saleToAddTo)) {
             return false;
         } else {
             this.sale = saleToAddTo;
@@ -170,6 +180,32 @@ public class Item extends Model {
         } else {
             return false;
         }
+    }
+
+    /* FORMATTERS */
+
+    public String formattedPrice() {
+        return formatPrice(price);
+    }
+
+    public String formattedMinprice() {
+        return formatPrice(minprice);
+    }
+
+    static String formatPrice(Double number) {
+        DecimalFormat df = new DecimalFormat("#.00");
+        return "$" + df.format(number);
+    }
+
+    /* PREBUILT QUERIES */
+
+    /**
+     * Returns an item from an ID
+     * @param id id of item we want to find
+     * @return an item with the specified id
+     */
+    public static Item findById(Integer id) {
+        return Item.find.byId(id.toString());
     }
 
     /* EXCEPTIONS */

@@ -27,6 +27,13 @@ POST    /sales/new                  controllers.SalesController.postCreate
 GET     /sales/:id                  controllers.SalesController.show(id: Integer)
 GET     /sales/:id/edit             controllers.SalesController.edit(id: Integer)
 POST    /sales/:id/edit             controllers.SalesController.postEdit(id: Integer)
+GET     /sales/:id/items            controllers.SalesController.show(id: Integer)
+
+# Items Routes
+GET     /sales/:saleId/items/new    controllers.ItemsController.create(saleId: Integer)
+POST    /sales/:saleId/items/new    controllers.ItemsController.postCreate(saleId: Integer)
+GET     /sales/:saleId/items/:id    controllers.ItemsController.edit(id: Integer, saleId: Integer)
+POST    /sales/:saleId/items/:id    controllers.ItemsController.postEdit(id: Integer, saleId: Integer)
 
 # TODO..future pages!!!
 GET     /reports                    controllers.HomeController.reports
