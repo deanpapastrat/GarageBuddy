@@ -11,6 +11,8 @@ import javax.xml.bind.DatatypeConverter;
 /**
  * from defuse
  * https://github.com/defuse/password-hashing
+ *
+ * @version 1.0.0
  */
 
 public class PasswordStorage
