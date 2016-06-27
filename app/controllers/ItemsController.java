@@ -43,21 +43,21 @@ public class ItemsController extends GBController {
     }
 
     /**
-     * Edits a sale in the database.
+     * Edits an item in the database.
      * @return a webpage representing that sale
      */
     @Security.Authenticated(Secured.class)
-    public Result edit(int id, int saleId) {
+    public Result edit(int id) {
         Item item = Item.findById(id);
         return ok(views.html.items.edit.render(item, modelForm(item)));
     }
 
     /**
-     * Validates sale form and edits a sale with the provided data
-     * @return redirect to sale page or renders sale form with validation errors
+     * Validates item form and edits an item with the provided data
+     * @return redirect to item page or renders item form with validation errors
      */
     @Security.Authenticated(Secured.class)
-    public Result postEdit(int id, int saleId) {
+    public Result postEdit(int id) {
         Item item = Item.findById(id);
         Form<Item> itemForm = modelForm(Item.class);
 
@@ -71,5 +71,27 @@ public class ItemsController extends GBController {
             item.save();
             return redirect("/sales/" + Integer.toString(item.sale.id) + "/items");
         }
+    }
+
+    /**
+     * Provides a confirmation for deletion of an item from the database.
+     * @return a page showing the confirmation
+     */
+    @Security.Authenticated(Secured.class)
+    public Result delete(int id) {
+        Item item = Item.findById(id);
+        return ok(views.html.items.delete.render(item));
+    }
+
+    /**
+     * Deletes an item from the database.
+     * @return a redirect to sale's item index
+     */
+    @Security.Authenticated(Secured.class)
+    public Result postDelete(int id) {
+        Item item = Item.findById(id);
+        int saleId = item.sale.id;
+        item.delete();
+        return redirect("/sales/" + Integer.toString(saleId) + "/items");
     }
 }

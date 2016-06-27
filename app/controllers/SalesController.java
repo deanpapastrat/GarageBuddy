@@ -81,15 +81,48 @@ public class SalesController extends GBController {
         }
     }
 
+    /**
+     * Shows the program dashboard
+     *
+     * @param id
+     * @return
+     */
     @Security.Authenticated(Secured.class)
     public Result show(int id) {
         // below is a temp list of items just so I can have it communicate and set up the view. I really need
         // a method to access the current sale and get it's items.
         Sale sale = Sale.findById(id);
+        List<Item> queryItems;
+        String query = formParam("q");
 
-        Form<Item> searchForm = modelForm(Item.class);
-        Form<Item> addItemForm = modelForm(Item.class);
+        if (query != null && !query.isEmpty()) {
+            queryItems = sale.findItems().icontains("name", query).findList();
+        } else {
+            queryItems = sale.items;
+        }
 
-        return ok(views.html.sales.show.render(sale.name, "Sales", sale, sale.items, searchForm, addItemForm));
+        return ok(views.html.sales.show.render(sale.name, "Sales", sale, queryItems, query));
+    }
+
+    /**
+     * Provides a confirmation for deletion of a sale from the database.
+     * @return a page showing the confirmation
+     */
+    @Security.Authenticated(Secured.class)
+    public Result delete(int id) {
+        Sale sale = Sale.findById(id);
+        return ok(views.html.sales.delete.render(sale));
+    }
+
+    /**
+     * Deletes a sale from the database.
+     * @return a redirect to sales index
+     */
+    @Security.Authenticated(Secured.class)
+    public Result postDelete(int id) {
+        Sale sale = Sale.findById(id);
+        sale.findItems().delete();
+        sale.delete();
+        return redirect("/sales");
     }
 }

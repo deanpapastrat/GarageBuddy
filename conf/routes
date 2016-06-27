@@ -28,12 +28,16 @@ GET     /sales/:id                  controllers.SalesController.show(id: Integer
 GET     /sales/:id/edit             controllers.SalesController.edit(id: Integer)
 POST    /sales/:id/edit             controllers.SalesController.postEdit(id: Integer)
 GET     /sales/:id/items            controllers.SalesController.show(id: Integer)
+GET     /sales/:id/delete           controllers.SalesController.delete(id: Integer)
+POST    /sales/:id/delete           controllers.SalesController.postDelete(id: Integer)
 
 # Items Routes
 GET     /sales/:saleId/items/new    controllers.ItemsController.create(saleId: Integer)
 POST    /sales/:saleId/items/new    controllers.ItemsController.postCreate(saleId: Integer)
-GET     /sales/:saleId/items/:id    controllers.ItemsController.edit(id: Integer, saleId: Integer)
-POST    /sales/:saleId/items/:id    controllers.ItemsController.postEdit(id: Integer, saleId: Integer)
+GET     /items/:id                  controllers.ItemsController.edit(id: Integer)
+POST    /items/:id                  controllers.ItemsController.postEdit(id: Integer)
+GET     /items/:id/delete           controllers.ItemsController.delete(id: Integer)
+POST    /items/:id/delete           controllers.ItemsController.postDelete(id: Integer)
 
 # TODO..future pages!!!
 GET     /reports                    controllers.HomeController.reports

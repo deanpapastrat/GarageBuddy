@@ -8,7 +8,7 @@
   </div>
   <div class="row">
     <div class="col-sm-8">
-      <form action="/sales/@item.sale.id/items/@item.id" method="POST">
+      <form action="/items/@item.id" method="POST">
         @common.flashNotification()
         @common.formErrors(itemForm.asInstanceOf[Form[Object]])
         <div class="form-group">
@@ -29,6 +29,7 @@
         </div>
         <div class="action-btns">
           <button class="btn btn-success pull-right" type="submit">Save Changes</button>
+          <a class="btn btn-danger pull-right" href="/items/@item.id/delete">Delete Item</a>
           <a class="btn btn-default pull-right" href="/sales/@item.sale.id/items">Cancel</a>
         </div>
       </form>

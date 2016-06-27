@@ -1,4 +1,4 @@
-@(page: String, nav:String, sale: Sale, items: List[Item], searchForm: Form[Item], addItemForm: Form[Item])
+@(page: String, nav:String, sale: Sale, items: List[Item], query: String)
 
 @main(page, nav) {
     <div class="page-header">
@@ -10,13 +10,13 @@
             </a>
         </h1>
     </div>
-    @if(items != null && items.length > 0) {
+    @if((query != null && !query.isEmpty()) || (items != null && items.length > 0)) {
         <form class="form-search">
-            <h3>Want to find an item?</h3>
+            <h5>Want to find an item? Search for it by name here:</h5>
             <div id="custom-search-input">
                 <div class="input-group col-md-12">
-                    <input type="text" name="name" class="  search-query form-control"
-                    placeholder="Search" value="@searchForm("name").value()">
+                    <input type="text" name="q" class="search-query form-control"
+                    placeholder="Search by item name" value="@query">
                     <span class="input-group-btn">
                         <button class="btn btn-default" type="button">
                             <i class="fa fa-search"></i>
@@ -36,11 +36,13 @@
                 <th>Created By</th>
             </tr>
             </thead>
+
+        @if(items != null && items.length > 0) {
             <tbody>
                 @for(item <- items) {
                     <tr>
                         <td>
-                            <a href="/sales/@sale.id/items/@item.id">@item.name</a>
+                            <a href="/items/@item.id">@item.name</a>
                         </td>
                         <td>@item.formattedPrice()</td>
                         <td>@item.description</td>
@@ -49,7 +51,15 @@
                     </tr>
                 }
             </tbody>
-        </table>
+            </table>
+        } else {
+            </table>
+            <div class="panel text-center">
+                <div class="panel-body">
+                    <h3>No results were found for query: "@query"</h3>
+                </div>
+            </div>
+        }
         <a class="btn btn-success" href="/sales/@sale.id/items/new">Add New Item</a>
     } else {
         <div class="jumbotron">
