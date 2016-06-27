@@ -1,0 +1,76 @@
+@(page: String, nav:String, sale: Sale, items: List[Item], query: String)
+
+@main(page, nav) {
+    <div class="page-header">
+        <h1>
+            @sale.name <small>@sale.getFormattedStartDate to @sale.getFormattedEndDate</small>
+            <a class="pull-right btn btn-warning" href="/sales/@sale.id/edit">
+                <i class="fa fa-pencil">&nbsp;</i>
+                Edit Sale
+            </a>
+        </h1>
+    </div>
+    @if((query != null && !query.isEmpty()) || (items != null && items.length > 0)) {
+        <form class="form-search">
+            <h5>Want to find an item? Search for it by name here:</h5>
+            <div id="custom-search-input">
+                <div class="input-group col-md-12">
+                    <input type="text" name="q" class="search-query form-control"
+                    placeholder="Search by item name" value="@query">
+                    <span class="input-group-btn">
+                        <button class="btn btn-default" type="button">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                </div>
+            </div>
+        </form>
+        <hr class="spacer"/>
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th>Item Name</th>
+                <th>Price</th>
+                <th>Description</th>
+                <th>ID</th>
+                <th>Created By</th>
+            </tr>
+            </thead>
+
+        @if(items != null && items.length > 0) {
+            <tbody>
+                @for(item <- items) {
+                    <tr>
+                        <td>
+                            <a href="/items/@item.id">@item.name</a>
+                        </td>
+                        <td>@item.formattedPrice()</td>
+                        <td>@item.description</td>
+                        <td>@item.id</td>
+                        <td>@item.createdBy.name</td>
+                    </tr>
+                }
+            </tbody>
+            </table>
+        } else {
+            </table>
+            <div class="panel text-center">
+                <div class="panel-body">
+                    <h3>No results were found for query: "@query"</h3>
+                </div>
+            </div>
+        }
+        <a class="btn btn-success" href="/sales/@sale.id/items/new">Add New Item</a>
+    } else {
+        <div class="jumbotron">
+            <h1>You haven't added any items.</h1>
+            <p>
+                What good is a garage sale with no items? Well, really it isn't a garage sale at all. Let's fix that.
+                Add an item by clicking that big green button below. You could add a lemon, for example.
+                <br/>
+                <small><i>And if you're anything like Cave Johnson, you'll use that lemon for some exciting things.</i></small>
+            </p>
+            <a class="btn btn-lg btn-success" href="/sales/@sale.id/items/new">Add New Item</a>
+        </div>
+    }
+}

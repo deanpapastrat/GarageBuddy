@@ -1,0 +1,28 @@
+@(item: Item)
+
+@main("Delete " + item.name, "Sales") {
+  <div class="page-header">
+    <h1>Delete "@item.name"? <small>(you probably don't want to)</small></h1>
+  </div>
+  <p>
+    <strong>Deleting this sale</strong> will cause you to lose all of your data about this item permanently.
+    <br/>
+    <br/>
+    All descriptions and orders related to this item will be deleted immediately.
+  </p>
+  <hr class="spacer"/>
+  <p class="text-danger">
+    <strong>Are you sure you want to delete "@item.name"?</strong>
+  </p>
+  <hr class="spacer spacer-huge"/>
+  <form action="/items/@item.id/delete" method="POST">
+    <a class="btn btn-link btn-lg" href="/sales/@item.sale.id/items">
+      <i class="fa fa-angle-left">&nbsp;</i>
+      Return to Items List
+    </a>
+    <button class="btn btn-danger btn-lg" type="submit">
+      <i class="fa fa-times">&nbsp;</i>
+      Delete Item
+    </button>
+  </form>
+}

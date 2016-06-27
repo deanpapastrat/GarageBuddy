@@ -27,13 +27,21 @@ public abstract class GBController extends play.mvc.Controller {
 
     /**
      * Creates a dynamic form to access attributes of non-model associated forms
-     * @return
+     * @return a dynamic form get attributes from
      */
     public DynamicForm formParams() {
         if (!formParamsLoaded) {
             formParams = formFactory.form().bindFromRequest();
         }
         return formParams;
+    }
+
+    /**
+     * Retrieves a param from the submitted parameters
+     * @return a string representation of the parameter sent
+     */
+    public String formParam(String key) {
+        return formParams().get(key);
     }
 
     /**

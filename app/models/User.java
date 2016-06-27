@@ -6,8 +6,10 @@ import play.Logger;
 import play.data.validation.*;
 
 /**
- * A User
- * likely that more Id vars get added as we move forwards
+ * Represents a user in GarageBuddy
+ *
+ * @author Andre Allen, Taj Gillani, Dean Papastrat, and Alex Woods
+ * @version 1.0.0
  */
 @Entity
 @Table(name="users")

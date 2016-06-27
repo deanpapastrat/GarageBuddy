@@ -1,0 +1,38 @@
+@(item: Item, itemForm: Form[Item])
+
+@main(item.name, "Sales") {
+  <div class="page-header">
+    <h1>
+      Updating @item.name <small>for sale "@item.sale.name"</small>
+    </h1>
+  </div>
+  <div class="row">
+    <div class="col-sm-8">
+      <form action="/items/@item.id" method="POST">
+        @common.flashNotification()
+        @common.formErrors(itemForm.asInstanceOf[Form[Object]])
+        <div class="form-group">
+          <label>Name</label>
+          <input class="form-control" type="text" name="name" required placeholder="My Item" value="@itemForm("name").value()">
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea class="form-control" type="date" name="description">@itemForm("description").value()</textarea>
+        </div>
+        <div class="form-group">
+          <label>Price</label>
+          <input class="form-control" type="number" name="price" step=".01" required value="@itemForm("price").value()">
+        </div>
+        <div class="form-group">
+          <label>Minimum Price (for bidding)</label>
+          <input class="form-control" type="number" name="minprice" step=".01" value="@itemForm("minprice").value()">
+        </div>
+        <div class="action-btns">
+          <button class="btn btn-success pull-right" type="submit">Save Changes</button>
+          <a class="btn btn-danger pull-right" href="/items/@item.id/delete">Delete Item</a>
+          <a class="btn btn-default pull-right" href="/sales/@item.sale.id/items">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+}

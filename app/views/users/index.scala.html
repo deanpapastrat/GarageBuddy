@@ -1,26 +1,23 @@
 @(page: String, nav:String, users: List[User])
 
-    @main(page, nav) {
-        <div class="page-header">
-            <h1>Users <small>all users in the GarageBuddy platform</small></h1>
-        </div>
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email Address</th>
-                </tr>
-            </thead>
-            <tbody>
-            @for(user <- users) {
-                <tr>
-                    <td>@user.name</td>
-                    <td>@user.email</td>
-                </tr>
-            }
-            </tbody>
-        </table>
-    }
-
-
-
+@main(page, nav) {
+    <div class="page-header">
+        <h1>Users <small>all users in the GarageBuddy platform</small></h1>
+    </div>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email Address</th>
+            </tr>
+        </thead>
+        <tbody>
+        @for(user <- users) {
+            <tr>
+                <td>@user.name</td>
+                <td>@user.email</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+}

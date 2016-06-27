@@ -2,6 +2,11 @@ package models;
 
 import com.avaje.ebean.Model;
 
+/**
+ * Represents permissions for users
+ *
+ * @version 1.0.0
+ */
 public class Permissions extends Model {
 
     // System-wide Permissions

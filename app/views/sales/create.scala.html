@@ -1,0 +1,33 @@
+@(page: String, nav:String, saleForm: Form[Sale])
+
+@main(page, nav) {
+  <div class="page-header">
+    <h1>
+      New Sale <small>fill in the details to get started</small>
+    </h1>
+  </div>
+  <div class="row">
+    <div class="col-sm-8">
+      <form action="/sales/new" method="POST">
+        @common.flashNotification()
+        @common.formErrors(saleForm.asInstanceOf[Form[Object]])
+        <div class="form-group">
+          <label>Name</label>
+          <input class="form-control" type="text" name="name" required placeholder="My Wonderful Sale" value="@saleForm("name").value()">
+        </div>
+        <div class="form-group">
+          <label>Start Date</label>
+          <input class="form-control" type="date" name="startDate" required value="@saleForm("startDate").value()">
+        </div>
+        <div class="form-group">
+          <label>End Date</label>
+          <input class="form-control" type="date" name="endDate" required value="@saleForm("endDate").value()">
+        </div>
+        <div class="action-btns">
+          <button class="btn btn-success pull-right" type="submit">Create Sale</button>
+          <a class="btn btn-default pull-right" href="/sales">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+}

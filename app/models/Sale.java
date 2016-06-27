@@ -1,46 +1,183 @@
 package models;
 
+import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model;
+import com.avaje.ebean.annotation.DbEnumType;
+import com.avaje.ebean.annotation.DbEnumValue;
+import com.avaje.ebean.annotation.DbJsonB;
+import com.avaje.ebean.annotation.EnumValue;
+import play.Logger;
+import play.data.format.*;
+import play.data.validation.*;
 
+import javax.persistence.*;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * Created by Lin on 6/13/16.
+ * Represents a sale in GarageBuddy
+ *
+ * @author Z. Lin and Dean Papastrat
+ * @version 1.0.0
  */
+@Entity
+@Table(name="sales")
 public class Sale extends Model {
-    private int saleId;
-    public static int numberOfSale;
-    private HashMap<String, Role> users;
+
+    /* ATTRIBUTES */
+
+    @Id
+    public int id;
+
+    @Constraints.Required
+    public String name;
+
+    @Constraints.Required @Formats.DateTime(pattern="yyyy-MM-dd")
+    public Date startDate = new Date();
+
+    @Constraints.Required @Formats.DateTime(pattern="yyyy-MM-dd")
+    public Date endDate = new Date();
+
+    @DbJsonB
+    public Map<String, Long> users = new HashMap<>();
+
+    @OneToMany(mappedBy = "sale")
+    public List<Item> items;
 
     public enum Role {
         GUEST(1), BOOK_KEEPER(2), CASHIER(3), CLERK(4), SELLER(5), SALE_ADMIN(6), SUPER_USER(7);
 
         int permit;
+
         Role(int p) {
             permit = p;
         }
 
-        int showPermission() {
+        Long showPermission() {
+            return ((Integer) permit).longValue();
+        }
+
+        int showPermissionInt() {
             return permit;
         }
+
+        static Role fromPermit(Long permit) {
+            for (Role role : values()) {
+                if (permit.equals(((Integer) role.permit).longValue())) {
+                    return role;
+                }
+            }
+
+            return GUEST;
+        }
+
+        public String toString() {
+            String result;
+            switch (permit) {
+                case 7: result = "Super User";
+                    break;
+                case 6: result = "Sale Administrator";
+                    break;
+                case 5: result = "Seller";
+                    break;
+                case 4: result = "Clerk";
+                    break;
+                case 3: result = "Cashier";
+                    break;
+                case 2: result = "Book Keeper";
+                    break;
+                default: result = "Guest";
+                    break;
+            }
+            return result;
+        }
     }
+
+    public static Finder<String, Sale> find = new Finder<String, Sale>(Sale.class);
+
+    /* CONSTRUCTORS & EQUIVALENCY */
 
     /**
      * Create a sale object
      */
-    public Sale() {
-        this.saleId = ++numberOfSale;
+    public Sale(User saleAdmin) {
         this.users = new HashMap<>();
+        this.addUser(saleAdmin.email, Role.SALE_ADMIN);
+        this.save();
     }
+
+    /**
+     * Delete a sale object
+     *
+     * @return if the object was successfully deleted from the database.
+     */
+    public boolean deleteSale() {
+        return delete();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+
+        if (!Sale.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+
+        final Sale other = (Sale) obj;
+
+        if (this.id == other.id) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Checks if all properties of the object are equivalent
+     * @param obj an object to compare
+     * @return
+     */
+    public boolean matches(Object obj) {
+        if (!this.equals(obj)) {
+            return false;
+        }
+
+        final Sale other = (Sale) obj;
+
+        if (this.users.equals(other.users)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    @Override
+    public int hashCode() {
+        return this.id;
+    }
+
+    /* USER ROLES MANAGEMENT */
 
     /**
      * Add a user to the current sale
      * @param email the user name
      * @param role the corresponding role
-     * @return ture if the user is added
+     * @return true if the user is added
      */
     public boolean addUser(String email, Role role) {
-        users.put(email, role);
+        if (users == null) {
+            this.users = new HashMap<>();
+        }
+
+        users.put(email, role.showPermission());
+        this.save();
         return true;
     }
 
@@ -48,7 +185,7 @@ public class Sale extends Model {
      * Get all the active users in this sale
      * @return all the users
      */
-    public HashMap<String, Role> getUsers(){
+    public Map<String, Long> getUsers(){
         return this.users;
     }
 
@@ -58,7 +195,7 @@ public class Sale extends Model {
      * @return the user role(***Which is a enum)
      */
     public Role getUserRole(String email) {
-        return users.get(email);
+        return Role.fromPermit(users.get(email));
     }
 
     /**
@@ -66,29 +203,109 @@ public class Sale extends Model {
      * @param email the username
      * @return the permission level from 1 to 7, 7 is the highest
      */
-    public int getUserPermit(String email) {
-        return users.get(email).showPermission();
+    public int getUserPermission(String email) {
+        return getUserRole(email).showPermissionInt();
 
+    }
+
+    /* DATE GETTERS & SETTERS */
+
+    /**
+     * Get the start date in human format
+     *
+     * @return a date in the pattern "MMM d, YYYY"
+     */
+    public String getFormattedStartDate() {
+        return formattedDate(startDate);
     }
 
     /**
-     * get sale ID
-     * @return sale ID
+     * Set the start date from string
+     *
+     * @param input a date in the pattern "yyyy-mm-dd"
+     * @return if startDate was set successfully or not
      */
-    public int getSaleId() {
-        return this.saleId;
+    public boolean setFormattedStartDate(String input) {
+        try {
+            this.startDate = new SimpleDateFormat("yyyy-mm-dd").parse(input);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
     }
 
-    /* Used for debugging
-    public static void main(String args[]) {
-        Sale s1 = new Sale();
-        s1.addUser("user@gatech.edu", Role.CLERK);
-        //HashMap<String, Role> alls = s1.getUsers();
-        System.out.println(s1.getUserRole("user@gatech.edu"));
-        System.out.println(s1.getUserPermit("user@gatech.edu"));
+    /**
+     * Get the end date in human format
+     *
+     * @return a date in the pattern "MMM d, YYYY"
+     */
+    public String getFormattedEndDate() {
+        return formattedDate(endDate);
     }
-    */
 
+    /**
+     * Set the end date from string
+     *
+     * @param input a date in the pattern "yyyy-mm-dd"
+     * @return if endDate was set successfully or not
+     */
+    public boolean setFormattedEndDate(String input) {
+        try {
+            this.endDate = new SimpleDateFormat("yyyy-mm-dd").parse(input);
+            return true;
+        } catch (ParseException e) {
+            return false;
+        }
+    }
+
+    /**
+     * Formats a date to the MMM d, YYYY pattern
+     *
+     * @param date date to format
+     * @return a date in the pattern "MMM d, YYYY"
+     */
+    private static String formattedDate(Date date) {
+        String format = "MMM d, yyyy";
+        return new SimpleDateFormat(format).format(date);
+    }
+
+    /* PREBUILT QUERIES */
+
+    /**
+     * Returns a sale from an ID
+     * @param id id of sale we want to find
+     * @return a sale with the specified id
+     */
+    public static Sale findById(Integer id) {
+        return Sale.find.byId(id.toString());
+    }
+
+    /**
+     * Builds a query for items related to this sale
+     *
+     * @return an expression list for items that have this sale ID
+     */
+    public ExpressionList<Item> findItems() {
+        return Item.find.where().eq("sale_id", this.id);
+    }
+
+    /**
+     * Builds a query for items related to this sale that are unpurchased
+     *
+     * @return an expression list for unpurchased sale items
+     */
+    public ExpressionList<Item> findUnpurchasedItems() {
+        return findItems().eq("purchased", false);
+    }
+
+    /**
+     * Builds a query for items related to this sale that are purchased
+     *
+     * @return an expression list for purchased sale items
+     */
+    public ExpressionList<Item> findPurchasedItems() {
+        return findItems().eq("purchased", true);
+    }
 }
 
 

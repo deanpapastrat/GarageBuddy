@@ -141,4 +141,24 @@ public class HomeController extends GBController {
     public Result profile() {
         return TODO;
     }
+
+    /**
+     * TODO
+     * @return not sure
+     */
+    public Result searchItem() {
+        return TODO;
+    }
+
+    /**
+     * TODO
+     * We need a method that adds an item to a given sale!
+     * I'm not sure how to associate the item with the sale the user is working on.
+     *
+     */
+    public Result addItem() {
+        return TODO;
+    }
+
+
 }
