@@ -1,8 +1,8 @@
 # GarageBuddy
 The ultimate garage sale helper
 
-### M4: Registration And Profile
-Our goal with M4 is to create an interface where the user can register and edit their profile.
+### M5: Registration And Profile
+Our goal with M5 is to create sale and item catalogs
 
 
 # Setup and Configuration (macOS/Linux)
