@@ -49,6 +49,8 @@ public class Sale extends Model {
     @OneToMany(mappedBy = "sale")
     public List<Item> items;
 
+    public static final Finder<String, Sale> find = new Finder<String, Sale>(Sale.class);
+
     public enum Role {
         GUEST(1), BOOK_KEEPER(2), CASHIER(3), CLERK(4), SELLER(5), SALE_ADMIN(6), SUPER_USER(7);
 
@@ -97,8 +99,6 @@ public class Sale extends Model {
             return result;
         }
     }
-
-    public static Finder<String, Sale> find = new Finder<String, Sale>(Sale.class);
 
     /* CONSTRUCTORS & EQUIVALENCY */
 

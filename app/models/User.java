@@ -30,7 +30,7 @@ public class User extends Model {
     public String postalCode;
 
     public boolean isSuperUser;
-
+    public static final Finder<String, User> find = new Finder<String, User>(User.class);
 
     /**
      * @param name name of the User
@@ -79,11 +79,6 @@ public class User extends Model {
                 (this.email != null) &&
                 (this.password != null));
     }
-
-    /**
-     * This is needed to specify the find method, used to search the User database for users
-     */
-    public static Finder<String, User> find = new Finder<String, User>(User.class);
 
     /**
      * Find a user by email
