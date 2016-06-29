@@ -26,7 +26,7 @@ public class Item extends Model {
 
     @ManyToOne
     @JoinColumn(name="transaction_id", referencedColumnName = "id")
-    public Transaction transation; // user who physically sold the item to a customer
+    public Transaction transaction; // user who physically sold the item to a customer
 
     @ManyToOne
     @JoinColumn(name="sale_id", referencedColumnName = "id")

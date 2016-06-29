@@ -15,6 +15,8 @@ import play.data.validation.*;
 @Table(name="users")
 public class User extends Model {
 
+    private static final int MAX_LOGIN_ATTEMPTS = 3;
+
     @Id @Constraints.Email @Constraints.Required
     public String email;
 
@@ -31,6 +33,7 @@ public class User extends Model {
 
     public boolean isSuperUser;
     public static final Finder<String, User> find = new Finder<String, User>(User.class);
+    private int loginAttempts = 0;
 
     /**
      * @param name name of the User
@@ -113,5 +116,53 @@ public class User extends Model {
     public boolean isUser(String email) {
         User testUser = User.find.byId(email);
         return testUser.exists();
+    }
+
+    /* LOGIN ATTEMPTS */
+
+    /**
+     * Gets the number of login attempts the user has done
+     * @return number of times user has tried to log in
+     */
+    public int getLoginAttempts() {
+        return loginAttempts;
+    }
+
+    /**
+     * Gets the number of login attempts the user may do before being locked out
+     * @return number of tries the user has left to log in
+     */
+    public int getLoginAttemptsRemaining() {
+        return MAX_LOGIN_ATTEMPTS - loginAttempts;
+    }
+
+    /**
+     * Increases the number of login attempts by 1
+     */
+    public void incLoginAttempts() {
+        this.loginAttempts += 1;
+        save();
+    }
+
+    /**
+     * Resets the number of login attempts to 0
+     */
+    public void resetLoginAttempts() {
+        this.loginAttempts = 0;
+        save();
+    }
+
+    /**
+     * Checks to see whether or not the user can attempt to login
+     * @return whether or not the user should be allowed to try to login
+     */
+    public boolean canLogin() {
+        return loginAttempts < MAX_LOGIN_ATTEMPTS;
+    }
+
+    /* PERMISSIONS MANAGEMENT */
+
+    public boolean can(String action) {
+        return isSuperUser; // TODO: fully implement permissions
     }
 }

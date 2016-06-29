@@ -49,6 +49,9 @@ public class Sale extends Model {
     @OneToMany(mappedBy = "sale")
     public List<Item> items;
 
+    @OneToMany(mappedBy = "sale")
+    public List<Transaction> transactions;
+
     public static final Finder<String, Sale> find = new Finder<String, Sale>(Sale.class);
 
     public enum Role {

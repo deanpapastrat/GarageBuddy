@@ -35,6 +35,7 @@ create table users (
   state                         varchar(255),
   postal_code                   varchar(255),
   is_super_user                 boolean,
+  login_attempts                integer,
   constraint pk_users primary key (email)
 );
 
