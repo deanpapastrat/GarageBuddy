@@ -1,3 +1,5 @@
+@(items: List[Item])
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,34 +7,31 @@
     <title>Print Tags</title>
 
 
-    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' type='text/css'>
-
-
-    <link rel="stylesheet" href="css/reset.css">
-    <link rel="stylesheet" href="css/style.css">
+    <link href="@routes.Assets.versioned("stylesheets/resetTag.css")" rel="stylesheet" media="screen">
+    <link href="@routes.Assets.versioned("stylesheets/tag.css")" rel="stylesheet" media="screen">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' media="all" type='text/css'>
 
 
 </head>
 <body>
-
-
     <div class="tag-container">
         <ul class="tag-list">
+            @for(item <- items) {
             <li>
                 <header class="tag-header">
-                    <h2>Ironman Watch</h2>
+                    <h2>@item.name</h2>
 
                     <div class="tag-price">
                         <span class="tag-currency">$</span>
-                        <span class="tag-value">35</span>
+                        <span class="tag-value">@item.formattedTagPrice()</span>
                     </div>
                 </header>
 
                 <div class="tag-body">
                     <ul class="tag-body-features">
-                        <li>Water resistant up to 50 meters, shows time, day and date</li>
-                        <li> Sold by Jodie Garagerson </li>
-                        <li>Item id: <em>34</em></li>
+                        <li>@item.description</li>
+                        <li>Sold by @item.createdBy.name</li>
+                        <li>Item id: <em>@item.id</em></li>
                     </ul>
                 </div>
 
@@ -40,52 +39,7 @@
                     <text>Thanks for shopping with GarageBuddy!</text>
                 </footer>
             </li>
-
-            <li>
-                <header class="tag-header">
-                    <h2>Cuisinart Coffee Maker</h2>
-
-                    <div class="tag-price">
-                        <span class="tag-currency">$</span>
-                        <span class="tag-value">140</span>
-                    </div>
-                </header>
-
-                <div class="tag-body">
-                    <ul class="tag-body-features">
-                        <li> Premium coffee maker </li>
-                        <li> Sold by Jodie Garagerson </li>
-                        <li>Item id: <em>27</em></li>
-                    </ul>
-                </div>
-
-                <footer class="tag-footer">
-                    <text>Thanks for shopping with GarageBuddy!</text>
-                </footer>
-            </li>
-
-            <li>
-                <header class="tag-header">
-                    <h2>Star Wars DVDs</h2>
-
-                    <div class="tag-price">
-                        <span class="tag-currency">$</span>
-                        <span class="tag-value">25</span>
-                    </div>
-                </header>
-
-                <div class="tag-body">
-                    <ul class="tag-body-features">
-                        <li> All 6 Star Wars episodes </li>
-                        <li> Sold by Jodie Garagerson </li>
-                        <li>Item id: <em>93</em></li>
-                    </ul>
-                </div>
-
-                <footer class="tag-footer">
-                    <text>Thanks for shopping with GarageBuddy!</text>
-                </footer>
-            </li>
+            }
 
         </ul>
     </div>

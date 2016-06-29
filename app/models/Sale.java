@@ -309,7 +309,29 @@ public class Sale extends Model {
     public ExpressionList<Item> findPurchasedItems() {
         return findItems().eq("purchased", true);
     }
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

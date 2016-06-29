@@ -191,6 +191,7 @@ public class Item extends Model {
     public String formattedPrice() {
         return formatPrice(price);
     }
+    public String formattedTagPrice() { return formatTagPrice(price); }
 
     public String formattedMinprice() {
         return formatPrice(minprice);
@@ -199,6 +200,11 @@ public class Item extends Model {
     static String formatPrice(Double number) {
         DecimalFormat df = new DecimalFormat("#.00");
         return "$" + df.format(number);
+    }
+
+    static String formatTagPrice(Double number) {
+        DecimalFormat df = new DecimalFormat("#.00");
+        return df.format(number);
     }
 
     /* PREBUILT QUERIES */
