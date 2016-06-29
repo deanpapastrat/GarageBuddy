@@ -1,0 +1,235 @@
+/*
+
+
+@author Alex Woods
+*/
+
+
+html {
+    font-size: 50.0%;
+}
+
+/*
+* makes things just a teeny bit smoother, particularly the big numbers.
+*/
+html * {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/*  The heart of the color and fonts, kind of a dark blueish */
+body {
+    font-size: 1.6rem;
+    font-family: "Open Sans", sans-serif;
+    color: #173d50;
+}
+
+
+/* --------------------------
+
+Main Components
+
+-------------------------- */
+
+
+/* Puts the tags in a container, which makes them nice to cut out*/
+.tag-container {
+    display: block;
+    width: 90%;
+    max-width: 1170px;
+    margin: 4em auto;
+}
+
+.tag-list > li {
+    position: relative;
+    margin-bottom: 1em;
+    background-color: #FFFFFF;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    outline: 1px solid transparent;
+}
+
+
+
+.tag-list {
+    margin: 3em 0 0;
+}
+
+.tag-list > li {
+width: 33.3333333333%;
+float: left;
+}
+
+
+
+.tag-list > li, .tag-list > li {
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+
+.tag-list > li {
+    width: 32.3333333333%;
+    float: left;
+    margin-right: 1.5%;
+    border-radius: 4px 4px 6px 6px;
+}
+.tag-list > li:last-of-type {
+    margin-right: 0;
+}
+.tag-list > li::before {
+    display: none;
+}
+
+.tag-header {
+    position: relative;
+    z-index: 1;
+    height: 80px;
+    padding: 1em;
+    pointer-events: none;
+    background-color: #3aa0d1;
+    color: #FFFFFF;
+}
+
+.tag-header h2 {
+    margin-bottom: 3px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+
+.tag-header {
+    height: auto;
+    padding: 1.9em 0.9em 1.6em;
+    pointer-events: auto;
+    text-align: center;
+    color: #173d50;
+    background-color: transparent;
+}
+
+
+.tag-currency, .tag-value {
+    font-size: 3rem;
+    font-weight: 300;
+}
+
+.tag-value {
+    font-size: 7rem;
+    font-weight: 300;
+}
+
+.tag-currency {
+    color: rgba(23, 61, 80, 0.4);
+}
+
+.tag-currency {
+    display: inline-block;
+    margin-top: 10px;
+    vertical-align: top;
+    font-size: 2rem;
+    font-weight: 700;
+}
+
+.tag-body {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.tag-body {
+    overflow-x: visible;
+}
+
+.tag-body-features {
+    width: 600px;
+}
+
+.tag-body-features:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.tag-body-features li {
+    width: 100px;
+    float: left;
+    padding: 1.6em 1em;
+    font-size: 1.4rem;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.tag-body-features em {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: 600;
+}
+
+
+.tag-body-features {
+    width: auto;
+}
+
+.tag-body-features li {
+    float: none;
+    width: auto;
+    padding: 1em;
+}
+
+.tag-body-features li:nth-of-type(2n+1) {
+    background-color: rgba(23, 61, 80, 0.06);
+}
+
+.tag-body-features em {
+    display: inline-block;
+    margin-bottom: 0;
+}
+
+.tag-body-features li {
+    margin: 0;
+}
+
+
+.tag-footer {
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    /* on mobile it covers the .cd-pricing-header */
+    height: 80px;
+    width: 100%;
+}
+
+.tag-footer {
+    position: relative;
+    height: auto;
+    padding: 1.75em 0;
+    text-align: center;
+    font-size: 80.0%;
+}
+
+.tag-footer {
+    /* gives padding to GB footer!!! */
+    padding-bottom: 1;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
