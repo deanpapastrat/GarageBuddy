@@ -9,6 +9,7 @@
             <tr>
                 <th>Name</th>
                 <th>Email Address</th>
+                <th>Login Attempts</th>
             </tr>
         </thead>
         <tbody>
@@ -16,6 +17,17 @@
             <tr>
                 <td>@user.name</td>
                 <td>@user.email</td>
+                @if(user.canLogin) {
+                    <td>@user.getLoginAttempts</td>
+                } else {
+                    <td class="text-danger">
+                        @user.getLoginAttempts() login attempts -
+                        <a href="/users/@user.email/reset_attempts" class="btn btn-xs btn-warning">
+                            <i class="fa fa-unlock">&nbsp;</i>
+                            Unlock
+                        </a>
+                    </td>
+                }
             </tr>
         }
         </tbody>
