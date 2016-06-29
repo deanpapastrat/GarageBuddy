@@ -40,6 +40,10 @@ public class Transaction extends Model {
     @ManyToOne
     public User customer;
 
+    @ManyToOne
+    @JoinColumn(name="sale_id", referencedColumnName = "id")
+    public Sale sale;
+
     @OneToMany(mappedBy = "transaction")
     public List<Item> items;
 
@@ -54,8 +58,8 @@ public class Transaction extends Model {
      *
      * @param seller the person checking out the customer
      */
-    public Transaction(User seller) {
-        this(seller, new ArrayList<Item>());
+    public Transaction(Sale sale, User seller) {
+        this(sale, seller, new ArrayList<Item>());
     }
 
     /**
@@ -63,7 +67,8 @@ public class Transaction extends Model {
      * @param seller the person checking out the customer
      * @param items items the customer is buying
      */
-    public Transaction(User seller, List<Item> items) {
+    public Transaction(Sale sale, User seller, List<Item> items) {
+        this.sale = sale;
         this.seller = seller;
         this.numItems = addItems(items);
     }
@@ -119,7 +124,8 @@ public class Transaction extends Model {
      * @param item item to add
      */
     private void addItem(Item item) {
-        item.transation = this;
+        item.transaction = this;
+        item.purchased = true;
         item.save();
     }
 
@@ -132,6 +138,7 @@ public class Transaction extends Model {
         addItem(item);
         if (updateCounts) {
             this.numItems += 1;
+            this.value += item.price;
             save();
         }
     }
@@ -164,10 +171,11 @@ public class Transaction extends Model {
      */
     public void addItems(List<Item> itemsToAdd, boolean updateCounts) {
         if (updateCounts) {
-            this.numItems = removeItems(itemsToAdd);
+            this.numItems = addItems(itemsToAdd);
+            updateItemValues(false);
             save();
         } else {
-            removeItems(itemsToAdd);
+            addItems(itemsToAdd);
         }
     }
 
@@ -176,7 +184,8 @@ public class Transaction extends Model {
      * @param item item to remove
      */
     private void removeItem(Item item) {
-        item.transation = null;
+        item.transaction = null;
+        item.purchased = false;
         item.save();
     }
 
@@ -189,6 +198,7 @@ public class Transaction extends Model {
         removeItem(item);
         if (updateCounts) {
             this.numItems -= 1;
+            this.value -= item.price;
             save();
         }
     }
@@ -208,7 +218,7 @@ public class Transaction extends Model {
 
             itemIds += Integer.toString(itemsToRemove.get(i).id);
         }
-        String sql = "UPDATE transactions SET transaction_id = :id WHERE transaction_id = :transactionId";
+        String sql = "UPDATE transactions SET transaction_id = :id, purchased = true WHERE transaction_id = :transactionId";
         SqlUpdate update = Ebean.createSqlUpdate(sql);
         update.setParameter("id", null);
         update.setParameter("transactionId", this.id);
@@ -222,6 +232,7 @@ public class Transaction extends Model {
     public void removeItems(List<Item> itemsToRemove, boolean updateCounts) {
         if (updateCounts) {
             this.numItems -= removeItems(itemsToRemove);
+            updateItemValues(false);
             save();
         } else {
             removeItems(itemsToRemove);
@@ -233,7 +244,7 @@ public class Transaction extends Model {
      * @return how many items were removed
      */
     public int removeItems() {
-        String sql = "UPDATE transactions SET transaction_id = :id WHERE transaction_id = :transactionId";
+        String sql = "UPDATE transactions SET transaction_id = :id, purchased = false WHERE transaction_id = :transactionId";
         SqlUpdate update = Ebean.createSqlUpdate(sql);
         update.setParameter("id", null);
         update.setParameter("transactionId", this.id);
@@ -247,9 +258,32 @@ public class Transaction extends Model {
     public void removeItems(boolean updateCounts) {
         if (updateCounts) {
             this.numItems = removeItems();
+            updateItemValues(false);
             save();
         } else {
             removeItems();
+        }
+    }
+
+    /* AGGREGATE UPDATERS */
+
+    /**
+     * Sums the values of the items on this transaction
+     * @return live sum of all item prices
+     */
+    private Double sumItemValues() {
+        String sql = "SELECT SUM(value) FROM items WHERE transaction_id = :id";
+        return Ebean.createSqlQuery(sql).setParameter("id", this.id).findUnique().getDouble("sum");
+    }
+
+    /**
+     * Updates the value of the transaction based on items linked to it
+     * @param save whether or not to save transaction
+     */
+    public void updateItemValues(boolean save) {
+        this.value = sumItemValues();
+        if (save) {
+            save();
         }
     }
 
