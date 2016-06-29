@@ -138,4 +138,16 @@ public class SalesController extends GBController {
         sale.delete();
         return redirect("/sales");
     }
+
+    /**
+     * Retrieves all tags for a sale in a printable format
+     * @param id a list of items
+     * @return a page of print tags for a given set of items
+     */
+    @Security.Authenticated(Secured.class)
+    public Result tags(int id) {
+        Sale sale = Sale.findById(id);
+        List<Item> tagItems = queryItems(sale.findItems(), "name", "name", sale.items);
+        return ok(views.html.sales.tags.render(tagItems));
+    }
 }

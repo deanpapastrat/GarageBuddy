@@ -5,6 +5,8 @@ import play.data.Form;
 import play.mvc.*;
 import models.*;
 import views.html.items.*;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Manages endpoints
@@ -94,4 +96,20 @@ public class ItemsController extends GBController {
         item.delete();
         return redirect("/sales/" + Integer.toString(saleId) + "/items");
     }
+
+
+    /**
+     * Shows a tag for the individual item
+     * @param id of item
+     * @return the print tag of the individual item
+     */
+    @Security.Authenticated(Secured.class)
+    public Result tag(int id) {
+        Item item = Item.findById(id);
+        List<Item> items = new ArrayList<Item>();
+        items.add(item);
+        return ok(views.html.sales.tags.render(items));
+    }
+
+
 }

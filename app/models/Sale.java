@@ -312,6 +312,3 @@ public class Sale extends Model {
         return Transaction.find.where().eq("sale_id", this.id);
     }
 }
-
-
-
