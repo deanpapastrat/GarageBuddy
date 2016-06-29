@@ -25,6 +25,10 @@ public class Item extends Model {
     public User soldBy; // user who physically sold the item to a customer
 
     @ManyToOne
+    @JoinColumn(name="transaction_id", referencedColumnName = "id")
+    public Transaction transaction; // user who physically sold the item to a customer
+
+    @ManyToOne
     @JoinColumn(name="sale_id", referencedColumnName = "id")
     public Sale sale;  // user who is Selling the item
 
@@ -40,7 +44,7 @@ public class Item extends Model {
 
     public boolean purchased = false; // self explanatory
     public double soldFor;  // amount that the item actually sold for
-    public static Finder<String, Item> find = new Finder<String, Item>(Item.class);
+    public static final Finder<String, Item> find = new Finder<String, Item>(Item.class);
 
     /* CONSTRUCTORS & EQUIVALENCY */
     /**
@@ -187,6 +191,7 @@ public class Item extends Model {
     public String formattedPrice() {
         return formatPrice(price);
     }
+    public String formattedTagPrice() { return formatTagPrice(price); }
 
     public String formattedMinprice() {
         return formatPrice(minprice);
@@ -195,6 +200,11 @@ public class Item extends Model {
     static String formatPrice(Double number) {
         DecimalFormat df = new DecimalFormat("#.00");
         return "$" + df.format(number);
+    }
+
+    static String formatTagPrice(Double number) {
+        DecimalFormat df = new DecimalFormat("#.00");
+        return df.format(number);
     }
 
     /* PREBUILT QUERIES */

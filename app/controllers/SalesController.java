@@ -5,6 +5,7 @@ import play.data.Form;
 import play.mvc.*;
 import models.*;
 import views.html.sales.*;
+import views.html.Tag.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -125,4 +126,38 @@ public class SalesController extends GBController {
         sale.delete();
         return redirect("/sales");
     }
+
+    /**
+     * @param a list of items
+     * @return a page of print tags for a given set of items
+     */
+    @Security.Authenticated(Secured.class)
+    public Result getAllTags(int id) {
+        Sale sale = Sale.findById(id);
+        List<Item> queryItems;
+        String query = formParam("q");
+
+        if (query != null && !query.isEmpty()) {
+            queryItems = sale.findItems().icontains("name", query).findList();
+        } else {
+            queryItems = sale.items;
+        }
+
+        return ok(views.html.Tag.index.render(queryItems));
+    }
+
+
+
+
 }
+
+
+
+
+
+
+
+
+
+
+
