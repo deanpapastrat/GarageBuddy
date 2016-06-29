@@ -79,4 +79,17 @@ public class UsersController extends GBController {
         currentUser().delete();
         return redirect("/logout");
     }
+
+    /**
+     * Resets a user's login attempts
+     * @return redirect to users index
+     */
+    @Security.Authenticated(Secured.class)
+    public Result resetLoginAttempts(String userEmail) {
+        if (currentUser().can("resetAttempts")) {
+            User user = User.findByEmail(userEmail);
+            user.resetLoginAttempts();
+        }
+        return redirect("/users");
+    }
 }

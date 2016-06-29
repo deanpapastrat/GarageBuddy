@@ -15,6 +15,7 @@ POST    /register                   controllers.HomeController.postRegister
 
 # Users/Profile Routes
 GET     /users                      controllers.UsersController.index
+GET     /users/:id/reset_attempts   controllers.UsersController.resetLoginAttempts(id: String)
 GET     /profile                    controllers.UsersController.profile
 POST    /profile                    controllers.UsersController.postProfile
 GET     /profile/delete             controllers.UsersController.deleteProfile

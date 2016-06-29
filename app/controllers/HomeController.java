@@ -21,6 +21,7 @@ public class HomeController extends GBController {
     public Result index() {
         if (startup) {
             User test = new User("user", "user@gatech.edu", "pass");
+            test.isSuperUser = true;
             if (test.validate() == null) {
                 test.save();
             }
@@ -49,13 +50,24 @@ public class HomeController extends GBController {
     public Result postLogin() {
         User user = User.findByEmail(formParams().get("email"));
 
-        if (user != null && user.checkPassword(formParams().get("password"))) {
+        if (user != null) {
+            user.incLoginAttempts();
+        }
+
+        if (user == null) {
+            flash("error", "Wrong email or password. Please try again.");
+            return badRequest(views.html.home.login.render());
+        } else if (!user.canLogin()) {
+            flash("error", "No login attempts remaining. Please email admin@garagebuddy.io to unlock your account.");
+            return badRequest(views.html.home.login.render());
+        } else if (user.checkPassword(formParams().get("password"))) {
+            user.resetLoginAttempts();
             session().clear();
             session("email", formParams().get("email"));
             return redirect("/home");
-        }
-        else {
-            flash("error", "Wrong email or password. Please try again.");
+        } else {
+            flash("error", "Wrong email or password. " + user.getLoginAttemptsRemaining()
+                    + " login attempts remaining. Please try again.");
             return badRequest(views.html.home.login.render());
         }
     }
@@ -125,40 +137,4 @@ public class HomeController extends GBController {
     public Result reports() {
         return TODO;
     }
-
-    /**
-     * Renders the users page with a list of users
-     * @return users page HTML
-     */
-    public Result users() {
-        return TODO;
-    }
-
-    /**
-     * Renders the profile page with profile data
-     * @return profile page HTML
-     */
-    public Result profile() {
-        return TODO;
-    }
-
-    /**
-     * TODO
-     * @return not sure
-     */
-    public Result searchItem() {
-        return TODO;
-    }
-
-    /**
-     * TODO
-     * We need a method that adds an item to a given sale!
-     * I'm not sure how to associate the item with the sale the user is working on.
-     *
-     */
-    public Result addItem() {
-        return TODO;
-    }
-
-
 }
