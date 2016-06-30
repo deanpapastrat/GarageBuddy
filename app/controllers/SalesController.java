@@ -104,6 +104,15 @@ public class SalesController extends GBController {
         return ok(views.html.sales.show.render(sale.name, "Sales", sale, queryItems, query));
     }
 
+    @Security.Authenticated(Secured.class)
+    public Result showFinancialReport(int id) {
+        Sale sale = Sale.findById(id);
+        List<Transaction> trans = sale.transactions;
+
+        return ok(views.html.sales.report.render(sale.name, "Financial Report", sale, trans));
+    }
+
+
     /**
      * Provides a confirmation for deletion of a sale from the database.
      * @return a page showing the confirmation
@@ -125,4 +134,7 @@ public class SalesController extends GBController {
         sale.delete();
         return redirect("/sales");
     }
+
+
+
 }
