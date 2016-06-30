@@ -1,0 +1,42 @@
+@(page: String, nav:String, sale: Sale, transactions: List[Transaction])
+
+@main(page, nav) {
+  <div class="page-header">
+    <h1>
+      @sale.name Financial Summary
+    </h1>
+  </div>
+
+  <hr class="spacer"/>
+  @if(transactions != null && transactions.length > 0) {
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Transaction ID</th>
+          <th>Sold To</th>
+          <th>Sold By</th>
+          <th>Items Sold</th>
+          <th>Transaction Total</th>
+        </tr>
+      </thead>
+      <tbody>
+      @for(trans <- transactions) {
+        <tr>
+          <td>@trans.id</td>
+          <td>@trans.customerName</td>
+          <td>@trans.seller.name</td>
+          <td> </td>
+          <td>@trans.value</td>
+        </tr>
+      }
+      </tbody>
+    </table>
+  } else {
+    <div class="panel text-center">
+      <div class="panel-body">
+        <h3>No transactions have been recorded for @sale.name</h3>
+      </div>
+    </div>
+  }
+}
+
