@@ -105,7 +105,7 @@ public class SalesController extends GBController {
     }
 
     @Security.Authenticated(Secured.class)
-    public Result showFinancialReport(int id) {
+    public Result report(int id) {
         Sale sale = Sale.findById(id);
         List<Transaction> trans = sale.transactions;
 
@@ -134,7 +134,4 @@ public class SalesController extends GBController {
         sale.delete();
         return redirect("/sales");
     }
-
-
-
 }

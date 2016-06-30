@@ -4,13 +4,11 @@
     <div class="page-header">
         <h1>
             @sale.name <small>@sale.getFormattedStartDate to @sale.getFormattedEndDate</small>
-            <a class="pull-right btn btn-warning" href="/sales/@sale.id/edit">
-                <i class="fa fa-pencil">&nbsp;</i>
-                Edit Sale
-            </a>
-            <a class="btn btn-lg btn-default" href="/sales/@sale.id/summary">Show Financial Report</a>
         </h1>
     </div>
+
+    @sales.nav(sale, "items")
+
     @if((query != null && !query.isEmpty()) || (items != null && items.length > 0)) {
         <form class="form-search">
             <h5>Want to find an item? Search for it by name here:</h5>
