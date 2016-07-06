@@ -72,10 +72,17 @@
             </tr>
             </tbody>
         </table>
-        <a class="btn btn-default" href="/transactions/@transaction.id/receipt">
-            <i class="fa fa-print">&nbsp;</i>
-            Print Receipt
-        </a>
+        <div class="action-btns">
+            <a class="btn btn-default" href="/transactions/@transaction.id/receipt" target="_blank">
+                <i class="fa fa-print">&nbsp;</i>
+                Print Receipt
+            </a>
+            <a class="btn btn-danger" href="/transactions/@transaction.id/delete">
+                <i class="fa fa-times">&nbsp;</i>
+                Cancel Transaction
+            </a>
+        </div>
+
     } else {
         <div class="jumbotron">
             <h1>There's no items on this transaction.</h1>

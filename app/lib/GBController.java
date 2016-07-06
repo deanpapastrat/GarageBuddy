@@ -4,6 +4,7 @@ import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model;
 import models.User;
 import controllers.Secured;
+import play.Logger;
 import play.data.DynamicForm;
 import play.data.FormFactory;
 import javax.inject.Inject;
@@ -69,10 +70,10 @@ public abstract class GBController extends play.mvc.Controller {
      * @param <T> a model object
      * @return a list of items that match the query
      */
-    public <T extends Model> List<T> queryItems(ExpressionList<T> query, String parameter, String sort, List<T> defaultItems) {
+    public <T extends Model> List<T> queryItems(Class<T> klass, ExpressionList<T> query, String parameter, String sort, List<T> defaultItems) {
         List<String> parameters = new ArrayList<>();
         parameters.add(parameter);
-        return queryItems(query, parameters, sort, defaultItems);
+        return queryItems(klass, query, parameters, sort, defaultItems);
     }
 
     /**
@@ -85,17 +86,31 @@ public abstract class GBController extends play.mvc.Controller {
      * @param <T> a model object
      * @return a list of items that match the query
      */
-    public <T extends Model> List<T> queryItems(ExpressionList<T> query, List<String> parameters, String sort, List<T> defaultItems) {
+    public <T extends Model> List<T> queryItems(Class<T> klass, ExpressionList<T> query, List<String> parameters, String sort, List<T> defaultItems) {
         if (queryString() == null) {
             return defaultItems;
         }
+
+        ExpressionList<T> originalQuery = query;
+
         for (int i = 0; i < parameters.size(); i++) {
             if (i != 0) {
                 query = query.or();
             }
-            query = query.icontains(parameters.get(i), queryString());
+
+            if (!parameters.get(i).equals("id")) {
+                query = query.icontains(parameters.get(i), queryString());
+            }
         }
-        return query.setOrderBy(sort).findList();
+
+        List<T> result = query.setOrderBy(sort).findList();
+
+        if (result.size() == 0 && parameters.contains("id")) {
+            Model.Finder<String, T> finder = new Model.Finder(klass);
+            result = finder.where().idEq(Integer.parseInt(queryString())).findList();
+        }
+
+        return result;
     }
 
     /**

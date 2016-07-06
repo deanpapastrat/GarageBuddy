@@ -49,7 +49,10 @@ GET     /sales/:id/transactions     controllers.TransactionsController.index(id:
 GET     /sales/:id/transactions/new controllers.TransactionsController.create(id: Integer)
 POST    /sales/:id/transactions/new controllers.TransactionsController.postCreate(id: Integer)
 GET     /transactions/:id           controllers.TransactionsController.show(id: Integer)
+GET     /transactions/:id/delete    controllers.TransactionsController.delete(id: Integer)
+POST    /transactions/:id/delete    controllers.TransactionsController.postDelete(id: Integer)
 GET     /transactions/:id/items     controllers.TransactionsController.items(id: Integer)
+GET     /transactions/:id/receipt   controllers.TransactionsController.receipt(id: Integer)
 
 GET     /transactions/:id/items/:itemId/add     controllers.TransactionsController.addItem(id: Integer, itemId: Integer)
 GET     /transactions/:id/items/:itemId/remove  controllers.TransactionsController.removeItem(id: Integer, itemId: Integer)

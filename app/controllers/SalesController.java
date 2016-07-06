@@ -89,7 +89,7 @@ public class SalesController extends GBController {
     @Security.Authenticated(Secured.class)
     public Result show(int id) {
         Sale sale = Sale.findById(id);
-        List<Item> queryItems = queryItems(sale.findItems(), "name", "name", sale.items);
+        List<Item> queryItems = queryItems(Item.class, sale.findItems(), "name", "name", sale.items);
         return ok(views.html.sales.show.render(sale.name, "Sales", sale, queryItems, queryString()));
     }
 
@@ -147,7 +147,7 @@ public class SalesController extends GBController {
     @Security.Authenticated(Secured.class)
     public Result tags(int id) {
         Sale sale = Sale.findById(id);
-        List<Item> tagItems = queryItems(sale.findItems(), "name", "name", sale.items);
+        List<Item> tagItems = queryItems(Item.class, sale.findItems(), "name", "name", sale.items);
         return ok(views.html.sales.tags.render(tagItems));
     }
 }

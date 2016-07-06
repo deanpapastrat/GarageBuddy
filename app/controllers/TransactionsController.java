@@ -28,7 +28,7 @@ public class TransactionsController extends GBController {
     public Result index(int saleId) {
         Sale sale = Sale.findById(saleId);
         List<String> parameters = new ArrayList<>(Arrays.asList("id", "customer_name", "customer_email"));
-        List<Transaction> transactions = queryItems(sale.findTransactions(), parameters, "created_at", sale.transactions);
+        List<Transaction> transactions = queryItems(Transaction.class, sale.findTransactions(), parameters, "created_at", sale.transactions);
         return ok(views.html.transactions.index.render(sale, transactions, queryString()));
     }
 
@@ -74,6 +74,18 @@ public class TransactionsController extends GBController {
     public Result show(int id) {
         Transaction transaction = Transaction.findById(id);
         return ok(views.html.transactions.show.render(transaction, transaction.items));
+    }
+
+    /**
+     * Displays a receipt for a transaction
+     *
+     * @param id id of the transaction to show
+     * @return a webpage showing a receipt for the transaction
+     */
+    @Security.Authenticated(Secured.class)
+    public Result receipt(int id) {
+        Transaction transaction = Transaction.findById(id);
+        return ok(views.html.transactions.receipt.render(transaction, transaction.items));
     }
 
     /**
@@ -138,6 +150,7 @@ public class TransactionsController extends GBController {
     public Result postDelete(int id) {
         Transaction transaction = Transaction.findById(id);
         int saleId = transaction.sale.id;
+        transaction.removeItems();
         transaction.delete();
         return redirect("/sales/" + saleId + "/transactions");
     }
