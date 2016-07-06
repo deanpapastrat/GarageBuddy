@@ -109,17 +109,9 @@ public class Sale extends Model {
     public Sale(User saleAdmin) {
         this.users = new HashMap<>();
         this.addUser(saleAdmin.email, Role.SALE_ADMIN);
-        this.save();
     }
 
-    /**
-     * Delete a sale object
-     *
-     * @return if the object was successfully deleted from the database.
-     */
-    public boolean deleteSale() {
-        return delete();
-    }
+
 
     @Override
     public boolean equals(Object obj) {
@@ -178,7 +170,6 @@ public class Sale extends Model {
         }
 
         users.put(email, role.showPermission());
-        this.save();
         return true;
     }
 
@@ -212,7 +203,6 @@ public class Sale extends Model {
      */
     public int getUserPermission(String email) {
         return getUserRole(email).showPermissionInt();
-
     }
 
     /* DATE GETTERS & SETTERS */
@@ -225,6 +215,27 @@ public class Sale extends Model {
     public String getFormattedStartDate() {
         return Formatter.date(startDate);
     }
+
+
+    /**
+     * A method that returns the date as a date object, so we can force the user to enter
+     * a valid start and end date (i.e. end date must be after the start date).
+     * @return the start date, as a date object
+     * @author Alex
+     */
+    public Date getStartDate() {
+        return this.startDate;
+    }
+
+
+    /**
+     * @return the start date
+     * @author Alex (in case I break everything with this method you guys will know it was me haha)
+     */
+    public Date getEndDate() {
+        return this.endDate;
+    }
+
 
     /**
      * Set the start date from string
@@ -264,6 +275,8 @@ public class Sale extends Model {
             return false;
         }
     }
+
+
 
     /* PREBUILT QUERIES */
 
