@@ -1,7 +1,7 @@
 # GarageBuddy
 The ultimate garage sale helper
 
-### M6: Registration And Profile
+### M6: Transactions and Tags
 Our goal with M6 is to create transactions and print tags
 
 
