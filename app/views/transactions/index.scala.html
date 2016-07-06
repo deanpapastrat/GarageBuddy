@@ -1,7 +1,7 @@
 @(sale: Sale, transactions: List[Transaction], query: String)
 
 @main(sale.name + ": Transactions", "Sales") {
-  @sales.nav(sale, "sell")
+  @sales.nav(sale, "transactions")
 
   @if((query != null && !query.isEmpty()) || (transactions != null && transactions.length > 0)) {
     @common.searchForm("Want to find a transaction? Search for it by customer name, customer email, or id here:", "Search by customer name, email, or transaction id", query)
