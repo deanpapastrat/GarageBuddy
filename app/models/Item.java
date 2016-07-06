@@ -207,6 +207,7 @@ public class Item extends Model {
     public String formattedPrice() {
         return Formatter.currency(price);
     }
+    public String formattedTagPrice() { return formatTagPrice(price); }
 
     /**
      * Returns the minimum price in a human-readable string format
@@ -215,6 +216,11 @@ public class Item extends Model {
      */
     public String formattedMinprice() {
         return Formatter.currency(minprice);
+    }
+
+    static String formatTagPrice(Double number) {
+        DecimalFormat df = new DecimalFormat("#.00");
+        return df.format(number);
     }
 
     /* PREBUILT QUERIES */

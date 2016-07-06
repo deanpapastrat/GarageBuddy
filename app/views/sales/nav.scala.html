@@ -26,6 +26,13 @@
     }
     <a href="/sales/@sale.id/sell">Sell</a>
   </li>
+  @if(tab.equals("transactions")) {
+    <li class="active">
+  } else {
+    <li>
+    }
+<a href="/sales/@sale.id/transactions">Transactions</a>
+</li>
   @if(tab.equals("report")) {
     <li class="active">
   } else {
