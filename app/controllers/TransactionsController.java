@@ -29,7 +29,7 @@ public class TransactionsController extends GBController {
         Sale sale = Sale.findById(saleId);
         List<String> parameters = new ArrayList<>(Arrays.asList("id", "customer_name", "customer_email"));
         List<Transaction> transactions = queryItems(Transaction.class, sale.findTransactions(), parameters, "created_at", sale.transactions);
-        return ok(views.html.transactions.index.render(sale, transactions, queryString()));
+        return ok(views.html.transactions.index.render(sale, transactions, queryString(), currentUser()));
     }
 
     /**
@@ -41,7 +41,7 @@ public class TransactionsController extends GBController {
     @Security.Authenticated(Secured.class)
     public Result create(int saleId) {
         Sale sale = Sale.findById(saleId);
-        return ok(views.html.transactions.create.render(sale, emptyModelForm(Transaction.class)));
+        return ok(views.html.transactions.create.render(sale, emptyModelForm(Transaction.class), currentUser()));
     }
 
     /**
@@ -55,7 +55,7 @@ public class TransactionsController extends GBController {
         Sale sale = Sale.findById(saleId);
         Form<Transaction> transactionForm = modelForm(Transaction.class);
         if (transactionForm.hasErrors()) {
-            return badRequest(views.html.transactions.create.render(sale, transactionForm));
+            return badRequest(views.html.transactions.create.render(sale, transactionForm, currentUser()));
         } else {
             Transaction transaction = new Transaction(sale, currentUser());
             transaction.customerName = transactionForm.get().customerName;
@@ -73,7 +73,7 @@ public class TransactionsController extends GBController {
     @Security.Authenticated(Secured.class)
     public Result show(int id) {
         Transaction transaction = Transaction.findById(id);
-        return ok(views.html.transactions.show.render(transaction, transaction.items));
+        return ok(views.html.transactions.show.render(transaction, transaction.items, currentUser()));
     }
 
     /**
@@ -85,7 +85,7 @@ public class TransactionsController extends GBController {
     @Security.Authenticated(Secured.class)
     public Result receipt(int id) {
         Transaction transaction = Transaction.findById(id);
-        return ok(views.html.transactions.receipt.render(transaction, transaction.items));
+        return ok(views.html.transactions.receipt.render(transaction, transaction.items, currentUser()));
     }
 
     /**
@@ -97,7 +97,8 @@ public class TransactionsController extends GBController {
     @Security.Authenticated(Secured.class)
     public Result items(int id) {
         Transaction transaction = Transaction.findById(id);
-        return ok(views.html.transactions.items.render(transaction, transaction.items, transaction.sale.findUnpurchasedItems().findList()));
+        return ok(views.html.transactions.items.render(transaction, transaction.items,
+                transaction.sale.findUnpurchasedItems().findList(), currentUser()));
     }
 
     /**
@@ -137,7 +138,7 @@ public class TransactionsController extends GBController {
     @Security.Authenticated(Secured.class)
     public Result delete(int id) {
         Transaction transaction = Transaction.findById(id);
-        return ok(views.html.transactions.delete.render(transaction));
+        return ok(views.html.transactions.delete.render(transaction, currentUser()));
     }
 
     /**
