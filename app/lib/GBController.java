@@ -1,10 +1,14 @@
 package lib;
 
+import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Model;
 import models.User;
 import controllers.Secured;
 import play.data.DynamicForm;
 import play.data.FormFactory;
 import javax.inject.Inject;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A collection of common methods for use in GarageBuddy controllers
@@ -12,12 +16,31 @@ import javax.inject.Inject;
  */
 public abstract class GBController extends play.mvc.Controller {
 
+    /**
+     * Provides form factory to all sub-controllers
+     */
     @Inject
     protected FormFactory formFactory;
+
+    /**
+     * Cache for request parameter parsing
+     */
     private DynamicForm formParams;
+
+    /**
+     * Determine whether to use cached form params or not
+     */
     private boolean formParamsLoaded = false;
+
+    /**
+     * Cached copy of the current user
+     */
     private User currentUser;
 
+    /**
+     * Retrieves the current authenticated user using the session's context
+     * @return current user
+     */
     public User currentUser() {
         if (currentUser == null || !Secured.getCurrentUsername(ctx()).equals(currentUser.email)) {
             currentUser = Secured.getUser(ctx());
@@ -34,6 +57,57 @@ public abstract class GBController extends play.mvc.Controller {
             formParams = formFactory.form().bindFromRequest();
         }
         return formParams;
+    }
+
+    /**
+     * Performs the same action as queryItems, but takes a single parameter instead of a list
+     *
+     * @param query an expression list for a given model
+     * @param parameter a single parameter to search for
+     * @param sort the field to sort by
+     * @param defaultItems items to return it there's no query
+     * @param <T> a model object
+     * @return a list of items that match the query
+     */
+    public <T extends Model> List<T> queryItems(ExpressionList<T> query, String parameter, String sort, List<T> defaultItems) {
+        List<String> parameters = new ArrayList<>();
+        parameters.add(parameter);
+        return queryItems(query, parameters, sort, defaultItems);
+    }
+
+    /**
+     * Automatically processes a search query and returns a list of items that match it
+     *
+     * @param query an expression list for a given model
+     * @param parameters a list of fields to search for the query value
+     * @param sort the field to sort by
+     * @param defaultItems items to return it there's no query
+     * @param <T> a model object
+     * @return a list of items that match the query
+     */
+    public <T extends Model> List<T> queryItems(ExpressionList<T> query, List<String> parameters, String sort, List<T> defaultItems) {
+        if (queryString() == null) {
+            return defaultItems;
+        }
+        for (int i = 0; i < parameters.size(); i++) {
+            if (i != 0) {
+                query = query.or();
+            }
+            query = query.icontains(parameters.get(i), queryString()).or();
+        }
+        return query.setOrderBy(sort).findList();
+    }
+
+    /**
+     * Parses the query parameter out of the params for the page
+     * @return the user's input or null if empty
+     */
+    public String queryString() {
+        String query = formParam("q");
+        if (query == null || query.isEmpty()) {
+            return null;
+        }
+        return query;
     }
 
     /**

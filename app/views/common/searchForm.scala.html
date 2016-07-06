@@ -1,0 +1,17 @@
+@(title: String, placeholder: String, query: String)
+
+<form class="form-search">
+  <h5>@title</h5>
+  <div id="custom-search-input">
+    <div class="input-group col-md-12">
+      <input type="text" name="q" class="search-query form-control"
+      placeholder="@placeholder" value="@query">
+      <span class="input-group-btn">
+        <button class="btn btn-default" type="button">
+          <i class="fa fa-search"></i>
+        </button>
+      </span>
+    </div>
+  </div>
+</form>
+<hr class="spacer"/>

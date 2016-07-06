@@ -1,11 +1,10 @@
 package models;
 
+import lib.Formatter;
+
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model;
-import com.avaje.ebean.annotation.DbEnumType;
-import com.avaje.ebean.annotation.DbEnumValue;
 import com.avaje.ebean.annotation.DbJsonB;
-import com.avaje.ebean.annotation.EnumValue;
 import play.Logger;
 import play.data.format.*;
 import play.data.validation.*;
@@ -13,7 +12,6 @@ import play.data.validation.*;
 import javax.persistence.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -198,7 +196,13 @@ public class Sale extends Model {
      * @return the user role(***Which is a enum)
      */
     public Role getUserRole(String email) {
-        return Role.fromPermit(users.get(email));
+        Long permissionVal = users.get(email);
+
+        if (permissionVal == null) {
+            permissionVal = ((Integer) 0).longValue();
+        }
+
+        return Role.fromPermit(permissionVal);
     }
 
     /**
@@ -219,7 +223,7 @@ public class Sale extends Model {
      * @return a date in the pattern "MMM d, YYYY"
      */
     public String getFormattedStartDate() {
-        return formattedDate(startDate);
+        return Formatter.date(startDate);
     }
 
     /**
@@ -230,7 +234,7 @@ public class Sale extends Model {
      */
     public boolean setFormattedStartDate(String input) {
         try {
-            this.startDate = new SimpleDateFormat("yyyy-mm-dd").parse(input);
+            this.startDate = new SimpleDateFormat("yyyy-MM-dd").parse(input);
             return true;
         } catch (ParseException e) {
             return false;
@@ -243,7 +247,7 @@ public class Sale extends Model {
      * @return a date in the pattern "MMM d, YYYY"
      */
     public String getFormattedEndDate() {
-        return formattedDate(endDate);
+        return Formatter.date(endDate);
     }
 
     /**
@@ -254,22 +258,11 @@ public class Sale extends Model {
      */
     public boolean setFormattedEndDate(String input) {
         try {
-            this.endDate = new SimpleDateFormat("yyyy-mm-dd").parse(input);
+            this.endDate = new SimpleDateFormat("yyyy-MM-dd").parse(input);
             return true;
         } catch (ParseException e) {
             return false;
         }
-    }
-
-    /**
-     * Formats a date to the MMM d, YYYY pattern
-     *
-     * @param date date to format
-     * @return a date in the pattern "MMM d, YYYY"
-     */
-    private static String formattedDate(Date date) {
-        String format = "MMM d, yyyy";
-        return new SimpleDateFormat(format).format(date);
     }
 
     /* PREBUILT QUERIES */
@@ -308,6 +301,15 @@ public class Sale extends Model {
      */
     public ExpressionList<Item> findPurchasedItems() {
         return findItems().eq("purchased", true);
+    }
+
+    /**
+     * Builds a query for transactions related to this sale
+     *
+     * @return an expression list for transactions
+     */
+    public ExpressionList<Transaction> findTransactions() {
+        return Transaction.find.where().eq("sale_id", this.id);
     }
 }
 

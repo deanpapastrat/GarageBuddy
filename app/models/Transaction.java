@@ -3,11 +3,17 @@ package models;
 import javax.persistence.*;
 
 import com.avaje.ebean.*;
+import lib.Formatter;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.springframework.cglib.core.Local;
 import play.data.validation.*;
 import play.data.format.*;
 
+import java.text.Format;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.text.DecimalFormat;
 import java.util.List;
 
 /**
@@ -26,7 +32,7 @@ public class Transaction extends Model {
     public int id;
 
     @Constraints.Required @Formats.DateTime(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-    public DateTime createdAt = new DateTime();
+    public LocalDateTime createdAt = LocalDateTime.now();
 
     @Constraints.Required
     public String customerName;
@@ -285,6 +291,26 @@ public class Transaction extends Model {
         if (save) {
             save();
         }
+    }
+
+    /* FORMATTERS */
+
+    /**
+     * Returns the value in a human-readable string format
+     *
+     * @return the value, with a dollar sign and to 2 decimal places
+     */
+    public String formattedValue() {
+        return Formatter.currency(value);
+    }
+
+    /**
+     * Returns the time the transaction was created in a human-readable string format
+     *
+     * @return the time in the format mm/dd/yy H:mma
+     */
+    public String formattedCreatedAt() {
+        return Formatter.time(createdAt);
     }
 
     /* PREBUILT QUERIES */

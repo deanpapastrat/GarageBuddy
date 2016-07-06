@@ -5,7 +5,6 @@ import play.data.Form;
 import play.mvc.*;
 import models.*;
 import views.html.sales.*;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -84,26 +83,21 @@ public class SalesController extends GBController {
     /**
      * Shows the program dashboard
      *
-     * @param id
-     * @return
+     * @param id id of the sale
+     * @return a webpage showing the items
      */
     @Security.Authenticated(Secured.class)
     public Result show(int id) {
-        // below is a temp list of items just so I can have it communicate and set up the view. I really need
-        // a method to access the current sale and get it's items.
         Sale sale = Sale.findById(id);
-        List<Item> queryItems;
-        String query = formParam("q");
-
-        if (query != null && !query.isEmpty()) {
-            queryItems = sale.findItems().icontains("name", query).findList();
-        } else {
-            queryItems = sale.items;
-        }
-
-        return ok(views.html.sales.show.render(sale.name, "Sales", sale, queryItems, query));
+        List<Item> queryItems = queryItems(sale.findItems(), "name", "name", sale.items);
+        return ok(views.html.sales.show.render(sale.name, "Sales", sale, queryItems, queryString()));
     }
 
+    /**
+     * Show the financial report for a sale
+     * @param id the id of the sale
+     * @return a webpage showing the financial report
+     */
     @Security.Authenticated(Secured.class)
     public Result report(int id) {
         Sale sale = Sale.findById(id);
@@ -112,6 +106,16 @@ public class SalesController extends GBController {
         return ok(views.html.sales.report.render(sale.name, "Financial Report", sale, trans));
     }
 
+
+    /**
+     * Provides a confirmation for deletion of a sale from the database.
+     * @return a page showing the confirmation
+     */
+    @Security.Authenticated(Secured.class)
+    public Result sell(int id) {
+        Sale sale = Sale.findById(id);
+        return ok(views.html.sales.sell.render(sale));
+    }
 
     /**
      * Provides a confirmation for deletion of a sale from the database.
