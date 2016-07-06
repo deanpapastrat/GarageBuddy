@@ -1,8 +1,8 @@
 # GarageBuddy
 The ultimate garage sale helper
 
-### M5: Registration And Profile
-Our goal with M5 is to create sale and item catalogs
+### M6: Registration And Profile
+Our goal with M6 is to create transactions and print tags
 
 
 # Setup and Configuration (macOS/Linux)
