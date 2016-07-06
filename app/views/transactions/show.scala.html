@@ -1,1 +1,91 @@
 @(transaction: Transaction, items: List[Item])
+@main("Transaction #" + transaction.id, "Sales") {
+    @sales.nav(transaction.sale, "transactions")
+    <h3>
+        Transaction Summary - #@transaction.id
+    </h3>
+    <hr class="spacer"/>
+    <div class="row">
+        <div class="col-sm-5">
+            <table class="table table-bordered">
+                <tr>
+                    <td><strong>Customer:</strong></td>
+                    <td>@transaction.customerName</td>
+                </tr>
+                <tr>
+                    <td><strong>Seller:</strong></td>
+                    <td>@transaction.seller.name</td>
+                </tr>
+                @if(transaction.customer != null) {
+                    <tr>
+                        <td><strong>Customer Email:</strong></td>
+                        <td>@transaction.customer.email</td>
+                    </tr>
+                }
+                <tr>
+                    <td><strong>Sold At:</strong></td>
+                    <td>@transaction.formattedCreatedAt()</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+    <hr/>
+    <h4>
+        Items List
+        <a class="btn btn-warning btn-xs pull-right" href="/transactions/@transaction.id/items">
+            <i class="fa fa-pencil">&nbsp;</i>
+            Modify Items
+        </a>
+    </h4>
+    <hr class="spacer"/>
+    @if(items != null && items.length > 0) {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Price</th>
+                    <th>Description</th>
+                    <th>ID</th>
+                    <th>Created By</th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(item <- items) {
+                <tr>
+                    <td> @item.name</td>
+                    <td>@item.formattedPrice()</td>
+                    <td>@item.description</td>
+                    <td>@item.id</td>
+                    <td>@item.createdBy.name</td>
+                </tr>
+            }
+            <tr>
+                <td>
+                    <strong>Grand Total</strong>
+                </td>
+                <td>
+                    <strong>@transaction.formattedValue()</strong>
+                </td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            </tbody>
+        </table>
+        <a class="btn btn-default" href="/transactions/@transaction.id/receipt">
+            <i class="fa fa-print">&nbsp;</i>
+            Print Receipt
+        </a>
+    } else {
+        <div class="jumbotron">
+            <h1>There's no items on this transaction.</h1>
+            <p>
+                Why don't you try adding one? Or 2? Or 42?
+            </p>
+            <a class="btn btn-success" href="/transactions/@transaction.id/items">
+                <i class="fa fa-plus">&nbsp;</i>
+                Add Items
+            </a>
+        </div>
+    }
+}

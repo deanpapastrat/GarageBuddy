@@ -93,7 +93,7 @@ public abstract class GBController extends play.mvc.Controller {
             if (i != 0) {
                 query = query.or();
             }
-            query = query.icontains(parameters.get(i), queryString()).or();
+            query = query.icontains(parameters.get(i), queryString());
         }
         return query.setOrderBy(sort).findList();
     }

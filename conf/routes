@@ -35,8 +35,6 @@ POST    /sales/:id/delete           controllers.SalesController.postDelete(id: I
 GET     /sales/:id/report           controllers.SalesController.report(id: Integer)
 GET     /sales/:id/sell             controllers.SalesController.sell(id: Integer)
 
-
-
 # Items Routes
 GET     /sales/:saleId/items/new    controllers.ItemsController.create(saleId: Integer)
 POST    /sales/:saleId/items/new    controllers.ItemsController.postCreate(saleId: Integer)
@@ -45,8 +43,6 @@ POST    /items/:id                  controllers.ItemsController.postEdit(id: Int
 GET     /items/:id/delete           controllers.ItemsController.delete(id: Integer)
 POST    /items/:id/delete           controllers.ItemsController.postDelete(id: Integer)
 GET     /items/:id/tag              controllers.ItemsController.tag(id: Integer)
-
-
 
 # Transactions Routes
 GET     /sales/:id/transactions     controllers.TransactionsController.index(id: Integer)

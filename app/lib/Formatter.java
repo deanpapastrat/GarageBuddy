@@ -31,7 +31,7 @@ public class Formatter {
      * @return a date in the pattern "mm/dd/yy 12:00pm"
      */
     public static String time(LocalDateTime time) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("mm/dd/yy H:mma");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM/dd/yy H:mma");
         return time.format(formatter);
     }
 
@@ -52,7 +52,10 @@ public class Formatter {
      * @return a string in the format $1.00
      */
     public static String currency(Double number) {
-        DecimalFormat df = new DecimalFormat("#.00");
+        if (number == null) {
+            number = 0.0;
+        }
+        DecimalFormat df = new DecimalFormat("0.00");
         return "$" + df.format(number);
     }
 }

@@ -7,6 +7,7 @@ import lib.Formatter;
 import org.joda.time.DateTime;
 import org.joda.time.LocalDate;
 import org.springframework.cglib.core.Local;
+import play.Logger;
 import play.data.validation.*;
 import play.data.format.*;
 
@@ -31,16 +32,16 @@ public class Transaction extends Model {
     @Id
     public int id;
 
-    @Constraints.Required @Formats.DateTime(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ")
+    @Formats.DateTime(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     public LocalDateTime createdAt = LocalDateTime.now();
 
     @Constraints.Required
     public String customerName;
 
-    @Constraints.Required
+    @Column(name="value", columnDefinition="decimal default '0.00'")
     public Double value;
 
-    @ManyToOne @Constraints.Required
+    @ManyToOne
     public User seller;
 
     @ManyToOne
@@ -76,7 +77,9 @@ public class Transaction extends Model {
     public Transaction(Sale sale, User seller, List<Item> items) {
         this.sale = sale;
         this.seller = seller;
+        this.createdAt = LocalDateTime.now();
         this.numItems = addItems(items);
+        updateItemValues(false);
     }
 
     @Override
@@ -156,6 +159,10 @@ public class Transaction extends Model {
      * @return how many items were added
      */
     private int addItems(List<Item> itemsToAdd) {
+        if (itemsToAdd.size() == 0) {
+            return 0;
+        }
+
         String itemIds = "";
         for (int i = 0; i < itemsToAdd.size(); i++) {
             if (i != 0) {
@@ -164,7 +171,7 @@ public class Transaction extends Model {
 
             itemIds += Integer.toString(itemsToAdd.get(i).id);
         }
-        String sql = "UPDATE transactions SET transaction_id = :id WHERE id IN :items";
+        String sql = "UPDATE items SET transaction_id = :id WHERE id IN :items;";
         SqlUpdate update = Ebean.createSqlUpdate(sql);
         update.setParameter("id", this.id);
         update.setParameter("items", itemIds);
@@ -224,7 +231,7 @@ public class Transaction extends Model {
 
             itemIds += Integer.toString(itemsToRemove.get(i).id);
         }
-        String sql = "UPDATE transactions SET transaction_id = :id, purchased = true WHERE transaction_id = :transactionId";
+        String sql = "UPDATE items SET transaction_id = :id, purchased = true WHERE transaction_id = :transactionId;";
         SqlUpdate update = Ebean.createSqlUpdate(sql);
         update.setParameter("id", null);
         update.setParameter("transactionId", this.id);
@@ -250,7 +257,7 @@ public class Transaction extends Model {
      * @return how many items were removed
      */
     public int removeItems() {
-        String sql = "UPDATE transactions SET transaction_id = :id, purchased = false WHERE transaction_id = :transactionId";
+        String sql = "UPDATE items SET transaction_id = :id, purchased = false WHERE transaction_id = :transactionId;";
         SqlUpdate update = Ebean.createSqlUpdate(sql);
         update.setParameter("id", null);
         update.setParameter("transactionId", this.id);
@@ -278,8 +285,13 @@ public class Transaction extends Model {
      * @return live sum of all item prices
      */
     private Double sumItemValues() {
-        String sql = "SELECT SUM(value) FROM items WHERE transaction_id = :id";
-        return Ebean.createSqlQuery(sql).setParameter("id", this.id).findUnique().getDouble("sum");
+        String sql = "SELECT SUM(price) FROM items WHERE transaction_id = :id;";
+        Double val = Ebean.createSqlQuery(sql).setParameter("id", this.id).findUnique().getDouble("sum");
+        if (val == null) {
+            return 0.0;
+        } else {
+            return val;
+        }
     }
 
     /**

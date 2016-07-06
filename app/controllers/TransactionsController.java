@@ -6,6 +6,7 @@ import play.mvc.*;
 import models.*;
 import views.html.transactions.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -57,7 +58,8 @@ public class TransactionsController extends GBController {
             return badRequest(views.html.transactions.create.render(sale, transactionForm));
         } else {
             Transaction transaction = new Transaction(sale, currentUser());
-            transaction.customerName = transactionForm.data().get("customerName");
+            transaction.customerName = transactionForm.get().customerName;
+            transaction.save();
             return redirect("/transactions/" + transaction.id + "/items");
         }
     }

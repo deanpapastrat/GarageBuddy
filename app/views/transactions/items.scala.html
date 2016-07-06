@@ -1,1 +1,89 @@
 @(transaction: Transaction, addedItems: List[Item], availableItems: List[Item])
+@main("Transaction #" + transaction.id, "Sales") {
+    @sales.nav(transaction.sale, "transactions")
+    <h3>
+        Modify Items - #@transaction.id
+        <a class="btn btn-success btn-sm pull-right" href="/transactions/@transaction.id">
+            <i class="fa fa-check">&nbsp;</i>
+            Finished Adding
+        </a>
+    </h3>
+    <hr class="spacer"/>
+    <h4>Added Items</h4>
+    @if(addedItems != null && addedItems.length > 0) {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Price</th>
+                    <th>Description</th>
+                    <th>ID</th>
+                    <th>Created By</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(item <- addedItems) {
+                <tr>
+                    <td>@item.name</td>
+                    <td>@item.formattedPrice()</td>
+                    <td>@item.description</td>
+                    <td>@item.id</td>
+                    <td>@item.createdBy.name</td>
+                    <td>
+                        <a class="btn btn-xs btn-danger" href="/transactions/@transaction.id/items/@item.id/remove">
+                            <i class="fa fa-minus">&nbsp;</i>
+                            Remove Item
+                        </a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    } else {
+        <div class="panel text-center">
+            <div class="panel-body">
+                <h4>No items have been added to this transaction.</h4>
+            </div>
+        </div>
+    }
+
+    <h4>Available Items</h4>
+    @if(availableItems != null && availableItems.length > 0) {
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Price</th>
+                    <th>Description</th>
+                    <th>ID</th>
+                    <th>Created By</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+            @for(item <- availableItems) {
+                <tr>
+                    <td>@item.name</td>
+                    <td>@item.formattedPrice()</td>
+                    <td>@item.description</td>
+                    <td>@item.id</td>
+                    <td>@item.createdBy.name</td>
+                    <td>
+                        <a class="btn btn-xs btn-success" href="/transactions/@transaction.id/items/@item.id/add">
+                            <i class="fa fa-plus">&nbsp;</i>
+                            Add Item
+                        </a>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    } else {
+        <div class="panel text-center">
+            <div class="panel-body">
+                <h4>No more items are available to add.</h4>
+            </div>
+        </div>
+    }
+}

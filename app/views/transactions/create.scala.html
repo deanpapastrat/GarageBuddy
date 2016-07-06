@@ -13,7 +13,7 @@
                 @common.formErrors(transactionForm.asInstanceOf[Form[Object]])
                 <div class="form-group">
                     <label>Customer Name</label>
-                    <input class="form-control" type="text" name="name" required placeholder="John Doe" value="@transactionForm("customerName").value()">
+                    <input class="form-control" type="text" name="customerName" required placeholder="John Doe" value="@transactionForm("customerName").value()">
                 </div>
                 <div class="action-btns">
                     <button class="btn btn-success pull-right" type="submit">Start Transaction</button>
