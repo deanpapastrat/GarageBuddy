@@ -1,28 +1,28 @@
 @(sale: Sale)
 
 @main("Delete " + sale.name, "Sales") {
-  <div class="page-header">
-    <h1>Delete "@sale.name"? <small>(you probably don't want to)</small></h1>
-  </div>
-  <p>
-    <strong>Deleting this sale</strong> will cause you to lose all of your data from this sale permanently.
-    <br/>
-    <br/>
-    All sale data, items, and user permissions will be destroyed immediately.
-  </p>
-  <hr class="spacer"/>
-  <p class="text-danger">
-    <strong>Are you sure you want to delete "@sale.name"?</strong>
-  </p>
-  <hr class="spacer spacer-huge"/>
-  <form action="/sales/@sale.id/delete" method="POST">
-    <a class="btn btn-link btn-lg" href="/sales/@sale.id">
-      <i class="fa fa-angle-left">&nbsp;</i>
-      Return to Sale Dashboard
-    </a>
-    <button class="btn btn-danger btn-lg" type="submit">
-      <i class="fa fa-times">&nbsp;</i>
-      Delete Sale
-    </button>
-  </form>
+    <div class="page-header">
+        <h1>Delete "@sale.name"? <small>(you probably don't want to)</small></h1>
+    </div>
+    <p>
+        <strong>Deleting this sale</strong> will cause you to lose all of your data from this sale permanently.
+        <br/>
+        <br/>
+        All sale data, items, and user permissions will be destroyed immediately.
+    </p>
+    <hr class="spacer"/>
+    <p class="text-danger">
+        <strong>Are you sure you want to delete "@sale.name"?</strong>
+    </p>
+    <hr class="spacer spacer-huge"/>
+    <form action="/sales/@sale.id/delete" method="POST">
+        <a class="btn btn-link btn-lg" href="/sales/@sale.id">
+            <i class="fa fa-angle-left">&nbsp;</i>
+            Return to Sale Dashboard
+        </a>
+        <button class="btn btn-danger btn-lg" type="submit">
+            <i class="fa fa-times">&nbsp;</i>
+            Delete Sale
+        </button>
+    </form>
 }

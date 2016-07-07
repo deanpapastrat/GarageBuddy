@@ -1,51 +1,58 @@
 @(sale: Sale, tab: String)
+
 <div class="page-header">
-  <h1>
-    @sale.name <small>@sale.getFormattedStartDate to @sale.getFormattedEndDate</small>
-  </h1>
+    <h1>
+        @sale.name <small>@sale.getFormattedStartDate to @sale.getFormattedEndDate</small>
+    </h1>
 </div>
+
 <ul class="nav nav-tabs">
-  @if(tab.equals("dashboard")) {
-    <li class="active">
-  } else {
-    <li>
-  }
-    <a href="/sales/@sale.id">Dashboard</a>
-  </li>
-  @if(tab.equals("items")) {
-    <li class="active">
-  } else {
-    <li>
-  }
-    <a href="/sales/@sale.id/items">Items</a>
-  </li>
-  @if(tab.equals("sell")) {
-    <li class="active">
-  } else {
-    <li>
+    @if(tab.equals("dashboard")) {
+        <li class="active">
+    } else {
+        <li>
     }
-    <a href="/sales/@sale.id/sell">Sell</a>
-  </li>
-  @if(tab.equals("transactions")) {
-    <li class="active">
-  } else {
-    <li>
+        <a href="/sales/@sale.id">Dashboard</a>
+    </li>
+
+    @if(tab.equals("items")) {
+        <li class="active">
+    } else {
+        <li>
     }
-<a href="/sales/@sale.id/transactions">Transactions</a>
-</li>
-  @if(tab.equals("report")) {
-    <li class="active">
-  } else {
-    <li>
+        <a href="/sales/@sale.id/items">Items</a>
+    </li>
+
+    @if(tab.equals("sell")) {
+        <li class="active">
+    } else {
+        <li>
     }
-    <a href="/sales/@sale.id/report">Financial Report</a>
-  </li>
-  @if(tab.equals("settings")) {
-    <li class="active">
-  } else {
-    <li>
+        <a href="/sales/@sale.id/sell">Sell</a>
+    </li>
+
+    @if(tab.equals("transactions")) {
+        <li class="active">
+    } else {
+        <li>
     }
-    <a href="/sales/@sale.id/edit">Settings</a>
-  </li>
+        <a href="/sales/@sale.id/transactions">Transactions</a>
+    </li>
+
+      @if(tab.equals("report")) {
+          <li class="active">
+      } else {
+          <li>
+      }
+          <a href="/sales/@sale.id/report">Financial Report</a>
+      </li>
+
+      @if(tab.equals("settings")) {
+          <li class="active">
+      } else {
+          <li>
+      }
+          <a href="/sales/@sale.id/edit">Settings</a>
+    </li>
 </ul>
-<hr class="spacer">
+<hr class="spacer"/>

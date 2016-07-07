@@ -1,28 +1,28 @@
 @(transaction: Transaction)
 
 @main("Cancel Transaction: " + transaction.id, "Sales") {
-  <div class="page-header">
-    <h1>Cancel transaction #@transaction.id?
-  </div>
-  <p>
-    <strong>Cancelling this transaction</strong> will cause you to lose all of your data about this transaction permanently.
-    <br/>
-    <br/>
-    All items will be returned to the list of available items.
-  </p>
-  <hr class="spacer"/>
-  <p class="text-danger">
-    <strong>Are you sure you want to cancel transaction #@transaction.id"?</strong>
-  </p>
-  <hr class="spacer spacer-huge"/>
-  <form action="/transactions/@transaction.id/delete" method="POST">
-    <a class="btn btn-link btn-lg" href="/transactions/@transaction.id">
-      <i class="fa fa-angle-left">&nbsp;</i>
-      Return to Transaction
-    </a>
-    <button class="btn btn-danger btn-lg" type="submit">
-      <i class="fa fa-times">&nbsp;</i>
-      Delete Transaction
-    </button>
-  </form>
+    <div class="page-header">
+        <h1>Cancel transaction #@transaction.id?</h1>
+    </div>
+    <p>
+        <strong>Cancelling this transaction</strong> will cause you to lose all of your data about this transaction permanently.
+        <br/>
+        <br/>
+        All items will be returned to the list of available items.
+    </p>
+    <hr class="spacer"/>
+    <p class="text-danger">
+        <strong>Are you sure you want to cancel transaction #@transaction.id"?</strong>
+    </p>
+    <hr class="spacer spacer-huge"/>
+    <form action="/transactions/@transaction.id/delete" method="POST">
+        <a class="btn btn-link btn-lg" href="/transactions/@transaction.id">
+            <i class="fa fa-angle-left">&nbsp;</i>
+            Return to Transaction
+        </a>
+        <button class="btn btn-danger btn-lg" type="submit">
+            <i class="fa fa-times">&nbsp;</i>
+            Delete Transaction
+        </button>
+    </form>
 }
