@@ -20,8 +20,18 @@
           <td>@trans.id</td>
           <td>@trans.customerName</td>
           <td>@trans.seller.name</td>
-          <td> </td>
-          <td>@trans.value</td>
+          <td>
+            <table>
+              @for(item <- trans.items) {
+                <tr>
+                  <td>@item.name</td>
+                  <td>@item.formattedPrice()</td>
+                </tr>
+              }
+            </table>
+          </td>
+
+          <td>@trans.formattedValue()</td>
         </tr>
       }
       </tbody>
