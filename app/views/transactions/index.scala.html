@@ -1,8 +1,7 @@
-@(sale: Sale, transactions: List[Transaction], query: String)
+@(sale: Sale, transactions: List[Transaction], query: String, currentUser: User)
 
 @main(sale.name + ": Transactions", "Sales") {
-    @sales.nav(sale, "transactions")
-
+  @sales.nav(sale, "transactions", currentUser: User)
     @if((query != null && !query.isEmpty()) || (transactions != null && transactions.length > 0)) {
         @common.searchForm("Want to find a transaction? Search for it by customer name, customer email, or id here:", "Search by customer name, email, or transaction id", query)
         <table class="table table-striped">

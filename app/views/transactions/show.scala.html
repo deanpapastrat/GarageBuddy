@@ -1,6 +1,6 @@
-@(transaction: Transaction, items: List[Item])
+@(transaction: Transaction, items: List[Item], currentUser: User)
 @main("Transaction #" + transaction.id, "Sales") {
-    @sales.nav(transaction.sale, "transactions")
+    @sales.nav(transaction.sale, "transactions", currentUser: User)
     <h3>
         Transaction Summary - #@transaction.id
     </h3>

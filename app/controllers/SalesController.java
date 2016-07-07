@@ -6,6 +6,7 @@ import play.mvc.*;
 import models.*;
 import views.html.sales.*;
 import java.util.List;
+import java.util.Collections;
 
 /**
  * Manages endpoints
@@ -20,7 +21,10 @@ public class SalesController extends GBController {
      */
     @Security.Authenticated(Secured.class)
     public Result index() {
-        return ok(views.html.sales.index.render("Sales", "Sales", Sale.find.all(), currentUser()));
+        List<Sale> allSales = Sale.find.all();
+        Collections.sort(allSales,
+                (o1, o2) -> o1.getStartDate().compareTo(o2.getStartDate()));
+        return ok(views.html.sales.index.render("Sales", "Sales", allSales, currentUser()));
     }
 
     /**
@@ -29,8 +33,10 @@ public class SalesController extends GBController {
      */
     @Security.Authenticated(Secured.class)
     public Result create() {
-        return ok(views.html.sales.create.render("New Sale", "Sales", emptyModelForm(Sale.class)));
+        return ok(views.html.sales.create.render("New Sale", "Sales", emptyModelForm(Sale.class), currentUser()));
     }
+
+
 
     /**
      * Validates sale form and creates a sale with the provided data
@@ -41,12 +47,21 @@ public class SalesController extends GBController {
         Form<Sale> saleForm = modelForm(Sale.class);
 
         if (saleForm.hasErrors()) {
-            return badRequest(views.html.sales.create.render("New Sale", "Sales", saleForm));
+            return badRequest(views.html.sales.create.render("New Sale", "Sales", saleForm, currentUser()));
         } else {
             Sale sale = saleForm.get();
             sale.addUser(currentUser().email, Sale.Role.SALE_ADMIN);
-            sale.save();
-            return redirect("/sales/" + Integer.toString(sale.id));
+
+            // if this next line looks weird, it's because we have to allow for sales that start and end on the same day
+            if (!sale.getEndDate().before(sale.getStartDate())) {
+                flash("success", "Sale created");
+                sale.save();
+                return redirect("/sales/" + Integer.toString(sale.id));
+            }
+            else {
+                flash("error", "The end date can't be before the start date");
+                return badRequest(views.html.sales.create.render("New Sale", "Sales", saleForm, currentUser()));
+            }
         }
     }
 
@@ -57,7 +72,7 @@ public class SalesController extends GBController {
     @Security.Authenticated(Secured.class)
     public Result edit(int id) {
         Sale sale = Sale.findById(id);
-        return ok(views.html.sales.edit.render(sale.name, "Sales", sale, modelForm(sale)));
+        return ok(views.html.sales.edit.render(sale.name, "Sales", sale, modelForm(sale), currentUser()));
     }
 
     /**
@@ -70,13 +85,20 @@ public class SalesController extends GBController {
         Form<Sale> saleForm = modelForm(Sale.class);
 
         if (saleForm.hasErrors()) {
-            return badRequest(views.html.sales.edit.render(sale.name, "Sales", sale, saleForm));
-        } else {
+            return badRequest(views.html.sales.edit.render(sale.name, "Sales", sale, saleForm, currentUser()));
+        }
+        else {
             sale.name = formParam("name");
             sale.setFormattedStartDate(formParam("startDate"));
             sale.setFormattedEndDate(formParam("endDate"));
-            sale.save();
-            return redirect("/sales/" + Integer.toString(sale.id));
+            if (!sale.getEndDate().before(sale.getStartDate())) {
+                sale.save();
+                return redirect("/sales/" + Integer.toString(sale.id));
+            }
+            else {
+                flash("error", "The end date can't be before the start date");
+                return badRequest(views.html.sales.edit.render(sale.name, "Sales", sale, saleForm, currentUser()));
+            }
         }
     }
 
@@ -90,7 +112,7 @@ public class SalesController extends GBController {
     public Result show(int id) {
         Sale sale = Sale.findById(id);
         List<Item> queryItems = queryItems(Item.class, sale.findItems(), "name", "name", sale.items);
-        return ok(views.html.sales.show.render(sale.name, "Sales", sale, queryItems, queryString()));
+        return ok(views.html.sales.show.render(sale.name, "Sales", sale, queryItems, queryString(), currentUser()));
     }
 
     /**
@@ -103,7 +125,7 @@ public class SalesController extends GBController {
         Sale sale = Sale.findById(id);
         List<Transaction> trans = sale.transactions;
 
-        return ok(views.html.sales.report.render(sale.name, "Financial Report", sale, trans));
+        return ok(views.html.sales.report.render(sale.name, "Financial Report", sale, trans, currentUser()));
     }
 
 
@@ -114,7 +136,7 @@ public class SalesController extends GBController {
     @Security.Authenticated(Secured.class)
     public Result sell(int id) {
         Sale sale = Sale.findById(id);
-        return ok(views.html.sales.sell.render(sale));
+        return ok(views.html.sales.sell.render(sale, currentUser()));
     }
 
     /**
@@ -124,7 +146,7 @@ public class SalesController extends GBController {
     @Security.Authenticated(Secured.class)
     public Result delete(int id) {
         Sale sale = Sale.findById(id);
-        return ok(views.html.sales.delete.render(sale));
+        return ok(views.html.sales.delete.render(sale, currentUser()));
     }
 
     /**
@@ -148,6 +170,6 @@ public class SalesController extends GBController {
     public Result tags(int id) {
         Sale sale = Sale.findById(id);
         List<Item> tagItems = queryItems(Item.class, sale.findItems(), "name", "name", sale.items);
-        return ok(views.html.sales.tags.render(tagItems));
+        return ok(views.html.sales.tags.render(tagItems, currentUser()));
     }
 }

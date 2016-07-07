@@ -108,7 +108,7 @@ public class ItemsController extends GBController {
         Item item = Item.findById(id);
         List<Item> items = new ArrayList<Item>();
         items.add(item);
-        return ok(views.html.sales.tags.render(items));
+        return ok(views.html.sales.tags.render(items, currentUser()));
     }
 
 

@@ -16,7 +16,7 @@ public class UsersController extends GBController {
      */
     @Security.Authenticated(Secured.class)
     public Result index() {
-        return ok(views.html.users.index.render("Users", "Users", User.find.all()));
+        return ok(views.html.users.index.render("Users", "Users", User.find.all(), currentUser()));
     }
 
     /**
@@ -25,7 +25,7 @@ public class UsersController extends GBController {
      */
     @Security.Authenticated(Secured.class)
     public Result profile() {
-        return ok(views.html.users.profile.render("Profile", "Profile", modelForm(currentUser())));
+        return ok(views.html.users.profile.render("Profile", "Profile", modelForm(currentUser()), currentUser()));
     }
 
     /**
@@ -57,7 +57,7 @@ public class UsersController extends GBController {
             flash("success", "Profile details saved.");
             return redirect("/profile");
         } else {
-            return badRequest(views.html.users.profile.render("Profile", "Profile", userForm));
+            return badRequest(views.html.users.profile.render("Profile", "Profile", userForm, currentUser()));
         }
     }
 
@@ -67,7 +67,7 @@ public class UsersController extends GBController {
      */
     @Security.Authenticated(Secured.class)
     public Result deleteProfile() {
-        return ok(views.html.users.deleteProfile.render("Profile", "Profile"));
+        return ok(views.html.users.deleteProfile.render("Profile", "Profile", currentUser()));
     }
 
     /**
