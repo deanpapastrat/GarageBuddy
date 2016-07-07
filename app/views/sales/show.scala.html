@@ -2,7 +2,6 @@
 
 @main(page, nav) {
     @sales.nav(sale, "items", currentUser: User)
-
     @if((query != null && !query.isEmpty()) || (items != null && items.length > 0)) {
         <form class="form-search">
             <h5>Want to find an item? Search for it by name here:</h5>
@@ -26,6 +25,7 @@
                 <th>Price</th>
                 <th>Description</th>
                 <th>ID</th>
+                <th>Purchased</th>
                 <th>Created By</th>
             </tr>
             </thead>
@@ -40,6 +40,7 @@
                         <td>@item.formattedPrice()</td>
                         <td>@item.description</td>
                         <td>@item.id</td>
+                        <td>@item.purchased.toString().capitalize</td>
                         <td>@item.createdBy.name</td>
                     </tr>
                 }
@@ -57,7 +58,7 @@
             <i class="fa fa-plus">&nbsp;</i>
             Add New Item
         </a>
-        <a class="btn btn-default" href="/sales/@sale.id/tags">
+        <a class="btn btn-default" href="/sales/@sale.id/tags" target="_blank">
             <i class="fa fa-print">&nbsp;</i>
             Print Tags
         </a>
