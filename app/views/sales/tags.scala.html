@@ -1,0 +1,44 @@
+@(items: List[Item])
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Print Tags</title>
+    <link href="@routes.Assets.versioned("stylesheets/tag.css")" rel="stylesheet" media="screen">
+    <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
+    <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' media="all" type='text/css'>
+</head>
+<body>
+    <div class="tag-container">
+        <ul class="tag-list">
+            @for(item <- items) {
+            <li>
+                <header class="tag-header">
+                    <h2>@item.name</h2>
+
+                    <div class="tag-price">
+                        <span class="tag-currency">$</span>
+                        <span class="tag-value">@item.formattedTagPrice()</span>
+                    </div>
+                </header>
+
+                <div class="tag-body">
+                    <ul class="tag-body-features">
+                        <li>@item.description</li>
+                        <li>Sold by @item.createdBy.name</li>
+                        <li>Item id: <em>@item.id</em></li>
+                    </ul>
+                </div>
+
+                <footer class="tag-footer">
+                    <text>Thanks for shopping with GarageBuddy!</text>
+                </footer>
+            </li>
+            }
+
+        </ul>
+    </div>
+</body>
+</html>
+

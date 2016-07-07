@@ -1,0 +1,51 @@
+@(sale: Sale, transactions: List[Transaction], query: String)
+
+@main(sale.name + ": Transactions", "Sales") {
+  @sales.nav(sale, "transactions")
+
+  @if((query != null && !query.isEmpty()) || (transactions != null && transactions.length > 0)) {
+    @common.searchForm("Want to find a transaction? Search for it by customer name, customer email, or id here:", "Search by customer name, email, or transaction id", query)
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Customer Name</th>
+          <th>Seller</th>
+          <th>Value</th>
+          <th>Created At</th>
+        </tr>
+      </thead>
+
+      @if(transactions != null && transactions.length > 0) {
+        <tbody>
+        @for(transaction <- transactions) {
+          <tr>
+            <td>
+              <a href="/transactions/@transaction.id">@transaction.id</a>
+            </td>
+            <td>@transaction.customerName</td>
+            <td>@transaction.seller.name</td>
+            <td>@transaction.formattedValue()</td>
+            <td>@transaction.formattedCreatedAt()</td>
+          </tr>
+        }
+        </tbody>
+      </table>
+  } else {
+      </table>
+      @common.noResults(query)
+    }
+  } else {
+    <div class="jumbotron">
+      <h1>You haven't sold anything. <i class="fa fa-frown-o"></i></h1>
+      <p>
+        You need to start selling stuff to make money. You don't want a Guavian Death Gang or Kanjiclub
+        to come hunt you down when you don't have money.
+      </p>
+      <a class="btn btn-success btn-lg" href="/sales/@sale.id/transactions/new">
+        <i class="fa fa-usd">&nbsp;</i>
+        Start New Transaction
+      </a>
+    </div>
+  }
+}

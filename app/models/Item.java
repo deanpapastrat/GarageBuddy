@@ -2,6 +2,7 @@ package models;
 
 import javax.persistence.*;
 import com.avaje.ebean.Model;
+import lib.Formatter;
 import play.data.validation.*;
 import java.text.DecimalFormat;
 
@@ -25,6 +26,10 @@ public class Item extends Model {
     public User soldBy; // user who physically sold the item to a customer
 
     @ManyToOne
+    @JoinColumn(name="transaction_id", referencedColumnName = "id")
+    public Transaction transaction; // user who physically sold the item to a customer
+
+    @ManyToOne
     @JoinColumn(name="sale_id", referencedColumnName = "id")
     public Sale sale;  // user who is Selling the item
 
@@ -40,10 +45,12 @@ public class Item extends Model {
 
     public boolean purchased = false; // self explanatory
     public double soldFor;  // amount that the item actually sold for
-    public static Finder<String, Item> find = new Finder<String, Item>(Item.class);
+    public static final Finder<String, Item> find = new Finder<String, Item>(Item.class);
 
     /* CONSTRUCTORS & EQUIVALENCY */
     /**
+     * Creates an item
+     *
      * @param creator the user adding the item to GarageBuddy
      * @param name name of the item
      * @param price sell price of the item
@@ -53,6 +60,8 @@ public class Item extends Model {
     }
 
     /**
+     * Creates an item
+     *
      * @param creator the user adding the item to GarageBuddy
      * @param name name of the item
      * @param price sell price of the item
@@ -87,6 +96,7 @@ public class Item extends Model {
 
     /**
      * Checks if all properties of the object are equivalent
+     *
      * @param obj an object to compare
      * @return
      */
@@ -115,6 +125,7 @@ public class Item extends Model {
 
     /**
      * Adds an item to a sale
+     *
      * @param saleId integer of the sale's ID
      * @return whether or not the record was modified
      */
@@ -124,6 +135,7 @@ public class Item extends Model {
 
     /**
      * Adds an item to a sale
+     *
      * @param saleToAddTo sale to add the item to
      * @return whether or not the record was modified
      */
@@ -142,6 +154,7 @@ public class Item extends Model {
 
     /**
      * Removes item from any sale
+     *
      * @return whether or not the record was modified
      */
     public boolean removeFromSale() throws ItemPurchasedException {
@@ -159,6 +172,7 @@ public class Item extends Model {
 
     /**
      * Removes item from the designated sale, if it is currently part of the sale
+     *
      * @param saleId id of the sale to remove the item from
      * @return whether or not the record was modified
      */
@@ -168,6 +182,7 @@ public class Item extends Model {
 
     /**
      * Removes item from the designated sale, if it is currently part of the sale
+     *
      * @param saleToRemoveFrom sale to remove the item from
      * @return whether or not the record was modified
      */
@@ -184,23 +199,35 @@ public class Item extends Model {
 
     /* FORMATTERS */
 
+    /**
+     * Returns the price in a human-readable string format
+     *
+     * @return the price, with a dollar sign and to 2 decimal places
+     */
     public String formattedPrice() {
-        return formatPrice(price);
+        return Formatter.currency(price);
     }
+    public String formattedTagPrice() { return formatTagPrice(price); }
 
+    /**
+     * Returns the minimum price in a human-readable string format
+     *
+     * @return the minum price, with a dollar sign and to 2 decimal places
+     */
     public String formattedMinprice() {
-        return formatPrice(minprice);
+        return Formatter.currency(minprice);
     }
 
-    static String formatPrice(Double number) {
+    static String formatTagPrice(Double number) {
         DecimalFormat df = new DecimalFormat("#.00");
-        return "$" + df.format(number);
+        return df.format(number);
     }
 
     /* PREBUILT QUERIES */
 
     /**
      * Returns an item from an ID
+     *
      * @param id id of item we want to find
      * @return an item with the specified id
      */

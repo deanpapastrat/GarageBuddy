@@ -1,11 +1,8 @@
 @(page: String, nav:String, sale: Sale, saleForm: Form[Sale])
 
 @main(page, nav) {
-  <div class="page-header">
-    <h1>
-      Updating @sale.name <small>@sale.getFormattedStartDate to @sale.getFormattedEndDate</small>
-    </h1>
-  </div>
+  @sales.nav(sale, "settings")
+
   <div class="row">
     <div class="col-sm-8">
       <form action="/sales/@sale.id/edit" method="POST">

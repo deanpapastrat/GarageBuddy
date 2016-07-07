@@ -1,0 +1,25 @@
+@(sale: Sale, transactionForm: Form[Transaction])
+
+@main("New Transaction", "Sales") {
+    <div class="page-header">
+        <h1>
+            New Transaction <small>fill in the customer's name to get started</small>
+        </h1>
+    </div>
+    <div class="row">
+        <div class="col-sm-8">
+            <form action="/sales/@sale.id/transactions/new" method="POST">
+                @common.flashNotification()
+                @common.formErrors(transactionForm.asInstanceOf[Form[Object]])
+                <div class="form-group">
+                    <label>Customer Name</label>
+                    <input class="form-control" type="text" name="customerName" required placeholder="John Doe" value="@transactionForm("customerName").value()">
+                </div>
+                <div class="action-btns">
+                    <button class="btn btn-success pull-right" type="submit">Start Transaction</button>
+                    <a class="btn btn-default pull-right" href="/sales/@sale.id/sell">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+}

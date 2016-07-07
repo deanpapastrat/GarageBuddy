@@ -1,0 +1,11 @@
+@(query: String = "")
+
+<div class="panel text-center">
+  <div class="panel-body">
+    @if(query.isEmpty()) {
+      <h3>No results were found.</h3>
+    } else {
+      <h3>No results were found for query: "@query"</h3>
+    }
+  </div>
+</div>

@@ -1,15 +1,8 @@
 @(page: String, nav:String, sale: Sale, items: List[Item], query: String)
 
 @main(page, nav) {
-    <div class="page-header">
-        <h1>
-            @sale.name <small>@sale.getFormattedStartDate to @sale.getFormattedEndDate</small>
-            <a class="pull-right btn btn-warning" href="/sales/@sale.id/edit">
-                <i class="fa fa-pencil">&nbsp;</i>
-                Edit Sale
-            </a>
-        </h1>
-    </div>
+    @sales.nav(sale, "items")
+
     @if((query != null && !query.isEmpty()) || (items != null && items.length > 0)) {
         <form class="form-search">
             <h5>Want to find an item? Search for it by name here:</h5>
@@ -60,7 +53,14 @@
                 </div>
             </div>
         }
-        <a class="btn btn-success" href="/sales/@sale.id/items/new">Add New Item</a>
+        <a class="btn btn-success" href="/sales/@sale.id/items/new">
+            <i class="fa fa-plus">&nbsp;</i>
+            Add New Item
+        </a>
+        <a class="btn btn-default" href="/sales/@sale.id/tags" target="_blank">
+            <i class="fa fa-print">&nbsp;</i>
+            Print Tags
+        </a>
     } else {
         <div class="jumbotron">
             <h1>You haven't added any items.</h1>
@@ -70,7 +70,10 @@
                 <br/>
                 <small><i>And if you're anything like Cave Johnson, you'll use that lemon for some exciting things.</i></small>
             </p>
-            <a class="btn btn-lg btn-success" href="/sales/@sale.id/items/new">Add New Item</a>
+            <a class="btn btn-lg btn-success" href="/sales/@sale.id/items/new">
+                <i class="fa fa-plus">&nbsp;</i>
+                Add New Item
+            </a>
         </div>
     }
 }

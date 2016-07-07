@@ -1,0 +1,32 @@
+@(sale: Sale)
+
+@main("Sell: " + sale.name, "Sales") {
+  @sales.nav(sale, "sell")
+
+  <div class="row">
+    <div class="col-sm-3">
+      <a class="btn btn-block btn-success btn-lg" href="/sales/@sale.id/transactions/new">
+        <i class="fa fa-usd">&nbsp;</i>
+        Start Transaction
+      </a>
+    </div>
+    <div class="col-sm-3">
+      <a class="btn btn-block btn-info btn-lg" href="/sales/@sale.id/tags">
+        <i class="fa fa-tags">&nbsp;</i>
+        Print Item Tags
+      </a>
+    </div>
+    <div class="col-sm-3">
+      <a class="btn btn-block btn-info btn-lg" href="/sales/@sale.id/transactions">
+        <i class="fa fa-search">&nbsp;</i>
+        Transactions List
+      </a>
+    </div>
+    <div class="col-sm-3">
+      <a class="btn btn-block btn-warning btn-lg" href="/sales/@sale.id/report">
+        <i class="fa fa-line-chart">&nbsp;</i>
+        Financial Report
+      </a>
+    </div>
+  </div>
+}
