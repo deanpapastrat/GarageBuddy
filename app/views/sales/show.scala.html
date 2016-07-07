@@ -26,6 +26,7 @@
                 <th>Price</th>
                 <th>Description</th>
                 <th>ID</th>
+                <th>Purchased</th>
                 <th>Created By</th>
             </tr>
             </thead>
@@ -40,6 +41,7 @@
                         <td>@item.formattedPrice()</td>
                         <td>@item.description</td>
                         <td>@item.id</td>
+                        <td>@item.purchased.toString().capitalize</td>
                         <td>@item.createdBy.name</td>
                     </tr>
                 }
