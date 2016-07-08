@@ -72,7 +72,12 @@ public class SalesController extends GBController {
     @Security.Authenticated(Secured.class)
     public Result edit(int id) {
         Sale sale = Sale.findById(id);
-        return ok(views.html.sales.edit.render(sale.name, "Sales", sale, modelForm(sale), currentUser()));
+        if (sale.isClosed()) {
+            flash("warning", "This sale has been closed, and can no longer be edited");
+        }
+        else {
+            return ok(views.html.sales.edit.render(sale.name, "Sales", sale, modelForm(sale), currentUser()));
+        }
     }
 
     /**
@@ -91,6 +96,10 @@ public class SalesController extends GBController {
             sale.name = formParam("name");
             sale.setFormattedStartDate(formParam("startDate"));
             sale.setFormattedEndDate(formParam("endDate"));
+            if (formParam("close") != null) {
+                sale.close();
+                flash("warning", "This sale has been closed, and can no longer be edited");
+            }
             if (!sale.getEndDate().before(sale.getStartDate())) {
                 sale.save();
                 return redirect("/sales/" + Integer.toString(sale.id));
@@ -136,7 +145,12 @@ public class SalesController extends GBController {
     @Security.Authenticated(Secured.class)
     public Result sell(int id) {
         Sale sale = Sale.findById(id);
-        return ok(views.html.sales.sell.render(sale, currentUser()));
+        if (sale.isClosed()) {
+            flash("warning", "This sale has been closed, and can no longer be edited");
+        }
+        else {
+            return ok(views.html.sales.sell.render(sale, currentUser()));
+        }
     }
 
     /**
@@ -170,6 +184,11 @@ public class SalesController extends GBController {
     public Result tags(int id) {
         Sale sale = Sale.findById(id);
         List<Item> tagItems = queryItems(Item.class, sale.findItems(), "name", "name", sale.items);
-        return ok(views.html.sales.tags.render(tagItems, currentUser()));
+        if (sale.isClosed()) {
+            flash("warning", "This sale has been closed, and can no longer be edited");
+        }
+        else {
+            return ok(views.html.sales.tags.render(tagItems, currentUser()));
+        }
     }
 }

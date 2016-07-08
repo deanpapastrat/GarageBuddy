@@ -22,6 +22,19 @@
                 <div class="form-group">
                     <label>End Date</label>
                     <input class="form-control" type="date" name="endDate" required value="@saleForm("endDate").value()">
+                    <p>
+                        Sales with End Dates earlier than today will not be shown in the list of Sales.
+                    </p>
+                </div>
+                
+                <div class="form-group">
+                    <label>Close Sale</label>
+                    <p>
+                        Are you sure? Closing a sale prevents it from being edited. Once closed, a Sale can never be reopened!
+                    </p>
+                    <p>
+                        Yes, I'm sure. Please close the sale! <input class="form-control" type="checkbox" name="close" value="markclosed">
+                    </p>
                 </div>
 
                 <div class="action-btns">

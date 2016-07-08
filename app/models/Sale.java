@@ -21,7 +21,7 @@ import java.util.Map;
  * Represents a sale in GarageBuddy
  *
  * @author Z. Lin and Dean Papastrat
- * @version 1.0.0
+ * @version 1.0.7
  */
 @Entity
 @Table(name="sales")
@@ -40,6 +40,9 @@ public class Sale extends Model {
 
     @Constraints.Required @Formats.DateTime(pattern="yyyy-MM-dd")
     public Date endDate = new Date();
+    
+    // sale closed flag - TG
+    private boolean isClosed;
 
     @DbJsonB
     public Map<String, Long> users = new HashMap<>();
@@ -109,6 +112,7 @@ public class Sale extends Model {
     public Sale(User saleAdmin) {
         this.users = new HashMap<>();
         this.addUser(saleAdmin.email, Role.SALE_ADMIN);
+        this.isClosed = false;
     }
 
 
@@ -323,5 +327,20 @@ public class Sale extends Model {
      */
     public ExpressionList<Transaction> findTransactions() {
         return Transaction.find.where().eq("sale_id", this.id);
+    }
+    
+    /**
+     * Closes a Sale
+     */
+    public void close() {
+        this.isClosed = true;
+    }
+    
+    /**
+     * Checks to see if a Sale is closed
+     * @return boolean true if the sale was closed, false otherwise
+     */
+    public boolean isClosed() {
+        return this.isClosed;
     }
 }

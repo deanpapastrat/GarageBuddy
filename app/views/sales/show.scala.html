@@ -54,27 +54,42 @@
                 </div>
             </div>
         }
-        <a class="btn btn-success" href="/sales/@sale.id/items/new">
-            <i class="fa fa-plus">&nbsp;</i>
-            Add New Item
-        </a>
-        <a class="btn btn-default" href="/sales/@sale.id/tags" target="_blank">
-            <i class="fa fa-print">&nbsp;</i>
-            Print Tags
-        </a>
-    } else {
-        <div class="jumbotron">
-            <h1>You haven't added any items.</h1>
-            <p>
-                What good is a garage sale with no items? Well, really it isn't a garage sale at all. Let's fix that.
-                Add an item by clicking that big green button below. You could add a lemon, for example.
-                <br/>
-                <small><i>And if you're anything like Cave Johnson, you'll use that lemon for some exciting things.</i></small>
-            </p>
-            <a class="btn btn-lg btn-success" href="/sales/@sale.id/items/new">
+        if (!sale.isClosed()) {
+            <a class="btn btn-success" href="/sales/@sale.id/items/new">
                 <i class="fa fa-plus">&nbsp;</i>
                 Add New Item
             </a>
-        </div>
+            <a class="btn btn-default" href="/sales/@sale.id/tags" target="_blank">
+                <i class="fa fa-print">&nbsp;</i>
+                Print Tags
+            </a>
+        }
+    } else {
+        if (!sale.isClosed()) {
+            <div class="jumbotron">
+                <h1>You haven't added any items.</h1>
+                <p>
+                    What good is a garage sale with no items? Well, really it isn't a garage sale at all. Let's fix that.
+                    Add an item by clicking that big green button below. You could add a lemon, for example.
+                    <br/>
+                    <small><i>And if you're anything like Cave Johnson, you'll use that lemon for some exciting things.</i></small>
+                </p>
+                <a class="btn btn-success" href="/sales/@sale.id/items/new">
+                    <i class="fa fa-plus">&nbsp;</i>
+                    Add New Item
+                </a>
+            </div>
+        }
+        else {
+            <div class="jumbotron">
+                <h1>This sale was closed with no items.</h1>
+                <p>
+                    The user who created this sale has closed it. Normally, this would be a list of all the items that were
+                    at the sale, but it seems like there were no items.
+                    <br/>
+                    <small><i>Try exploring some other sales and see what GarageBuddy can do for you.</i></small>
+                </p>
+            </div>
+        
     }
 }
