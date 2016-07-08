@@ -92,6 +92,7 @@ public class HomeController extends GBController {
         }
 
         if (userForm.hasErrors()) {
+            flash("error", "Form has errors!");
             return badRequest(views.html.home.register.render(userForm));
         } else {
             User user = userForm.get();
