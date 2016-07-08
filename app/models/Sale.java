@@ -181,6 +181,7 @@ public class Sale extends Model {
         return this.users;
     }
 
+
     /**
      * Get the user role of current sale
      * @param email the user name

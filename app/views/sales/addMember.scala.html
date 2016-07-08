@@ -1,0 +1,42 @@
+@(page: String, nav: String, sale: Sale, members: List[String], roles: List[String], currentUser: User)
+
+@main(page, nav) {
+@sales.nav(sale, "members", currentUser: User)
+    <div class="page-header">
+        <h1>
+            Add a new member <small>for sale @sale.name</small>
+        </h1>
+    </div>
+    <div class="row">
+        <div class="col-sm-8">
+            <form action="/sales/@sale.id/addMember" method="POST">
+                @common.flashNotification()
+                <div class="form-group">
+                    <label>Email</label>
+                    <input class="form-control" type="email" name="email" placeholder="arthur@@garagebuddy.org" required>
+                </div>
+
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+                        Choose User Role
+                        <span class="caret"></span></button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+
+                        @for(role <- roles) {
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">@role</a></li>
+                        }
+                    </ul>
+                </div>
+
+
+
+                <div class="action-btns">
+                    <button type="submit" class="pull-right btn btn-success">Submit</button>
+                    <a class="btn btn-default pull-right" href="/sales/@sale.id/members">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+}
+
