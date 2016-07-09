@@ -113,7 +113,7 @@ public class User extends Model {
      * @param email
      * @return true if we find a user with email, and false otherwise
      */
-    public boolean isUser(String email) {
+    public static boolean isUser(String email) {
         User testUser = User.find.byId(email);
         return testUser.exists();
     }
