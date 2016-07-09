@@ -1,0 +1,27 @@
+@(page: String, nav: String, sale: Sale, members: List[String], currentUser: User)
+
+@main(page, nav) {
+    @sales.nav(sale, "members", currentUser: User)
+    <div class="page-header">
+        <h1>
+            Members of @sale.name<small> - Garage Sales suck without your friends. </small>
+            <a class="pull-right btn btn-success" href="/sales/@sale.id/addMember">Add Member</a>
+        </h1>
+    </div>
+    <table class="table table-striped">
+        <thead>
+        <tr>
+            <th>User Email</th>
+            <th>Role</th>
+        </tr>
+        </thead>
+        <tbody>
+        @for(member <- members) {
+        <tr>
+            <td>@member</td>
+            <td>@sale.getUserRole(member)</td>
+        </tr>
+        }
+        </tbody>
+    </table>
+}

@@ -47,12 +47,20 @@
           <a href="/sales/@sale.id/report">Financial Report</a>
       </li>
 
-      @if(tab.equals("settings")) {
-          <li class="active">
-      } else {
-          <li>
-      }
-          <a href="/sales/@sale.id/edit">Settings</a>
+    @if(tab.equals("members")) {
+    <li class="active">
+        } else {
+    <li>
+        }
+        <a href="/sales/@sale.id/members">Members</a>
+    </li>
+
+    @if(tab.equals("settings")) {
+    <li class="active">
+        } else {
+    <li>
+        }
+        <a href="/sales/@sale.id/edit">Settings</a>
     </li>
 </ul>
 <hr class="spacer"/>

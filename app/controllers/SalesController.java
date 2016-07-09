@@ -5,8 +5,15 @@ import play.data.Form;
 import play.mvc.*;
 import models.*;
 import views.html.sales.*;
+
 import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Set;
+import java.util.Arrays;
+
 
 /**
  * Manages endpoints
@@ -14,6 +21,12 @@ import java.util.Collections;
  * @author Dean Papastrat and Alex Woods
  */
 public class SalesController extends GBController {
+
+    // for presentation, it will be useful to have a hashmap between the roles and a nice descriptive string
+    // we can put on the site
+
+
+
 
     /**
      * Returns an index of all sales
@@ -191,4 +204,71 @@ public class SalesController extends GBController {
             return ok(views.html.sales.tags.render(tagItems, currentUser()));
         }
     }
+
+    /**
+     * Displays the members page.
+     * TODO - sort the members of a sale so the display is nicer, perhaps in order of importance of role.
+     *
+     * @param id
+     * @return a page of all the users associated with a sale
+     */
+    @Security.Authenticated(Secured.class)
+    public Result members(int id) {
+        Sale sale = Sale.findById(id);
+        List<String> members = new ArrayList<String>(sale.getUsers().keySet());
+        return ok(views.html.sales.members.render("Members", "Members", sale, members, currentUser()));
+    }
+
+    /**
+     * Allows for a user to add a member with an associated role, and the role that the current user can add is
+     * limited by their role for the sale. For example, only Sale Administrator's can add other Sale Administrators,
+     * Guests can't add anyone, and no one can add a super user.
+     *
+     * @param id - the sale id
+     * @return a page where a user can add members to a sale
+     */
+    @Security.Authenticated(Secured.class)
+    public Result addMember(int id) {
+        Sale sale = Sale.findById(id);
+        List<String> roles = Sale.getUnrestrictedRoles();
+        return ok(views.html.sales.addMember.render("Members", "Members", sale, roles, currentUser()));
+    }
+
+
+    /**
+     * Adds a member (a user associated with a sale) to a given sale. The member is associated
+     * with some role.
+     * Just cleaned this method...like a bunch haha.
+     * 
+     * TODO provide a user with a way of changing another users role on a sale, after they've been added with an initial role
+     *
+     * @return redirect to sale items index or renders item form with validation errors
+     */
+    @Security.Authenticated(Secured.class)
+    public Result postAddMember(int id) {
+        Sale sale = Sale.findById(id);
+        User user = User.findByEmail(formParams().get("email"));
+        List<String> members = new ArrayList<String>(sale.getUsers().keySet());
+        List<String> roles = Sale.getUnrestrictedRoles();
+        Map<String, Sale.Role> roleMap = Sale.getRoleMap();
+
+        if (user == null) {
+            flash("error", "Your friend doesn't have an account with GarageBuddy.");
+            return badRequest(views.html.sales.addMember.render("Members",
+                    "Members", sale, roles, currentUser()));
+        }
+        else if (members.contains(user.email)) {
+            flash("error", "This user is already a member of the sale!");
+            return badRequest(views.html.sales.addMember.render("Members",
+                    "Members", sale, roles, currentUser()));
+        }
+        else {
+            String role = formParams().get("role");
+            sale.addUser(user.email, roleMap.get(role));
+            sale.save();
+            return redirect("/sales/" + Integer.toString(sale.id) + "/members");
+        }
+    }
+
+
 }
