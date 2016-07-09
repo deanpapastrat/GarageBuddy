@@ -13,6 +13,7 @@ import javax.persistence.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -197,6 +198,25 @@ public class Sale extends Model {
         return Role.fromPermit(permissionVal);
     }
 
+    public static List<String> getUnrestrictedRoles() {
+        List<String> roles = Arrays.asList("Guest", "Book Keeper", "Cashier",
+                "Clerk", "Seller");
+        return roles;
+    }
+
+    public static Map<String, Role> getRoleMap() {
+        Map<String, Role> roleMap = new HashMap<>();
+        roleMap.put("Guest", Role.GUEST);
+        roleMap.put("Book Keeper", Role.BOOK_KEEPER);
+        roleMap.put("Cashier", Role.CASHIER);
+        roleMap.put("Clerk", Role.CLERK);
+        roleMap.put("Seller", Role.SELLER);
+        roleMap.put("Sale Administrator", Role.SALE_ADMIN);
+        roleMap.put("Super User", Role.SUPER_USER);
+
+        return roleMap;
+    }
+
     /**
      * Get the user permission number based on their role
      * @param email the username
@@ -222,7 +242,6 @@ public class Sale extends Model {
      * A method that returns the date as a date object, so we can force the user to enter
      * a valid start and end date (i.e. end date must be after the start date).
      * @return the start date, as a date object
-     * @author Alex
      */
     public Date getStartDate() {
         return this.startDate;
@@ -231,7 +250,6 @@ public class Sale extends Model {
 
     /**
      * @return the start date
-     * @author Alex (in case I break everything with this method you guys will know it was me haha)
      */
     public Date getEndDate() {
         return this.endDate;

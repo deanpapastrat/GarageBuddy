@@ -1,5 +1,4 @@
-@(page: String, nav: String, sale: Sale, members: List[String], membersWithRoles: Map[String, Long],
-    roles: Map[Long, String], currentUser: User)
+@(page: String, nav: String, sale: Sale, members: List[String], currentUser: User)
 
 @main(page, nav) {
     @sales.nav(sale, "members", currentUser: User)
@@ -13,14 +12,14 @@
         <thead>
         <tr>
             <th>User Email</th>
-            <th>Role in @sale.name</th>
+            <th>Role</th>
         </tr>
         </thead>
         <tbody>
         @for(member <- members) {
         <tr>
             <td>@member</td>
-            <td>@roles.get(membersWithRoles.get(member))</td>
+            <td>@sale.getUserRole(member)</td>
         </tr>
         }
         </tbody>
