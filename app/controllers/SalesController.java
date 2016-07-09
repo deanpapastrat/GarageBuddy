@@ -182,6 +182,7 @@ public class SalesController extends GBController {
 
     /**
      * Displays the members page.
+     * TODO - sort the members of a sale so the display is nicer, perhaps in order of importance of role.
      *
      * @param id
      * @return a page of all the users associated with a sale
@@ -192,6 +193,7 @@ public class SalesController extends GBController {
 
         // I know this isn't pretty, but I needed a way (that worked) to be able to go from the role of the user
         // to a pretty displayable string. And the role came in long form
+        // TODO put this logic in the model, so that it returns a role instead of a long
         Map<Long, String> roles = new HashMap<Long, String>();
         roles.put(new Long(1), "Guest");
         roles.put(new Long(2), "Book Keeper");
@@ -210,57 +212,88 @@ public class SalesController extends GBController {
     }
 
     /**
-     * The addMember page, which allows a user to add another user to the sale
+     * Allows for a user to add a member with an associated role, and the role that the current user can add is
+     * limited by their role for the sale. For example, only Sale Administrator's can add other Sale Administrators,
+     * Guests can't add anyone, and no one can add a super user.
      *
      * @param id - the sale id
-     * @return
+     * @return a page where a user can add members to a sale
+     * @author Alex W
      */
     @Security.Authenticated(Secured.class)
     public Result addMember(int id) {
         Sale sale = Sale.findById(id);
 
-        // unused so far, but we'll need to check if a user is already a member of a sale
-        Map<String, Long> membersWithRoles = sale.getUsers();
-        Set temp = membersWithRoles.keySet();
-        List<String> members = new ArrayList<String>(temp);
+        // This isn't pretty, but I have to have a way to go in between something the user understands and
+        // something the database understands. Ideas are welcome.
+        List<String> rolesForEveryone = Arrays.asList("Guest", "Book Keeper", "Cashier", "Clerk", "Seller");
+        List<String> rolesForAdmin = Arrays.asList("Guest", "Book Keeper", "Cashier", "Clerk", "Seller", "Sale Administrator");
 
-        // right now this is just for display in the dropdown menu
-        List<String> roles = Arrays.asList("Guest", "Book Keeper", "Cashier", "Clerk", "Seller", "Sale Administrator");
+        // If current user is SALE_ADMIN, they can add other SALE_ADMIN's. Otherwise, they can't.
+        List<String> roles = new ArrayList<>();
+        if (sale.getUserRole(currentUser().email) == Sale.Role.SALE_ADMIN) roles = rolesForAdmin;
+        else roles = rolesForEveryone;
 
-
-        return ok(views.html.sales.addMember.render("Members", "Members", sale, members, roles, currentUser()));
+        return ok(views.html.sales.addMember.render("Members",
+                "Members", sale, roles, currentUser()));
     }
 
+
     /**
-     * Validates item form and creates an item with the provided data
+     * Adds a member (a user associated with a sale) to a given sale. The member is associated
+     * with some role.
      *
-     * So far this method works to add members to a sale, however, it doesn't do the role yet.
-     * TODO be able to associate a role with an added user
+     * This is a fairly long method, because there is a lot that it contains. The only part I might say
+     * is unnecessary is Map<> roleMap, because I'm sure we could put something in the Sale model that would
+     * function in the same way; I just felt that was the easiest way.
+     *
+     * TODO provide a user with a way of changing another users role on a sale, after they've been added with an initial role
+     *
      * @return redirect to sale items index or renders item form with validation errors
+     * @author Alex W
      */
     @Security.Authenticated(Secured.class)
     public Result postAddMember(int id) {
         Sale sale = Sale.findById(id);
         User user = User.findByEmail(formParams().get("email"));
 
-        // unused so far, but we'll need to check if a user is already a member of a sale
+        // Needed to check if a user is already a part of a sale. We don't want to add duplicates, although
         Map<String, Long> membersWithRoles = sale.getUsers();
         Set temp = membersWithRoles.keySet();
         List<String> members = new ArrayList<String>(temp);
 
-        // right now this is just for display in the dropdown menu
-        List<String> roles = Arrays.asList("Guest", "Book Keeper", "Cashier", "Clerk", "Seller", "Sale Administrator");
+        List<String> rolesForEveryone = Arrays.asList("Guest", "Book Keeper", "Cashier", "Clerk", "Seller");
+        List<String> rolesForAdmin = Arrays.asList("Guest", "Book Keeper", "Cashier", "Clerk", "Seller", "Sale Administrator");
+
+        // A map relating a displayable string with a Sale.Role object
+        Map<String, Sale.Role> roleMap = new HashMap<>();
+        roleMap.put("Guest", Sale.Role.GUEST);
+        roleMap.put("Book Keeper", Sale.Role.BOOK_KEEPER);
+        roleMap.put("Cashier", Sale.Role.CASHIER);
+        roleMap.put("Clerk", Sale.Role.CLERK);
+        roleMap.put("Seller", Sale.Role.SELLER);
+        roleMap.put("Sale Administrator", Sale.Role.SALE_ADMIN);
+
+        // If current user is SALE_ADMIN, they can add other SALE_ADMIN's. Otherwise, they can't.
+        List<String> roles = new ArrayList<>();
+        if (sale.getUserRole(currentUser().email) == Sale.Role.SALE_ADMIN) roles = rolesForAdmin;
+        else roles = rolesForEveryone;
 
         if (user == null) {
             flash("error", "Your friend doesn't have an account with Garage Buddy");
-            return badRequest(views.html.sales.addMember.render("Members", "Members", sale, members, roles, currentUser()));
-
+            return badRequest(views.html.sales.addMember.render("Members",
+                    "Members", sale, roles, currentUser()));
+        }
+        else if (members.contains(user.email)) {
+            flash("error", "This user is already a member of the sale!");
+            return badRequest(views.html.sales.addMember.render("Members",
+                    "Members", sale, roles, currentUser()));
         }
         else {
-        sale.addUser(user.email, Sale.Role.SELLER);
-        sale.save();
-        return redirect("/sales/" + Integer.toString(sale.id) + "/members");
-
+            String role = formParams().get("role");
+            sale.addUser(user.email, roleMap.get(role));
+            sale.save();
+            return redirect("/sales/" + Integer.toString(sale.id) + "/members");
         }
     }
 
