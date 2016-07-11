@@ -44,7 +44,7 @@
               You need to start selling stuff to make money. You don't want a Guavian Death Gang or Kanjiclub
               to come hunt you down when you don't have money.
             </p>
-            <a class="btn btn-success btn-lg" href="/sales/@sale.id/transactions/new">
+            <a class="btn btn-success btn-lg" @if(sale.isClosed()){ disabled="true" } else { href="/sales/@sale.id/transactions/new" }>
                 <i class="fa fa-usd">&nbsp;</i>
                 Start New Transaction
             </a>

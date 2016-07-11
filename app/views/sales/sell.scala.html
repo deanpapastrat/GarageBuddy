@@ -5,7 +5,7 @@
 
     <div class="row">
         <div class="col-sm-3">
-            <a class="btn btn-block btn-success btn-lg" href="/sales/@sale.id/transactions/new">
+            <a class="btn btn-block btn-success btn-lg" @if(sale.isClosed()){ disabled="true" } else { href="/sales/@sale.id/transactions/new" }>
                 <i class="fa fa-usd">&nbsp;</i>
                 Start Transaction
             </a>

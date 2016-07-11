@@ -23,6 +23,7 @@ create table sales (
   name                          varchar(255),
   start_date                    timestamp,
   end_date                      timestamp,
+  is_closed                     boolean,
   users                         jsonb,
   constraint pk_sales primary key (id)
 );
