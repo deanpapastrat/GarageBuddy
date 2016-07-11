@@ -24,7 +24,7 @@
                 </div>
                 <div id="collapsible-nav">
                     <ul class="nav navbar-nav">
-                        @for(tab <- Array("Home","Sales", "Reports", "Users", "Profile")) {
+                        @for(tab <- Array("Home","Sales", "Users", "Profile")) {
                             @if(tab.equals(nav)) {
                                 <li class="active">
                                     <a href="/@tab.toLowerCase()">@tab</a>

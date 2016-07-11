@@ -88,9 +88,8 @@ public class SalesController extends GBController {
         if (sale.isClosed()) {
             flash("warning", "This sale has been closed, and can no longer be edited");
         }
-        else {
-            return ok(views.html.sales.edit.render(sale.name, "Sales", sale, modelForm(sale), currentUser()));
-        }
+
+        return ok(views.html.sales.edit.render(sale.name, "Sales", sale, modelForm(sale), currentUser()));
     }
 
     /**
@@ -161,9 +160,8 @@ public class SalesController extends GBController {
         if (sale.isClosed()) {
             flash("warning", "This sale has been closed, and can no longer be edited");
         }
-        else {
-            return ok(views.html.sales.sell.render(sale, currentUser()));
-        }
+
+        return ok(views.html.sales.sell.render(sale, currentUser()));
     }
 
     /**
@@ -197,12 +195,7 @@ public class SalesController extends GBController {
     public Result tags(int id) {
         Sale sale = Sale.findById(id);
         List<Item> tagItems = queryItems(Item.class, sale.findItems(), "name", "name", sale.items);
-        if (sale.isClosed()) {
-            flash("warning", "This sale has been closed, and can no longer be edited");
-        }
-        else {
-            return ok(views.html.sales.tags.render(tagItems, currentUser()));
-        }
+        return ok(views.html.sales.tags.render(tagItems, currentUser()));
     }
 
     /**

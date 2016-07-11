@@ -55,7 +55,7 @@
                 </div>
             </div>
         }
-        if (!sale.isClosed()) {
+        @if(!sale.isClosed()) {
             <a class="btn btn-success" href="/sales/@sale.id/items/new">
                 <i class="fa fa-plus">&nbsp;</i>
                 Add New Item
@@ -66,7 +66,7 @@
             </a>
         }
     } else {
-        if (!sale.isClosed()) {
+        @if(!sale.isClosed()) {
             <div class="jumbotron">
                 <h1>You haven't added any items.</h1>
                 <p>
@@ -80,8 +80,7 @@
                     Add New Item
                 </a>
             </div>
-        }
-        else {
+        } else {
             <div class="jumbotron">
                 <h1>This sale was closed with no items.</h1>
                 <p>
@@ -91,6 +90,7 @@
                     <small><i>Try exploring some other sales and see what GarageBuddy can do for you.</i></small>
                 </p>
             </div>
+        }
         
     }
 }
