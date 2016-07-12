@@ -1,0 +1,50 @@
+@(page: String, nav:String, sale: Sale, transactions: List[Transaction])
+
+@main(page, nav) {
+  @sales.nav(sale, "report")
+  <hr class="spacer"/>
+  @if(transactions != null && transactions.length > 0) {
+    <table class="table table-striped">
+      <thead>
+        <caption>Financial Report for User</caption>
+        <tr>
+          <th>Item Name</th>
+          <th>Sold To</th>
+          <th>Description</th>
+          <th>Price</th>
+          <th>Item ID</th>
+          <th>Transaction ID</th>
+        </tr>
+      </thead>
+      <tbody>
+      @for(trans <- transactions) {
+        <tr>
+          <td>@trans.id</td>
+          <td>@trans.customerName</td>
+          <td>@trans.seller.name</td>
+          <td>
+            <table>
+              @for(item <- trans.items) {
+                <tr>
+                  <td>@item.name</td>
+                  <td>@item.formattedPrice()</td>
+                  <td>@item.createdBy.name</td>
+                </tr>
+              }
+            </table>
+          </td>
+
+          <td>@trans.formattedValue()</td>
+        </tr>
+      }
+      </tbody>
+    </table>
+  } else {
+    <div class="panel text-center">
+      <div class="panel-body">
+        <h3>No transactions have been recorded for @sale.name</h3>
+      </div>
+    </div>
+  }
+}
+

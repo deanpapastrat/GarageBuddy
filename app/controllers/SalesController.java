@@ -142,11 +142,26 @@ public class SalesController extends GBController {
      * @return a webpage showing the financial report
      */
     @Security.Authenticated(Secured.class)
-    public Result report(int id) {
+    public Result reportAll(int id) {
         Sale sale = Sale.findById(id);
         List<Transaction> trans = sale.transactions;
 
-        return ok(views.html.sales.report.render(sale.name, "Financial Report", sale, trans, currentUser()));
+        return ok(views.html.sales.reportAll.render(sale.name, "All Financial Report", sale, trans));
+    }
+
+
+    public Result reportBySeller(int id) {
+        Sale sale = Sale.findById(id);
+        List<Transaction> trans = sale.transactions;
+        //Found items that are sold
+        //Find the created by
+        return ok(views.html.sales.reportBySeller.render(sale.name, "Financial Report", sale, trans));
+        //return null;
+    }
+
+    public Result report(int id) {
+        Sale sale = Sale.findById(id);
+        return ok(views.html.sales.report.render(sale));
     }
 
 
@@ -232,7 +247,7 @@ public class SalesController extends GBController {
      * Adds a member (a user associated with a sale) to a given sale. The member is associated
      * with some role.
      * Just cleaned this method...like a bunch haha.
-     * 
+     *
      * TODO provide a user with a way of changing another users role on a sale, after they've been added with an initial role
      *
      * @return redirect to sale items index or renders item form with validation errors
