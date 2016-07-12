@@ -24,7 +24,7 @@ public class SalesController extends GBController {
      */
     @Security.Authenticated(Secured.class)
     public final Result index() {
-        List<Sale> allSales = Sale.find.all();
+        List<Sale> allSales = Sale.FIND.all();
         Collections.sort(allSales,
                 (o1, o2) -> o1.getStartDate().compareTo(o2.getStartDate()));
         return ok(views.html.sales.index.render(allSales, currentUser()));

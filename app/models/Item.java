@@ -292,7 +292,7 @@ public class Item extends Model {
      * @param id id of item we want to find
      * @return an item with the specified id
      */
-    public static Item findById(final int id) {
+    public static Item findById(final Integer id) {
         return Item.FIND.byId(id.toString());
     }
 
