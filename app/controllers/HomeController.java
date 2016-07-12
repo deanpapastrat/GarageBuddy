@@ -26,6 +26,9 @@ public class HomeController extends GBController {
                 test.save();
             }
             startup = false;
+            // static field set - poor code style, but it's a one-and-done
+            // it initializes a user for demo purposes on any instance
+            // only runs the first time they visit the homepage
         }
         
         if (Secured.isLoggedIn(ctx())) {
