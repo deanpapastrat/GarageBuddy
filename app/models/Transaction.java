@@ -166,10 +166,10 @@ public class Transaction extends Model {
         String itemIds = "";
         for (int i = 0; i < itemsToAdd.size(); i++) {
             if (i != 0) {
-                itemIds += ",";
+                itemIds = (new StringBuilder()).append(itemIds).append(",").toString();
             }
 
-            itemIds += Integer.toString(itemsToAdd.get(i).id);
+            itemIds = (new StringBuilder()).append(itemIds).append(Integer.toString(itemsToAdd.get(i).id)).toString();
         }
         String sql = "UPDATE items SET transaction_id = :id WHERE id IN :items;";
         SqlUpdate update = Ebean.createSqlUpdate(sql);
@@ -226,10 +226,10 @@ public class Transaction extends Model {
         String itemIds = "";
         for (int i = 0; i < itemsToRemove.size(); i++) {
             if (i != 0) {
-                itemIds += ",";
+                itemIds = (new StringBuilder()).append(itemIds).append(",").toString();
             }
 
-            itemIds += Integer.toString(itemsToRemove.get(i).id);
+            itemIds = (new StringBuilder()).append(itemIds).append(Integer.toString(itemsToRemove.get(i).id)).toString();
         }
         String sql = "UPDATE items SET transaction_id = :id, purchased = true WHERE transaction_id = :transactionId;";
         SqlUpdate update = Ebean.createSqlUpdate(sql);
