@@ -4,21 +4,14 @@ import javax.persistence.*;
 
 import com.avaje.ebean.*;
 import lib.Formatter;
-import org.joda.time.DateTime;
-import org.joda.time.LocalDate;
-import org.springframework.cglib.core.Local;
-import play.Logger;
 import play.data.validation.*;
 import play.data.format.*;
-
-import java.text.Format;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.text.DecimalFormat;
 import java.util.List;
 
 /**
- * Represents a transaction between a customer and an item
+ * Represents a transaction between a customer and an item.
  *
  * @author Dean Papastrat
  * @version 1.0.0
@@ -61,7 +54,7 @@ public class Transaction extends Model {
     /* CONSTRUCTORS & EQUIVALENCY */
 
     /**
-     * Create a transaction
+     * Create a transaction.
      *
      * @param seller the person checking out the customer
      */
@@ -70,7 +63,7 @@ public class Transaction extends Model {
     }
 
     /**
-     * Create a transaction
+     * Create a transaction.
      * @param seller the person checking out the customer
      * @param items items the customer is buying
      */
@@ -83,7 +76,7 @@ public class Transaction extends Model {
     }
 
     @Override
-    public boolean equals(Object obj) {
+    public final boolean equals(Object obj) {
         if (obj == null) {
             return false;
         }
@@ -94,42 +87,36 @@ public class Transaction extends Model {
 
         final Transaction other = (Transaction) obj;
 
-        if (this.id == other.id) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.id == other.id;
     }
 
     /**
-     * Checks if all properties of the object are equivalent
+     * Checks if all properties of the object are equivalent.
      * @param obj an object to compare
-     * @return
+     * @return if they are equivalent or not
      */
-    public boolean matches(Object obj) {
+    public final boolean matches(Object obj) {
         if (!this.equals(obj)) {
             return false;
         }
 
         final Transaction other = (Transaction) obj;
 
-        if (this.createdAt.equals(other.createdAt) && this.customerName.equals(other.customerName)
-                && this.value.equals(other.value) && this.seller.equals(other.seller)) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.createdAt.equals(other.createdAt)
+                && this.customerName.equals(other.customerName)
+                && this.value.equals(other.value)
+                && this.seller.equals(other.seller);
     }
 
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return this.id;
     }
 
     /* ADD AND REMOVE ITEMS */
 
     /**
-     * Adds an item to the transaction
+     * Adds an item to the transaction.
      * @param item item to add
      */
     private void addItem(Item item) {
@@ -139,7 +126,7 @@ public class Transaction extends Model {
     }
 
     /**
-     * Adds an item to the transaction
+     * Adds an item to the transaction.
      * @param item item to add
      * @param updateCounts whether to update numItems or not
      */
@@ -153,7 +140,7 @@ public class Transaction extends Model {
     }
 
     /**
-     * Adds specified items to the transaction
+     * Adds specified items to the transaction.
      *
      * @param itemsToAdd a list of items to add to the transaction
      * @return how many items were added
@@ -179,10 +166,10 @@ public class Transaction extends Model {
     }
 
     /**
-     * Adds specified items to the transaction
+     * Adds specified items to the transaction.
      * @param updateCounts whether to update numItems or not
      */
-    public void addItems(List<Item> itemsToAdd, boolean updateCounts) {
+    public final void addItems(List<Item> itemsToAdd, boolean updateCounts) {
         if (updateCounts) {
             this.numItems = addItems(itemsToAdd);
             updateItemValues(false);
@@ -193,7 +180,7 @@ public class Transaction extends Model {
     }
 
     /**
-     * Removes an item from the transaction
+     * Removes an item from the transaction.
      * @param item item to remove
      */
     private void removeItem(Item item) {
@@ -203,7 +190,7 @@ public class Transaction extends Model {
     }
 
     /**
-     * Removes an item from the transaction
+     * Removes an item from the transaction.
      * @param item item to remove
      * @param updateCounts whether to update numItems or not
      */
@@ -217,7 +204,7 @@ public class Transaction extends Model {
     }
 
     /**
-     * Removes the specified items from the transaction
+     * Removes the specified items from the transaction.
      *
      * @param itemsToRemove a list of items to remove from the transaction
      * @return how many items were removed
@@ -239,10 +226,10 @@ public class Transaction extends Model {
     }
 
     /**
-     * Removes the specified items from the transaction
+     * Removes the specified items from the transaction.
      * @param updateCounts whether to update numItems or not
      */
-    public void removeItems(List<Item> itemsToRemove, boolean updateCounts) {
+    public final void removeItems(List<Item> itemsToRemove, boolean updateCounts) {
         if (updateCounts) {
             this.numItems -= removeItems(itemsToRemove);
             updateItemValues(false);
@@ -253,10 +240,10 @@ public class Transaction extends Model {
     }
 
     /**
-     * Removes all items from the transaction
+     * Removes all items from the transaction.
      * @return how many items were removed
      */
-    public int removeItems() {
+    public final int removeItems() {
         String sql = "UPDATE items SET transaction_id = :id, purchased = false WHERE transaction_id = :transactionId;";
         SqlUpdate update = Ebean.createSqlUpdate(sql);
         update.setParameter("id", null);
@@ -265,10 +252,10 @@ public class Transaction extends Model {
     }
 
     /**
-     * Removes all items from the transaction
+     * Removes all items from the transaction.
      * @param updateCounts whether to update numItems or not
      */
-    public void removeItems(boolean updateCounts) {
+    public final void removeItems(boolean updateCounts) {
         if (updateCounts) {
             this.numItems = removeItems();
             updateItemValues(false);
@@ -281,7 +268,7 @@ public class Transaction extends Model {
     /* AGGREGATE UPDATERS */
 
     /**
-     * Sums the values of the items on this transaction
+     * Sums the values of the items on this transaction.
      * @return live sum of all item prices
      */
     private Double sumItemValues() {
@@ -295,10 +282,10 @@ public class Transaction extends Model {
     }
 
     /**
-     * Updates the value of the transaction based on items linked to it
+     * Updates the value of the transaction based on items linked to it.
      * @param save whether or not to save transaction
      */
-    public void updateItemValues(boolean save) {
+    public final void updateItemValues(boolean save) {
         this.value = sumItemValues();
         if (save) {
             save();
@@ -308,27 +295,27 @@ public class Transaction extends Model {
     /* FORMATTERS */
 
     /**
-     * Returns the value in a human-readable string format
+     * Returns the value in a human-readable string format.
      *
      * @return the value, with a dollar sign and to 2 decimal places
      */
-    public String formattedValue() {
+    public final String formattedValue() {
         return Formatter.currency(value);
     }
 
     /**
-     * Returns the time the transaction was created in a human-readable string format
+     * Returns the time the transaction was created in a human-readable string format.
      *
      * @return the time in the format mm/dd/yy H:mma
      */
-    public String formattedCreatedAt() {
+    public final String formattedCreatedAt() {
         return Formatter.time(createdAt);
     }
 
     /* PREBUILT QUERIES */
 
     /**
-     * Returns a transaction from an ID
+     * Returns a transaction from an ID.
      * @param id id of transaction we want to find
      * @return a transaction with the specified id
      */
@@ -337,11 +324,11 @@ public class Transaction extends Model {
     }
 
     /**
-     * Builds a query for items related to this sale
+     * Builds a query for items related to this sale.
      *
      * @return an expression list for items that have this sale ID
      */
-    public ExpressionList<Item> findItems() {
-        return Item.find.where().eq("transaction_id", this.id);
+    public final ExpressionList<Item> findItems() {
+        return Item.FIND.where().eq("transaction_id", this.id);
     }
 }

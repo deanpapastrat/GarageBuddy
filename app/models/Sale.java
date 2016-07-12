@@ -259,9 +259,8 @@ public class Sale extends Model {
      * @return All roles in a list
      */
     public static List<String> getUnrestrictedRoles() {
-        List<String> roles = Arrays.asList("Guest", "Book Keeper", "Cashier",
+        return Arrays.asList("Guest", "Book Keeper", "Cashier",
                 "Clerk", "Seller");
-        return roles;
     }
 
     /**
