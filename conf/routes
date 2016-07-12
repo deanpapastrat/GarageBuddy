@@ -33,6 +33,8 @@ GET     /sales/:id/tags             controllers.SalesController.tags(id: Integer
 GET     /sales/:id/delete           controllers.SalesController.delete(id: Integer)
 POST    /sales/:id/delete           controllers.SalesController.postDelete(id: Integer)
 GET     /sales/:id/report           controllers.SalesController.report(id: Integer)
+GET     /sales/:id/reportAll        controllers.SalesController.reportAll(id: Integer)
+GET     /sales/:id/reportBySeller   controllers.SalesController.reportBySeller(id: Integer)
 GET     /sales/:id/sell             controllers.SalesController.sell(id: Integer)
 
 # Items Routes
