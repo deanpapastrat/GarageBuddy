@@ -10,9 +10,6 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.Set;
-import java.util.Arrays;
 
 
 /**
@@ -22,7 +19,8 @@ import java.util.Arrays;
  */
 public class SalesController extends GBController {
 
-    // for presentation, it will be useful to have a hashmap between the roles and a nice descriptive string
+    // for presentation, it will be useful to have a map
+    // between the roles and a nice descriptive string
     // we can put on the site
 
 
@@ -35,9 +33,10 @@ public class SalesController extends GBController {
     @Security.Authenticated(Secured.class)
     public Result index() {
         List<Sale> allSales = Sale.find.all();
-        Collections.sort(allSales,
-                (o1, o2) -> o1.getStartDate().compareTo(o2.getStartDate()));
-        return ok(views.html.sales.index.render("Sales", "Sales", allSales, currentUser()));
+        Collections.sort(allSales, (o1, o2)
+            -> o1.getStartDate().compareTo(o2.getStartDate()));
+        return ok(views.html.sales.index.render("Sales",
+                "Sales", allSales, currentUser()));
     }
 
     /**
@@ -46,7 +45,8 @@ public class SalesController extends GBController {
      */
     @Security.Authenticated(Secured.class)
     public Result create() {
-        return ok(views.html.sales.create.render("New Sale", "Sales", emptyModelForm(Sale.class), currentUser()));
+        return ok(views.html.sales.create.render("New Sale",
+                "Sales", emptyModelForm(Sale.class), currentUser()));
     }
 
 
@@ -60,40 +60,45 @@ public class SalesController extends GBController {
         Form<Sale> saleForm = modelForm(Sale.class);
 
         if (saleForm.hasErrors()) {
-            return badRequest(views.html.sales.create.render("New Sale", "Sales", saleForm, currentUser()));
+            return badRequest(views.html.sales.create.render("New Sale",
+                    "Sales", saleForm, currentUser()));
         } else {
             Sale sale = saleForm.get();
             sale.addUser(currentUser().email, Sale.Role.SALE_ADMIN);
 
-            // if this next line looks weird, it's because we have to allow for sales that start and end on the same day
+            // if this next line looks weird, it's because we have to 
+            // allow for sales that start and end on the same day
             if (!sale.getEndDate().before(sale.getStartDate())) {
                 flash("success", "Sale created");
                 sale.save();
                 return redirect("/sales/" + Integer.toString(sale.id));
-            }
-            else {
+            } else {
                 flash("error", "The end date can't be before the start date");
-                return badRequest(views.html.sales.create.render("New Sale", "Sales", saleForm, currentUser()));
+                return badRequest(views.html.sales.create.render("New Sale",
+                        "Sales", saleForm, currentUser()));
             }
         }
     }
 
     /**
      * Edits a sale in the database.
+     * @param id integer ID representing the sale in the database
      * @return a webpage representing that sale
      */
     @Security.Authenticated(Secured.class)
     public Result edit(int id) {
         Sale sale = Sale.findById(id);
         if (sale.isClosed()) {
-            flash("warning", "This sale has been closed, and can no longer be edited");
+            flash("warning",
+                    "This sale has been closed, and can no longer be edited");
         }
-
-        return ok(views.html.sales.edit.render(sale.name, "Sales", sale, modelForm(sale), currentUser()));
+        return ok(views.html.sales.edit.render(sale.name,
+                "Sales", sale, modelForm(sale), currentUser()));
     }
 
     /**
      * Validates sale form and edits a sale with the provided data
+     * @param id integer ID representing the sale in the database
      * @return redirect to sale page or renders sale form with validation errors
      */
     @Security.Authenticated(Secured.class)
@@ -102,23 +107,25 @@ public class SalesController extends GBController {
         Form<Sale> saleForm = modelForm(Sale.class);
 
         if (saleForm.hasErrors()) {
-            return badRequest(views.html.sales.edit.render(sale.name, "Sales", sale, saleForm, currentUser()));
-        }
-        else {
+            return badRequest(views.html.sales.edit.render(sale.name,
+                    "Sales", sale, saleForm, currentUser()));
+        } else {
             sale.name = formParam("name");
             sale.setFormattedStartDate(formParam("startDate"));
             sale.setFormattedEndDate(formParam("endDate"));
             if (formParam("close") != null) {
                 sale.close();
-                flash("warning", "This sale has been closed, and can no longer be edited");
+                flash("warning",
+                        "This sale has been closed,"
+                        + " and can no longer be edited");
             }
             if (!sale.getEndDate().before(sale.getStartDate())) {
                 sale.save();
                 return redirect("/sales/" + Integer.toString(sale.id));
-            }
-            else {
+            } else {
                 flash("error", "The end date can't be before the start date");
-                return badRequest(views.html.sales.edit.render(sale.name, "Sales", sale, saleForm, currentUser()));
+                return badRequest(views.html.sales.edit.render(sale.name,
+                        "Sales", sale, saleForm, currentUser()));
             }
         }
     }
@@ -132,8 +139,10 @@ public class SalesController extends GBController {
     @Security.Authenticated(Secured.class)
     public Result show(int id) {
         Sale sale = Sale.findById(id);
-        List<Item> queryItems = queryItems(Item.class, sale.findItems(), "name", "name", sale.items);
-        return ok(views.html.sales.show.render(sale.name, "Sales", sale, queryItems, queryString(), currentUser()));
+        List<Item> queryItems = queryItems(Item.class, sale.findItems(),
+                "name", "name", sale.items);
+        return ok(views.html.sales.show.render(sale.name,
+                "Sales", sale, queryItems, queryString(), currentUser()));
     }
 
     /**
@@ -146,19 +155,22 @@ public class SalesController extends GBController {
         Sale sale = Sale.findById(id);
         List<Transaction> trans = sale.transactions;
 
-        return ok(views.html.sales.report.render(sale.name, "Financial Report", sale, trans, currentUser()));
+        return ok(views.html.sales.report.render(sale.name,
+                "Financial Report", sale, trans, currentUser()));
     }
 
 
     /**
      * Provides a confirmation for deletion of a sale from the database.
+     * @param id integer ID representing the sale in the database
      * @return a page showing the confirmation
      */
     @Security.Authenticated(Secured.class)
     public Result sell(int id) {
         Sale sale = Sale.findById(id);
         if (sale.isClosed()) {
-            flash("warning", "This sale has been closed, and can no longer be edited");
+            flash("warning",
+                    "This sale has been closed, and can no longer be edited");
         }
 
         return ok(views.html.sales.sell.render(sale, currentUser()));
@@ -166,6 +178,7 @@ public class SalesController extends GBController {
 
     /**
      * Provides a confirmation for deletion of a sale from the database.
+     * @param id integer ID representing the sale in the database
      * @return a page showing the confirmation
      */
     @Security.Authenticated(Secured.class)
@@ -176,6 +189,7 @@ public class SalesController extends GBController {
 
     /**
      * Deletes a sale from the database.
+     * @param id integer ID representing the sale in the database
      * @return a redirect to sales index
      */
     @Security.Authenticated(Secured.class)
@@ -194,27 +208,30 @@ public class SalesController extends GBController {
     @Security.Authenticated(Secured.class)
     public Result tags(int id) {
         Sale sale = Sale.findById(id);
-        List<Item> tagItems = queryItems(Item.class, sale.findItems(), "name", "name", sale.items);
+        List<Item> tagItems = queryItems(Item.class, sale.findItems(),
+                "name", "name", sale.items);
         return ok(views.html.sales.tags.render(tagItems, currentUser()));
     }
 
     /**
      * Displays the members page.
-     * TODO - sort the members of a sale so the display is nicer, perhaps in order of importance of role.
+     * TODO - sort the members of a sale in order of importance of role.
      *
-     * @param id
+     * @param id integer ID representing the sale in the database
      * @return a page of all the users associated with a sale
      */
     @Security.Authenticated(Secured.class)
     public Result members(int id) {
         Sale sale = Sale.findById(id);
         List<String> members = new ArrayList<String>(sale.getUsers().keySet());
-        return ok(views.html.sales.members.render("Members", "Members", sale, members, currentUser()));
+        return ok(views.html.sales.members.render("Members",
+                "Members", sale, members, currentUser()));
     }
 
     /**
-     * Allows for a user to add a member with an associated role, and the role that the current user can add is
-     * limited by their role for the sale. For example, only Sale Administrator's can add other Sale Administrators,
+     * Allows for a user to add a member with an associated role, and the role 
+     * that the current user can add is limited by their role for the sale.
+     * For example, only Sale Administrator's can add other Sale Administrators,
      * Guests can't add anyone, and no one can add a super user.
      *
      * @param id - the sale id
@@ -224,18 +241,20 @@ public class SalesController extends GBController {
     public Result addMember(int id) {
         Sale sale = Sale.findById(id);
         List<String> roles = Sale.getUnrestrictedRoles();
-        return ok(views.html.sales.addMember.render("Members", "Members", sale, roles, currentUser()));
+        return ok(views.html.sales.addMember.render("Members",
+                "Members", sale, roles, currentUser()));
     }
 
 
     /**
-     * Adds a member (a user associated with a sale) to a given sale. The member is associated
-     * with some role.
-     * Just cleaned this method...like a bunch haha.
+     * Adds a member (a user associated with a sale) to a given sale. 
+     * The member is associated with some role.
      * 
-     * TODO provide a user with a way of changing another users role on a sale, after they've been added with an initial role
+     * TODO provide a user with a way of changing another users role on a sale,
+     * after they've been added with an initial role
      *
-     * @return redirect to sale items index or renders item form with validation errors
+     * @param id integer ID representing the sale in the database
+     * @return redirect to inventory or renders item form with validation errors
      */
     @Security.Authenticated(Secured.class)
     public Result postAddMember(int id) {
@@ -246,20 +265,20 @@ public class SalesController extends GBController {
         Map<String, Sale.Role> roleMap = Sale.getRoleMap();
 
         if (user == null) {
-            flash("error", "Your friend doesn't have an account with GarageBuddy.");
+            flash("error",
+                    "Your friend doesn't have an account with GarageBuddy.");
             return badRequest(views.html.sales.addMember.render("Members",
                     "Members", sale, roles, currentUser()));
-        }
-        else if (members.contains(user.email)) {
+        } else if (members.contains(user.email)) {
             flash("error", "This user is already a member of the sale!");
             return badRequest(views.html.sales.addMember.render("Members",
                     "Members", sale, roles, currentUser()));
-        }
-        else {
+        } else {
             String role = formParams().get("role");
             sale.addUser(user.email, roleMap.get(role));
             sale.save();
-            return redirect("/sales/" + Integer.toString(sale.id) + "/members");
+            return redirect("/sales/"
+                    + Integer.toString(sale.id) + "/members");
         }
     }
 

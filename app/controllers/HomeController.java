@@ -26,6 +26,9 @@ public class HomeController extends GBController {
                 test.save();
             }
             startup = false;
+            // static field set - poor code style, but it's a one-and-done
+            // it initializes a user for demo purposes on any instance
+            // only runs the first time they visit the homepage
         }
         
         if (Secured.isLoggedIn(ctx())) {
@@ -45,7 +48,7 @@ public class HomeController extends GBController {
 
     /**
      * Finds an existing user and authenticates them if credentials are correct.
-     * @return redirect to home page or renders login form with invalid credentials error
+     * @return redirects to homepage or renders login with credentials error
      */
     public Result postLogin() {
         User user = User.findByEmail(formParams().get("email"));
@@ -58,7 +61,8 @@ public class HomeController extends GBController {
             flash("error", "Wrong email or password. Please try again.");
             return badRequest(views.html.home.login.render());
         } else if (!user.canLogin()) {
-            flash("error", "No login attempts remaining. Please email admin@garagebuddy.io to unlock your account.");
+            flash("error", "No login attempts remaining. Please email"
+                    + " admin@garagebuddy.io to unlock your account.");
             return badRequest(views.html.home.login.render());
         } else if (user.checkPassword(formParams().get("password"))) {
             user.resetLoginAttempts();
@@ -66,7 +70,8 @@ public class HomeController extends GBController {
             session("email", formParams().get("email"));
             return redirect("/home");
         } else {
-            flash("error", "Wrong email or password. " + user.getLoginAttemptsRemaining()
+            flash("error", "Wrong email or password. " 
+                    + user.getLoginAttemptsRemaining()
                     + " login attempts remaining. Please try again.");
             return badRequest(views.html.home.login.render());
         }
@@ -82,12 +87,13 @@ public class HomeController extends GBController {
 
     /**
      * Validates registration form and creates a user with the provided data
-     * @return redirect to home page or renders register form with validation errors
+     * @return redirects to homepage or renders register with validation errors
      */
     public Result postRegister() {
         Form<User> userForm = modelForm(User.class);
 
-        if (!userForm.data().get("password").equals(userForm.data().get("confirmPassword"))) {
+        if (!userForm.data().get("password")
+                .equals(userForm.data().get("confirmPassword"))) {
             userForm.reject("Password and confirmation do not match.");
         }
 
