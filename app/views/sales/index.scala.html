@@ -1,6 +1,6 @@
-@(page: String, nav:String, sales: List[Sale], currentUser: User)
+@(sales: List[Sale], currentUser: User)
 
-@main(page, nav) {
+@main("Sales", "Sales") {
     <div class="page-header">
         <h1>
             Sales <small>all sales in the GarageBuddy platform</small>

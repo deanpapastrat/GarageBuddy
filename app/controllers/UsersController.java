@@ -6,35 +6,38 @@ import play.mvc.*;
 import views.html.users.*;
 
 /**
- * Manages routes for users
+ * Manages routes for users.
  * @author Dean Papastrat
  */
 public class UsersController extends GBController {
     /**
-     * Renders an index of all users
+     * Renders an index of all users.
      * @return user index page HTML
      */
     @Security.Authenticated(Secured.class)
-    public Result index() {
-        return ok(views.html.users.index.render("Users", "Users", User.find.all(), currentUser()));
+    public final Result index() {
+        return ok(views.html.users.index.render(User.find.all(),
+                currentUser()));
     }
 
     /**
-     * Renders a profile page with user details
+     * Renders a profile page with user details.
      * @return profile page HTML
      */
     @Security.Authenticated(Secured.class)
-    public Result profile() {
-        return ok(views.html.users.profile.render("Profile", "Profile", modelForm(currentUser()), currentUser()));
+    public final Result profile() {
+        return ok(views.html.users.profile.render(modelForm(currentUser()),
+                currentUser()));
     }
 
     /**
-     * Processes profile updates for a user
+     * Processes profile updates for a user.
      * @return redirect to profile page or renders profile form with errors
      */
     @Security.Authenticated(Secured.class)
-    public Result postProfile() {
-        if (!currentUser().checkPassword(formParams().get("currentPassword"))) {
+    public final Result postProfile() {
+        if (!currentUser().checkPassword(formParams()
+                .get("currentPassword"))) {
             flash("error", "Current password is not valid. Please try again.");
             return redirect("/profile");
         }
@@ -46,7 +49,8 @@ public class UsersController extends GBController {
         currentUser().address = formParams().get("address");
         currentUser().city = formParams().get("city");
 
-        if (formParams().get("newPassword") != null && !formParams().get("newPassword").isEmpty()) {
+        if (formParams().get("newPassword") != null && !formParams()
+                .get("newPassword").isEmpty()) {
             currentUser().setPassword(formParams().get("newPassword"));
         }
 
@@ -57,35 +61,38 @@ public class UsersController extends GBController {
             flash("success", "Profile details saved.");
             return redirect("/profile");
         } else {
-            return badRequest(views.html.users.profile.render("Profile", "Profile", userForm, currentUser()));
+            return badRequest(views.html.users.profile.render(userForm,
+                    currentUser()));
         }
     }
 
     /**
-     * Renders a confirmation to delete current user
+     * Renders a confirmation to delete current user.
      * @return delete confirmation page HTML
      */
     @Security.Authenticated(Secured.class)
-    public Result deleteProfile() {
-        return ok(views.html.users.deleteProfile.render("Profile", "Profile", currentUser()));
+    public final Result deleteProfile() {
+        return ok(views.html.users.deleteProfile.render(currentUser()));
     }
 
     /**
-     * Permanently deletes a user
+     * Permanently deletes a user.
      * @return redirect to welcome page
      */
     @Security.Authenticated(Secured.class)
-    public Result postDeleteProfile() {
+    public final Result postDeleteProfile() {
         currentUser().delete();
         return redirect("/logout");
     }
 
     /**
-     * Resets a user's login attempts
+     * Resets a user's login attempts.
+     *
+     * @param userEmail the email of the user to reset attempts for
      * @return redirect to users index
      */
     @Security.Authenticated(Secured.class)
-    public Result resetLoginAttempts(String userEmail) {
+    public final Result resetLoginAttempts(final String userEmail) {
         if (currentUser().can("resetAttempts")) {
             User user = User.findByEmail(userEmail);
             user.resetLoginAttempts();

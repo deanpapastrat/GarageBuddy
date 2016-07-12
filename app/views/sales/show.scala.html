@@ -1,6 +1,6 @@
-@(page: String, nav:String, sale: Sale, items: List[Item], query: String, currentUser: User)
+@(sale: Sale, items: List[Item], query: String, currentUser: User)
 
-@main(page, nav) {
+@main(sale.name, "Sales") {
     @sales.nav(sale, "items", currentUser: User)
     @if((query != null && !query.isEmpty()) || (items != null && items.length > 0)) {
         <form class="form-search">

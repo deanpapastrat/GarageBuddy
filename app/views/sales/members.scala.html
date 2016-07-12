@@ -1,6 +1,6 @@
-@(page: String, nav: String, sale: Sale, members: List[String], currentUser: User)
+@(sale: Sale, members: List[String], currentUser: User)
 
-@main(page, nav) {
+@main(sale.name + " Members", "Sales") {
     @sales.nav(sale, "members", currentUser: User)
     <div class="page-header">
         <h1>

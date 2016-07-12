@@ -1,6 +1,6 @@
-@(page: String, nav:String, sale: Sale, saleForm: Form[Sale], currentUser: User)
+@(sale: Sale, saleForm: Form[Sale], currentUser: User)
 
-@main(page, nav) {
+@main(sale.name, "Sales") {
   @sales.nav(sale, "settings", currentUser: User)
 
     <div class="row">

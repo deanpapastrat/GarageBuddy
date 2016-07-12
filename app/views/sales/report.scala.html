@@ -1,6 +1,6 @@
-@(page: String, nav:String, sale: Sale, transactions: List[Transaction], currentUser: User)
+@(sale: Sale, transactions: List[Transaction], currentUser: User)
 
-@main(page, nav) {
+@main(sale.name + " Finanical Report", "Sales") {
     @sales.nav(sale, "report", currentUser: User)
     <hr class="spacer"/>
     @if(transactions != null && transactions.length > 0) {
