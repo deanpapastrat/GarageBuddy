@@ -17,17 +17,20 @@ public class ItemsController extends GBController {
 
     /**
      * Creates an item in the database.
+     * @param saleId the integer ID of the sale in the database
      * @return a webpage representing that item
      */
     @Security.Authenticated(Secured.class)
     public Result create(int saleId) {
         Sale sale = Sale.findById(saleId);
-        return ok(views.html.items.create.render(sale, emptyModelForm(Item.class)));
+        return ok(views.html.items.create.render(sale,
+                emptyModelForm(Item.class)));
     }
 
     /**
      * Validates item form and creates an item with the provided data
-     * @return redirect to sale items index or renders item form with validation errors
+     * @param saleId the integer ID of the sale being edited
+     * @return redirects to inventory or renders item form with errors
      */
     @Security.Authenticated(Secured.class)
     public Result postCreate(int saleId) {
@@ -40,12 +43,14 @@ public class ItemsController extends GBController {
             Item item = itemForm.get();
             item.createdBy = currentUser();
             item.addToSale(sale); // Autosaves
-            return redirect("/sales/" + Integer.toString(item.sale.id) + "/items");
+            return redirect("/sales/"
+                    + Integer.toString(item.sale.id) + "/items");
         }
     }
 
     /**
      * Edits an item in the database.
+     * @param id integer ID of the item to edit
      * @return a webpage representing that sale
      */
     @Security.Authenticated(Secured.class)
@@ -56,6 +61,7 @@ public class ItemsController extends GBController {
 
     /**
      * Validates item form and edits an item with the provided data
+     * @param id integer ID of the item being edited
      * @return redirect to item page or renders item form with validation errors
      */
     @Security.Authenticated(Secured.class)
@@ -71,12 +77,14 @@ public class ItemsController extends GBController {
             item.minprice = Double.parseDouble(formParam("minprice"));
             item.price = Double.parseDouble(formParam("price"));
             item.save();
-            return redirect("/sales/" + Integer.toString(item.sale.id) + "/items");
+            return redirect("/sales/"
+                    + Integer.toString(item.sale.id) + "/items");
         }
     }
 
     /**
      * Provides a confirmation for deletion of an item from the database.
+     * @param id integer ID of the item to delete
      * @return a page showing the confirmation
      */
     @Security.Authenticated(Secured.class)
@@ -87,6 +95,7 @@ public class ItemsController extends GBController {
 
     /**
      * Deletes an item from the database.
+     * @param id integer ID of the item being deleted
      * @return a redirect to sale's item index
      */
     @Security.Authenticated(Secured.class)

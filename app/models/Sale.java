@@ -5,7 +5,7 @@ import lib.Formatter;
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model;
 import com.avaje.ebean.annotation.DbJsonB;
-import play.Logger;
+//import play.Logger;
 import play.data.format.*;
 import play.data.validation.*;
 
@@ -19,61 +19,109 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Represents a sale in GarageBuddy
+ * Represents a sale in GarageBuddy.
  *
  * @author Z. Lin and Dean Papastrat
  * @version 1.0.7
  */
 @Entity
-@Table(name="sales")
+@Table(name = "sales")
 public class Sale extends Model {
 
     /* ATTRIBUTES */
 
+    /**
+     * Integer id of the Sale.
+     */
     @Id
     public int id;
 
+    /**
+     * String name of owner of the Sale.
+     */
     @Constraints.Required
     public String name;
 
-    @Constraints.Required @Formats.DateTime(pattern="yyyy-MM-dd")
+    /**
+     * Formatted date of start date of the Sale.
+     */
+    @Constraints.Required @Formats.DateTime(pattern = "yyyy-MM-dd")
     public Date startDate = new Date();
 
-    @Constraints.Required @Formats.DateTime(pattern="yyyy-MM-dd")
+    /**
+     * Formatted date of the end date of the Sale.
+     */
+    @Constraints.Required @Formats.DateTime(pattern = "yyyy-MM-dd")
     public Date endDate = new Date();
-    
-    // sale closed flag - TG
+
+    /**
+     * Sale closed flag.
+     */
     private boolean isClosed;
 
+    /**
+     * Users associated with a Sale.
+     */
     @DbJsonB
     public Map<String, Long> users = new HashMap<>();
 
+    /**
+     * Items associated with a Sale.
+     */
     @OneToMany(mappedBy = "sale")
     public List<Item> items;
 
+    /**
+     * Transactions associated with a Sale.
+     */
     @OneToMany(mappedBy = "sale")
     public List<Transaction> transactions;
 
-    public static final Finder<String, Sale> find = new Finder<String, Sale>(Sale.class);
+    /**
+     * Helper for query methods down below.
+     */
+    public static final Finder<String, Sale> FIND =
+            new Finder<String, Sale>(Sale.class);
 
+    /**
+     * Enumerated list of roles a user could have in a Sale.
+     */
     public enum Role {
-        GUEST(1), BOOK_KEEPER(2), CASHIER(3), CLERK(4), SELLER(5), SALE_ADMIN(6), SUPER_USER(7);
+        GUEST(1), BOOK_KEEPER(2), CASHIER(3), CLERK(4),
+        SELLER(5), SALE_ADMIN(6), SUPER_USER(7);
 
-        int permit;
+        private int permit;
 
-        Role(int p) {
+        /**
+         * Sets permit to p.
+         * @param p int corresponding to enum's roles.
+         */
+        Role(final int p) {
             permit = p;
         }
 
+        /**
+         * Convert int to a long.
+         * @return permit as an int
+         */
         Long showPermission() {
             return ((Integer) permit).longValue();
         }
 
+        /**
+         * Displays permission as an int.
+         * @return int corresponding to role
+         */
         int showPermissionInt() {
             return permit;
         }
 
-        static Role fromPermit(Long permit) {
+        /**
+         * Given permit as a long, get the role.
+         * @param permit the permission level as a number
+         * @return role corresponding to int
+         */
+        static Role fromPermit(final Long permit) {
             for (Role role : values()) {
                 if (permit.equals(((Integer) role.permit).longValue())) {
                     return role;
@@ -83,6 +131,10 @@ public class Sale extends Model {
             return GUEST;
         }
 
+        /**
+         * Convert role number to string.
+         * @return string associated with role number
+         */
         public String toString() {
             String result;
             switch (permit) {
@@ -108,18 +160,23 @@ public class Sale extends Model {
     /* CONSTRUCTORS & EQUIVALENCY */
 
     /**
-     * Create a sale object
+     * Create a sale object.
+     * @param saleAdmin is the user creating Sale
      */
-    public Sale(User saleAdmin) {
+    public Sale(final User saleAdmin) {
         this.users = new HashMap<>();
         this.addUser(saleAdmin.email, Role.SALE_ADMIN);
         this.isClosed = false;
     }
 
 
-
+    /**
+     * Check if two items are exactly the same.
+     * @param obj to compare
+     * @return True if obj exists, and is exactly this item
+     */
     @Override
-    public boolean equals(Object obj) {
+    public final boolean equals(final Object obj) {
         if (obj == null) {
             return false;
         }
@@ -130,46 +187,42 @@ public class Sale extends Model {
 
         final Sale other = (Sale) obj;
 
-        if (this.id == other.id) {
-            return true;
-        } else {
-            return false;
-        }
+        return (this.id == other.id);
     }
 
     /**
-     * Checks if all properties of the object are equivalent
+     * Checks if all properties of the object are equivalent.
      * @param obj an object to compare
-     * @return
+     * @return true if both objects contain same properties
      */
-    public boolean matches(Object obj) {
+    public final boolean matches(final Object obj) {
         if (!this.equals(obj)) {
             return false;
         }
 
         final Sale other = (Sale) obj;
 
-        if (this.users.equals(other.users)) {
-            return true;
-        } else {
-            return false;
-        }
+        return (this.users.equals(other.users));
     }
 
+    /**
+     * Gets id of this item, which is the same as its hash code.
+     * @return id of this item
+     */
     @Override
-    public int hashCode() {
+    public final int hashCode() {
         return this.id;
     }
 
     /* USER ROLES MANAGEMENT */
 
     /**
-     * Add a user to the current sale
+     * Add a user to the current sale.
      * @param email the user name
      * @param role the corresponding role
      * @return true if the user is added
      */
-    public boolean addUser(String email, Role role) {
+    public final boolean addUser(final String email, final Role role) {
         if (users == null) {
             this.users = new HashMap<>();
         }
@@ -179,20 +232,19 @@ public class Sale extends Model {
     }
 
     /**
-     * Get all the active users in this sale
+     * Get all the active users in this sale.
      * @return all the users
      */
-    public Map<String, Long> getUsers(){
+    public final Map<String, Long> getUsers() {
         return this.users;
     }
 
-
     /**
-     * Get the user role of current sale
+     * Get the user role of current sale.
      * @param email the user name
      * @return the user role(***Which is a enum)
      */
-    public Role getUserRole(String email) {
+    public final Role getUserRole(final String email) {
         Long permissionVal = users.get(email);
 
         if (permissionVal == null) {
@@ -202,12 +254,20 @@ public class Sale extends Model {
         return Role.fromPermit(permissionVal);
     }
 
+    /**
+     * Get all roles except for Sale Admin.
+     * @return All roles in a list
+     */
     public static List<String> getUnrestrictedRoles() {
         List<String> roles = Arrays.asList("Guest", "Book Keeper", "Cashier",
                 "Clerk", "Seller");
         return roles;
     }
 
+    /**
+     * Map string to enum of roles.
+     * @return map of strings to roles
+     */
     public static Map<String, Role> getRoleMap() {
         Map<String, Role> roleMap = new HashMap<>();
         roleMap.put("Guest", Role.GUEST);
@@ -222,32 +282,33 @@ public class Sale extends Model {
     }
 
     /**
-     * Get the user permission number based on their role
+     * Get the user permission number based on their role.
      * @param email the username
      * @return the permission level from 1 to 7, 7 is the highest
      */
-    public int getUserPermission(String email) {
+    public final int getUserPermission(final String email) {
         return getUserRole(email).showPermissionInt();
     }
 
     /* DATE GETTERS & SETTERS */
 
     /**
-     * Get the start date in human format
+     * Get the start date in human format.
      *
      * @return a date in the pattern "MMM d, YYYY"
      */
-    public String getFormattedStartDate() {
+    public final String getFormattedStartDate() {
         return Formatter.date(startDate);
     }
 
 
     /**
-     * A method that returns the date as a date object, so we can force the user to enter
+     * A method that returns the date as a date object,
+     * so we can force the user to enter.
      * a valid start and end date (i.e. end date must be after the start date).
      * @return the start date, as a date object
      */
-    public Date getStartDate() {
+    public final Date getStartDate() {
         return this.startDate;
     }
 
@@ -255,18 +316,18 @@ public class Sale extends Model {
     /**
      * @return the start date
      */
-    public Date getEndDate() {
+    public final Date getEndDate() {
         return this.endDate;
     }
 
 
     /**
-     * Set the start date from string
+     * Set the start date from string.
      *
      * @param input a date in the pattern "yyyy-mm-dd"
      * @return if startDate was set successfully or not
      */
-    public boolean setFormattedStartDate(String input) {
+    public final boolean setFormattedStartDate(final String input) {
         try {
             this.startDate = new SimpleDateFormat("yyyy-MM-dd").parse(input);
             return true;
@@ -276,21 +337,21 @@ public class Sale extends Model {
     }
 
     /**
-     * Get the end date in human format
+     * Get the end date in human format.
      *
      * @return a date in the pattern "MMM d, YYYY"
      */
-    public String getFormattedEndDate() {
+    public final String getFormattedEndDate() {
         return Formatter.date(endDate);
     }
 
     /**
-     * Set the end date from string
+     * Set the end date from string.
      *
      * @param input a date in the pattern "yyyy-mm-dd"
      * @return if endDate was set successfully or not
      */
-    public boolean setFormattedEndDate(String input) {
+    public final boolean setFormattedEndDate(final String input) {
         try {
             this.endDate = new SimpleDateFormat("yyyy-MM-dd").parse(input);
             return true;
@@ -304,62 +365,61 @@ public class Sale extends Model {
     /* PREBUILT QUERIES */
 
     /**
-     * Returns a sale from an ID
+     * Returns a sale from an ID.
      * @param id id of sale we want to find
      * @return a sale with the specified id
      */
-    public static Sale findById(Integer id) {
-        return Sale.find.byId(id.toString());
+    public static Sale findById(final Integer id) {
+        return Sale.FIND.byId(id.toString());
     }
 
     /**
-     * Builds a query for items related to this sale
+     * Builds a query for items related to this sale.
      *
      * @return an expression list for items that have this sale ID
      */
-    public ExpressionList<Item> findItems() {
-        return Item.find.where().eq("sale_id", this.id);
+    public final ExpressionList<Item> findItems() {
+        return Item.FIND.where().eq("sale_id", this.id);
     }
 
     /**
-     * Builds a query for items related to this sale that are unpurchased
+     * Builds a query for items related to this sale that are unpurchased.
      *
      * @return an expression list for unpurchased sale items
      */
-    public ExpressionList<Item> findUnpurchasedItems() {
+    public final ExpressionList<Item> findUnpurchasedItems() {
         return findItems().eq("purchased", false);
     }
 
     /**
-     * Builds a query for items related to this sale that are purchased
+     * Builds a query for items related to this sale that are purchased.
      *
      * @return an expression list for purchased sale items
      */
-    public ExpressionList<Item> findPurchasedItems() {
+    public final ExpressionList<Item> findPurchasedItems() {
         return findItems().eq("purchased", true);
     }
 
     /**
-     * Builds a query for transactions related to this sale
+     * Builds a query for transactions related to this sale.
      *
      * @return an expression list for transactions
      */
-    public ExpressionList<Transaction> findTransactions() {
+    public final ExpressionList<Transaction> findTransactions() {
         return Transaction.find.where().eq("sale_id", this.id);
     }
-    
     /**
-     * Closes a Sale
+     * Closes a Sale.
      */
-    public void close() {
+    public final void close() {
         this.isClosed = true;
     }
-    
+
     /**
-     * Checks to see if a Sale is closed
+     * Checks to see if a Sale is closed.
      * @return boolean true if the sale was closed, false otherwise
      */
-    public boolean isClosed() {
+    public final boolean isClosed() {
         return this.isClosed;
     }
 }

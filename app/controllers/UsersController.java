@@ -16,7 +16,7 @@ public class UsersController extends GBController {
      */
     @Security.Authenticated(Secured.class)
     public final Result index() {
-        return ok(views.html.users.index.render(User.find.all(),
+        return ok(views.html.users.index.render(User.FIND.all(),
                 currentUser()));
     }
 
