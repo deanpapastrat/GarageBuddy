@@ -1,7 +1,7 @@
-@(sale: Sale)
+@(sale: Sale, currentUser: User)
 
 @main("Sell: " + sale.name, "Sales") {
-  @sales.nav(sale, "report")
+  @sales.nav(sale, "report", currentUser)
 
   <div class="row">
     <div class="col-sm-3"></div>
@@ -12,14 +12,13 @@
       </a>
     </div>
     <div class="col-sm-3">
-      <a class="btn btn-block btn-info btn-lg" href="/sales/@sale.id/reportBySeller">
+      <a class="btn btn-block btn-info btn-lg" href="/sales/@sale.id/sellers">
         <i class="fa fa-search">&nbsp;</i>
         Reports by Seller
       </a>
     </div>
 
     <div class="col-sm-3">
-      </a>
 
     </div>
   </div>
