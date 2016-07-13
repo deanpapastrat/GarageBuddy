@@ -6,7 +6,6 @@ import play.data.Form;
 import play.mvc.*;
 import models.*;
 import views.html.sales.*;
-
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
