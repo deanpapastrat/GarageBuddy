@@ -1,5 +1,6 @@
 package controllers;
 
+import com.avaje.ebean.SqlRow;
 import lib.GBController;
 import play.data.Form;
 import play.mvc.*;
@@ -146,22 +147,33 @@ public class SalesController extends GBController {
         Sale sale = Sale.findById(id);
         List<Transaction> trans = sale.transactions;
 
-        return ok(views.html.sales.reportAll.render(sale.name, "All Financial Report", sale, trans));
+        return ok(views.html.sales.reportAll.render(sale.name, "All Financial Report", sale, trans, currentUser()));
     }
 
 
-    public Result reportBySeller(int id) {
+    public Result sellers(int id) {
         Sale sale = Sale.findById(id);
-        List<Transaction> trans = sale.transactions;
+        List<User> sellers = sale.findSellers();
         //Found items that are sold
         //Find the created by
-        return ok(views.html.sales.reportBySeller.render(sale.name, "Financial Report", sale, trans));
+        return ok(views.html.sales.sellers.render(sale.name, "Financial Report", sale, sellers, currentUser()));
+        //return null;
+    }
+
+
+
+    public Result reportBySeller(String email, int id) {
+        Sale sale = Sale.findById(id);
+        List<SqlRow> report = sale.findReport(email, id);
+        Double total = sale.reportTotal(email, id);
+
+        return ok(views.html.sales.reportBySeller.render(sale.name, "Financial Report", sale, report, total, currentUser()));
         //return null;
     }
 
     public Result report(int id) {
         Sale sale = Sale.findById(id);
-        return ok(views.html.sales.report.render(sale));
+        return ok(views.html.sales.report.render(sale, currentUser()));
     }
 
 

@@ -1,13 +1,14 @@
-@(page: String, nav:String, sale: Sale, transactions: List[Transaction])
+@(page: String, nav:String, sale: Sale, transactions: List[Transaction], currentUser: User)
 
 @main(page, nav) {
-  @sales.nav(sale, "report")
+  @sales.nav(sale, "report", currentUser : User)
   <hr class="spacer"/>
   @if(transactions != null && transactions.length > 0) {
     <table class="table table-striped">
       <thead>
         <tr>
           <th>Transaction ID</th>
+          <th>Transaction Time</th>
           <th>Sold To</th>
           <th>Sold By</th>
           <th>Items Sold</th>
@@ -18,6 +19,7 @@
       @for(trans <- transactions) {
         <tr>
           <td>@trans.id</td>
+          <td>@trans.formattedCreatedAt()</td>
           <td>@trans.customerName</td>
           <td>@trans.seller.name</td>
           <td>
@@ -26,7 +28,6 @@
               <tr>
                 <td>@item.name</td>
                 <td>@item.formattedPrice()</td>
-                <td>@item.createdBy.name</td>
               </tr>
             }
             </table>
