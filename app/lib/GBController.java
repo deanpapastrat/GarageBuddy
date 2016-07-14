@@ -91,7 +91,7 @@ public abstract class GBController extends play.mvc.Controller {
             return defaultItems;
         }
 
-        ExpressionList<T> originalQuery = query;
+        //ExpressionList<T> originalQuery = query;
 
         for (int i = 0; i < parameters.size(); i++) {
             if (i != 0) {

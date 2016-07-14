@@ -6,41 +6,83 @@ import play.Logger;
 import play.data.validation.*;
 
 /**
- * Represents a user in GarageBuddy
+ * Represents a user in GarageBuddy.
  *
  * @author Andre Allen, Taj Gillani, Dean Papastrat, and Alex Woods
  * @version 1.0.0
  */
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User extends Model {
 
+    /**
+     * Represents the number of login attempts a user can perform
+     * before being locked out.
+     */
     private static final int MAX_LOGIN_ATTEMPTS = 3;
 
+    /**
+     * Represents the email of the user.
+     */
     @Id @Constraints.Email @Constraints.Required
     public String email;
 
+    /**
+     * Represents the name of the user.
+     */
     @Constraints.Required
     public String name;
 
+    /**
+     * Represents the SHA-1 hash of the user's password.
+     */
     @Constraints.Required
     public String password;
 
+    /**
+     * Represents the street address of the user.
+     */
     public String address;
+
+    /**
+     * Represents the city the user lives in.
+     */
     public String city;
+
+    /**
+     * Represents the state the user lives in.
+     */
     public String state;
+
+    /**
+     * Represents the ZIP code of the user.
+     */
     public String postalCode;
 
+    /**
+     * Identifies the user as a super admin or not.
+     */
     public boolean isSuperUser;
-    public static final Finder<String, User> find = new Finder<String, User>(User.class);
+
+    /**
+     * Provides a helper for a finder object for easy querying.
+     */
+    public static final Finder<String, User> FIND = new Finder<String, User>(
+            User.class);
+
+    /**
+     * Number of times the user has tried to log in.
+     */
     private int loginAttempts = 0;
 
     /**
+     * Creates a user.
+     *
      * @param name name of the User
      * @param email email of the User
      * @param password password of the User
      */
-    public User(String name, String email, String password) {
+    public User(final String name, final String email, final String password) {
         this.name = name;
         this.email = email;
         try {
@@ -50,10 +92,14 @@ public class User extends Model {
         }
     }
 
+    /* PASSWORDS */
+
     /**
+     * Converts the password to a secure hash and sets it on the user.
+     *
      * @param password the password to set in place of the existing password
      */
-    public void setPassword(String password) {
+    public final void setPassword(final String password) {
         try {
             this.password = PasswordStorage.createHash(password);
         } catch (Exception echo) {
@@ -61,10 +107,12 @@ public class User extends Model {
         }
     }
     /**
+     * Checks to see if the password matches the one stored in the DB.
+     *
      * @param login string of the password the user tries to log in with
      * @return true or false: is supplied password is the correct password?
      */
-    public boolean checkPassword(String login) {
+    public final boolean checkPassword(final String login) {
         try {
             return PasswordStorage.verifyPassword(login, this.password);
         } catch (Exception echo) {
@@ -74,32 +122,23 @@ public class User extends Model {
 
     /**
      * Checks if the user has all non-null fields.
-     * @return true or false: this user is not null, i.e., it has values for all fields
+     *
+     * @return true or false: this user is not null
      */
 
-    public boolean exists() {
-        return ((this.name != null) &&
-                (this.email != null) &&
-                (this.password != null));
+    public final boolean exists() {
+        return ((this.name != null)
+                && (this.email != null)
+                && (this.password != null));
     }
 
     /**
-     * Find a user by email
-     * @param email email address of user
-     * @return the user matching the email
-     */
-    public static User findByEmail(String email) {
-        if (email == null) {
-            return null;
-        }
-        return find.where().ieq("email", email).findUnique();
-    }
-
-    /**
-     * Ad-hoc validation for the user; ensures there isn't a user with the same email (uniqueness).
+     * Ad-hoc validation for the user; ensures there isn't a user with the
+     * same email (uniqueness).
+     *
      * @return null if valid, message if not
      */
-    public String validate() {
+    public final String validate() {
         User user = User.findByEmail(email);
         if (user != null && user.email.equals(email)) {
             return "Email " + email + " is already taken.";
@@ -107,62 +146,89 @@ public class User extends Model {
         return null;
     }
 
-    /**
-     * This is a query that uses email as the key to search for a particular user
-     * Side note, we're going to want to make sure we don't add multiple users with the same email
-     * @param email
-     * @return true if we find a user with email, and false otherwise
-     */
-    public boolean isUser(String email) {
-        User testUser = User.find.byId(email);
-        return testUser.exists();
-    }
 
     /* LOGIN ATTEMPTS */
 
     /**
-     * Gets the number of login attempts the user has done
+     * Gets the number of login attempts the user has done.
+     *
      * @return number of times user has tried to log in
      */
-    public int getLoginAttempts() {
+    public final int getLoginAttempts() {
         return loginAttempts;
     }
 
     /**
-     * Gets the number of login attempts the user may do before being locked out
+     * Gets the number of login attempts the user may perform before being
+     * locked out.
+     *
      * @return number of tries the user has left to log in
      */
-    public int getLoginAttemptsRemaining() {
+    public final int getLoginAttemptsRemaining() {
         return MAX_LOGIN_ATTEMPTS - loginAttempts;
     }
 
     /**
-     * Increases the number of login attempts by 1
+     * Increases the number of login attempts by 1.
      */
-    public void incLoginAttempts() {
+    public final void incLoginAttempts() {
         this.loginAttempts += 1;
         save();
     }
 
     /**
-     * Resets the number of login attempts to 0
+     * Resets the number of login attempts to 0.
      */
-    public void resetLoginAttempts() {
+    public final void resetLoginAttempts() {
         this.loginAttempts = 0;
         save();
     }
 
     /**
-     * Checks to see whether or not the user can attempt to login
+     * Checks to see whether or not the user can attempt to login.
+     *
      * @return whether or not the user should be allowed to try to login
      */
-    public boolean canLogin() {
+    public final boolean canLogin() {
         return loginAttempts < MAX_LOGIN_ATTEMPTS;
     }
 
     /* PERMISSIONS MANAGEMENT */
 
-    public boolean can(String action) {
-        return isSuperUser; // TODO: fully implement permissions
+    /**
+     * Determines whether or not a user is allowed to perform an action.
+     * TODO: fully implement permissions
+     *
+     * @param action the action the user wants to perform
+     * @return whether or not the user may perform that action
+     */
+    public final boolean can(final String action) {
+        return isSuperUser;
+    }
+
+    /* QUERIES */
+
+    /**
+     * Find a user by email.
+     *
+     * @param email email address of user
+     * @return the user matching the email
+     */
+    public static final User findByEmail(final String email) {
+        if (email == null) {
+            return null;
+        }
+        return FIND.where().ieq("email", email).findUnique();
+    }
+
+    /**
+     * This is a query that uses email as the key to search for a user.
+     *
+     * @param email email of user to find
+     * @return true if we find a user with email, and false otherwise
+     */
+    public static final boolean isUser(final String email) {
+        User testUser = User.FIND.byId(email);
+        return testUser.exists();
     }
 }

@@ -34,6 +34,10 @@ GET     /sales/:id/delete           controllers.SalesController.delete(id: Integ
 POST    /sales/:id/delete           controllers.SalesController.postDelete(id: Integer)
 GET     /sales/:id/report           controllers.SalesController.report(id: Integer)
 GET     /sales/:id/sell             controllers.SalesController.sell(id: Integer)
+GET     /sales/:id/members          controllers.SalesController.members(id: Integer)
+GET     /sales/:id/addMember        controllers.SalesController.addMember(id: Integer)
+POST    /sales/:id/addMember        controllers.SalesController.postAddMember(id: Integer)
+
 
 # Items Routes
 GET     /sales/:saleId/items/new    controllers.ItemsController.create(saleId: Integer)

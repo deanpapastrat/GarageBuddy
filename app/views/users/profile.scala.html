@@ -1,6 +1,6 @@
-@(page: String, nav:String, userForm: Form[User])
+@(userForm: Form[User], currentUser: User)
 
-@main(page, nav) {
+@main("Profile", "Profile") {
     <div class="page-header">
         <h1>Profile <small>it's all about you</small></h1>
     </div>
@@ -62,7 +62,7 @@
                         <hr class="spacer"/>
                         <hr class="spacer"/>
                         <p>
-                            <strong>GarageBuddy 1.0.0.alpha-6</strong>
+                            <strong>GarageBuddy 1.0.0.alpha-7</strong>
                             <small><br /><a href="https://github.com/deanpapastrat/GarageBuddy" target="_blank">Source Code</a></small>
                         </p>
                         <hr/>

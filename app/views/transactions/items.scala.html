@@ -1,6 +1,6 @@
-@(transaction: Transaction, addedItems: List[Item], availableItems: List[Item])
+@(transaction: Transaction, addedItems: List[Item], availableItems: List[Item], currentUser: User)
 @main("Transaction #" + transaction.id, "Sales") {
-    @sales.nav(transaction.sale, "transactions")
+    @sales.nav(transaction.sale, "transactions", currentUser: User)
     <h3>
         Modify Items - #@transaction.id
         <a class="btn btn-success btn-sm pull-right" href="/transactions/@transaction.id">

@@ -1,6 +1,6 @@
-@(transaction: Transaction, items: List[Item])
+@(transaction: Transaction, items: List[Item], currentUser: User)
 @main("Transaction #" + transaction.id, "Sales") {
-    @sales.nav(transaction.sale, "transactions")
+    @sales.nav(transaction.sale, "transactions", currentUser: User)
     <h3>
         Transaction Summary - #@transaction.id
     </h3>
@@ -32,10 +32,12 @@
     <hr/>
     <h4>
         Items List
-        <a class="btn btn-warning btn-xs pull-right" href="/transactions/@transaction.id/items">
-            <i class="fa fa-pencil">&nbsp;</i>
-            Modify Items
-        </a>
+        @if(!transaction.sale.isClosed()) {
+            <a class="btn btn-warning btn-xs pull-right" href="/transactions/@transaction.id/items">
+                <i class="fa fa-pencil">&nbsp;</i>
+                Modify Items
+            </a>
+        }
     </h4>
     <hr class="spacer"/>
     @if(items != null && items.length > 0) {
@@ -77,10 +79,12 @@
                 <i class="fa fa-print">&nbsp;</i>
                 Print Receipt
             </a>
-            <a class="btn btn-danger" href="/transactions/@transaction.id/delete">
-                <i class="fa fa-times">&nbsp;</i>
-                Cancel Transaction
-            </a>
+            @if(!transaction.sale.isClosed()) {
+                <a class="btn btn-danger" href="/transactions/@transaction.id/delete">
+                    <i class="fa fa-times">&nbsp;</i>
+                    Cancel Transaction
+                </a>
+            }
         </div>
 
     } else {
@@ -89,7 +93,7 @@
             <p>
                 Why don't you try adding one? Or 2? Or 42?
             </p>
-            <a class="btn btn-success" href="/transactions/@transaction.id/items">
+            <a class="btn btn-success" @if(transaction.sale.isClosed()){ disabled="true" } else {href="/transactions/@transaction.id/items"}>
                 <i class="fa fa-plus">&nbsp;</i>
                 Add Items
             </a>
