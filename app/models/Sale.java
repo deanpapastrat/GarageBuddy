@@ -5,6 +5,8 @@ import com.avaje.ebean.Query;
 import com.avaje.ebean.annotation.Sql;
 import lib.Formatter;
 
+import com.avaje.ebean.ExpressionList;
+import com.avaje.ebean.Model;
 import com.avaje.ebean.annotation.DbJsonB;
 import play.Logger;
 import play.data.format.*;
@@ -13,8 +15,10 @@ import play.data.validation.*;
 import javax.persistence.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.*;
-import lib.Formatter;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Represents a sale in GarageBuddy
@@ -39,7 +43,7 @@ public class Sale extends Model {
 
     @Constraints.Required @Formats.DateTime(pattern="yyyy-MM-dd")
     public Date endDate = new Date();
-    
+
     // sale closed flag - TG
     private boolean isClosed;
 
@@ -173,7 +177,7 @@ public class Sale extends Model {
         }
 
         users.put(email, role.showPermission());
-
+        this.save();
         return true;
     }
 
@@ -412,14 +416,14 @@ public class Sale extends Model {
     public ExpressionList<Transaction> findTransactions() {
         return Transaction.find.where().eq("sale_id", this.id);
     }
-    
+
     /**
      * Closes a Sale
      */
     public void close() {
         this.isClosed = true;
     }
-    
+
     /**
      * Checks to see if a Sale is closed
      * @return boolean true if the sale was closed, false otherwise
