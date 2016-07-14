@@ -31,7 +31,6 @@ create table sales (
 create table transactions (
   id                            serial not null,
   created_at                    timestamp,
-  formatted_created_at          varchar(255),
   customer_name                 varchar(255),
   value                         decimal default '0.00',
   seller_email                  varchar(255),
