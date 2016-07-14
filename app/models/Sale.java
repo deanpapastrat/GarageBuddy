@@ -46,8 +46,6 @@ public class Sale extends Model {
     @DbJsonB
     public Map<String, Long> users = new HashMap<>();
 
-    //public List<String> sellerEmails = new ArrayList<>();
-
     @OneToMany(mappedBy = "sale")
     public List<Item> items;
 
@@ -175,9 +173,7 @@ public class Sale extends Model {
         }
 
         users.put(email, role.showPermission());
-//        if (role.showPermission() >= 5) {
-//            this.sellerEmails.add(email);
-//        }
+
         return true;
     }
 
@@ -323,7 +319,7 @@ public class Sale extends Model {
 
 
     public List<User> findSellers() {
-        //Can I keep track of the sellers instead of looping every time?
+
         List<String> sellerEmails = new ArrayList<>();
         for (String email: this.users.keySet()) {
             if (getUserPermission(email) >= 5) {
@@ -332,6 +328,7 @@ public class Sale extends Model {
         }
         Query<User> query = Ebean.createQuery(User.class);
         List<User> sellers= query.where().in("email", sellerEmails).findList();
+
         return sellers;
     }
 
@@ -344,7 +341,7 @@ public class Sale extends Model {
 
     public List<SqlRow> findReport(String sellerEmail, int saleId) {
         String sql = "SELECT * FROM (SELECT items.name AS itemname, items.id AS itemid, items.created_by_email as owneremail,\n" +
-                "items.description,items.price, items.sold_for, transactions.formatted_created_at AS soldat,\n" +
+                "items.description,items.price, items.sold_for, transactions.created_at AS soldat,\n" +
                 "transactions.customer_name AS soldTo, transactions.sale_id AS saleid, transactions.id AS transid\n" +
                 "FROM (items INNER JOIN transactions ON items.transaction_id = transactions.id) \n" +
                 "WHERE(items.created_by_email = :ownerEmail AND transactions.sale_id = :id)) AS output1,\n" +

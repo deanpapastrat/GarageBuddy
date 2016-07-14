@@ -35,7 +35,6 @@ public class Transaction extends Model {
     @Formats.DateTime(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     public LocalDateTime createdAt = LocalDateTime.now();
 
-    public String formattedCreatedAt;
 
     @Constraints.Required
     public String customerName;
@@ -80,7 +79,6 @@ public class Transaction extends Model {
         this.sale = sale;
         this.seller = seller;
         this.createdAt = LocalDateTime.now();
-        this.formattedCreatedAt = formattedCreatedAt();
         this.numItems = addItems(items);
         updateItemValues(false);
     }

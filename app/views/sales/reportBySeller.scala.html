@@ -1,4 +1,5 @@
 @import com.avaje.ebean.SqlRow
+@import lib.Formatter
 @(page: String, nav:String, sale: Sale, report: List[SqlRow], total: Double, currentUser: User)
 
 @main(page, nav) {
@@ -31,7 +32,7 @@
           <td>$@row.getString("sold_for")</td>
           <td>@row.getString("itemid")</td>
           <td>@row.getString("transid")</td>
-          <td>@row.getString("soldat")</td>
+          <td>@Formatter.time(row.getTimestamp("soldat").toLocalDateTime())</td>
 
         </tr>
       }
