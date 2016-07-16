@@ -114,6 +114,7 @@ float: left;
 .tag-value {
     font-size: 7rem;
     font-weight: 300;
+
 }
 
 .tag-currency {
@@ -154,8 +155,9 @@ float: left;
     font-size: 1.4rem;
     text-align: center;
     white-space: nowrap;
-    overflow: hidden;
+    overflow: auto;
     text-overflow: ellipsis;
+
 }
 
 .tag-body-features em {
@@ -188,21 +190,42 @@ float: left;
     margin: 0;
 }
 
+.barcode {
+    font-size: 3.5rem;
+    height: 0%;
+    width: 80%;
+    padding: 0.7em 0.6em;
+    text-align: center;
+    overflow: hidden;
+    //text-overflow: ellipsis;
+    font-color: black;
+    transform : scale(1,1.8);
+    -webkit-transform:scale(1,1.8); /* Safari and Chrome */
+    -moz-transform:scale(1,1.8); /* Firefox */
+    -ms-transform:scale(1,1.8); /* IE 9+ */
+    -o-transform:scale(1,1.8); /* Opera */
+
+
+}
+
+
+
+//currently not used...
 
 .tag-footer {
     position: absolute;
     z-index: 1;
-    top: 0;
+    padding: 7px 3px;
     left: 0;
     /* on mobile it covers the .cd-pricing-header */
-    height: 80px;
+    height: 60px;
     width: 100%;
 }
 
 .tag-footer {
     position: relative;
-    height: auto;
-    padding: 1.75em 0;
+    height: fit-content;
+    //padding: 1.0em 0;
     text-align: center;
     font-size: 80.0%;
 }
