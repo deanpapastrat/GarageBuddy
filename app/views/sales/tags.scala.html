@@ -3,11 +3,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+
     <meta charset="UTF-8">
     <title>Print Tags</title>
     <link href="@routes.Assets.versioned("stylesheets/tag.css")" rel="stylesheet" media="screen">
     <link rel="shortcut icon" type="image/png" href="@routes.Assets.versioned("images/favicon.png")">
     <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,300,700' rel='stylesheet' media="all" type='text/css'>
+    <link rel="stylesheet" href="@routes.Assets.versioned("stylesheets/barcode-font.css")">
+
+    <script src="@routes.Assets.versioned("scripts/barcode-font.js")"></script>
 </head>
 <body>
     <div class="tag-container">
@@ -28,12 +32,21 @@
                         <li>@item.description</li>
                         <li>Sold by @item.createdBy.name</li>
                         <li>Item id: <em>@item.id</em></li>
+
+                        <div class="barcode" id=@item.id></div>
+                        <script>
+                            var itemIDcode = barcodeFont('code39', @item.id, true)
+                                .create({
+                                tagName: 'span',
+                                id: 'code39',
+                                className: 'codes test'
+                             });
+
+                            document.getElementById(@item.id).appendChild(itemIDcode);
+                        </script>
                     </ul>
                 </div>
 
-                <footer class="tag-footer">
-                    <text>Thanks for shopping with GarageBuddy!</text>
-                </footer>
             </li>
             }
 
