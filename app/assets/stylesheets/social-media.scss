@@ -12,22 +12,26 @@ html {
 
 /* Wrapper */
 .icon-button {
-    background-color: #CDCDCD;
+    align-items: center;
+    background-color: #fff;
     border-radius: 3.6rem;
+    border-style: solid;
+    border-width: 2px;
     cursor: pointer;
-    display: inline-block;
+    display: inline-flex;
     font-size: 2.0rem;
     height: 3.6rem;
+    justify-content: center;
     line-height: 3.6rem;
     margin: 0 5px;
     position: relative;
     text-align: center;
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
     width: 3.6rem;
     text-decoration: none;
+    
+    &:hover {
+        text-decoration: none;
+    }
 }
 
 /* Circle */
@@ -54,14 +58,17 @@ html {
     text-decoration: none;
 }
 .twitter span {
+    border-color: #4099ff;
     background-color: #4099ff;
     text-decoration: none;
 }
 .facebook span {
+    border-color: #3B5998;
     background-color: #3B5998;
     text-decoration: none;
 }
 .google-plus span {
+    border-color: #db5a3c;
     background-color: #db5a3c;
     text-decoration: none;
 }
@@ -72,7 +79,6 @@ html {
     height: 3.6rem;
     left: 0;
     line-height: 3.6rem;
-    position: absolute;
     top: 0;
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
@@ -82,10 +88,20 @@ html {
     z-index: 10;
     text-decoration: none;
 }
+
+.icon-button.twitter {
+    border-color: #4099ff;
+}
+
 .icon-button .icon-twitter {
     color: #4099ff;
     text-decoration: none;
 }
+
+.icon-button.facebook {
+    border-color: #3B5998;
+}
+
 .icon-button .icon-facebook {
     color: #3B5998;
     text-decoration: none;
@@ -94,6 +110,11 @@ html {
     color: #db5a3c;
     text-decoration: none;
 }
+
+.icon-button.google-plus {
+    border-color: #db5a3c;
+}
+
 .icon-button:hover .icon-twitter,
 .icon-button:hover .icon-facebook,
 .icon-button:hover .icon-google-plus {
