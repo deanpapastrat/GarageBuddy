@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 @(sale: Sale, items: List[Item], query: String, twitterText: String, shareURL: String, currentUser: User)
 
 @main(sale.name, "Sales") {
@@ -19,44 +20,33 @@
                         </button>
                     </span>
                 </div>
-            </div>
-        </form>
-        <hr class="spacer"/>
-        <table class="table table-striped">
-            <thead>
-            <tr>
-                <th>Item Name</th>
-                <th>Price</th>
-                <th>Description</th>
-                <th>ID</th>
-                <th>Purchased</th>
-                <th>Created By</th>
-            </tr>
-            </thead>
+=======
+@(sale: Sale, currentUser: User)
 
-        @if(items != null && items.length > 0) {
-            <tbody>
-                @for(item <- items) {
-                    <tr>
-                        <td>
-                            <a href="/items/@item.id">@item.name</a>
-                        </td>
-                        <td>@item.formattedPrice()</td>
-                        <td>@item.description</td>
-                        <td>@item.id</td>
-                        <td>@item.purchased.toString().capitalize</td>
-                        <td>@item.createdBy.name</td>
-                    </tr>
-                }
-            </tbody>
-            </table>
-        } else {
-            </table>
-            <div class="panel text-center">
-                <div class="panel-body">
-                    <h3>No results were found for query: "@query"</h3>
-                </div>
+@main(sale.name, "Sales") {
+    @sales.nav(sale, "dashboard", currentUser: User)
+    <div class="sale-charts">
+        <div class="row">
+            <div class="col-sm-4">
+                <h3>Sales to Date</h3>
+                <div id="sales-over-time-chart" class="chart" data-chart-y-axis-title='Sales' data-chart-unit-suffix='sales' data-chart-key='transactionsOverTime' data-chart-series-name="@sale.name Sales"></div>
+>>>>>>> refs/remotes/origin/master
             </div>
+            <div class="col-sm-4">
+                <h3>Revenue to Date</h3>
+                <div id="revenue-over-time-chart" class="chart" data-chart-y-axis-title='Revenue' data-chart-unit-prefix='$' data-chart-key='revenueOverTime' data-chart-series-name="@sale.name Revenue"></div>
+            </div>
+            <div class="col-sm-4">
+                <h3>Items Sold to Date</h3>
+                <div id="items-over-time-chart" class="chart" data-chart-y-axis-title='Items Sold' data-chart-unit-suffix='items' data-chart-key='itemsOverTime' data-chart-series-name="@sale.name Items"></div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4">
+                <h3>Sales per Day</h3>
+                <div id="sales-per-day-chart" class="chart" data-chart-y-axis-title='Sales' data-chart-unit-suffix='sales' data-chart-key='transactionsPerDay' data-chart-series-name="@sale.name Sales"></div>
+            </div>
+<<<<<<< HEAD
         }
         @if(!sale.isClosed()) {
             <a class="btn btn-success" href="/sales/@sale.id/items/new">
@@ -96,18 +86,17 @@
                     <i class="fa fa-plus">&nbsp;</i>
                     Add New Item
                 </a>
+=======
+            <div class="col-sm-4">
+                <h3>Revenue per Day</h3>
+                <div id="revenue-per-day-chart" class="chart" data-chart-y-axis-title='Revenue' data-chart-unit-prefix='$' data-chart-key='revenuePerDay' data-chart-series-name="@sale.name Revenue"></div>
+>>>>>>> refs/remotes/origin/master
             </div>
-        } else {
-            <div class="jumbotron">
-                <h1>This sale was closed with no items.</h1>
-                <p>
-                    The user who created this sale has closed it. Normally, this would be a list of all the items that were
-                    at the sale, but it seems like there were no items.
-                    <br/>
-                    <small><i>Try exploring some other sales and see what GarageBuddy can do for you.</i></small>
-                </p>
+            <div class="col-sm-4">
+                <h3>Items Sold per Day</h3>
+                <div id="items-per-day-chart" class="chart" data-chart-y-axis-title='Items Sold' data-chart-unit-suffix='items' data-chart-key='itemsPerDay' data-chart-series-name="@sale.name Items"></div>
             </div>
-        }
-        
-    }
+        </div>
+    </div>
+    <script>new GarageBuddy.SalesCharts({id: "@sale.id", el: $('.sale-charts')});</script>
 }
