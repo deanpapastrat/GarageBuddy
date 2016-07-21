@@ -40,8 +40,6 @@ public class SalesController extends GBController {
                 currentUser()));
     }
 
-
-
     /**
      * Validates sale form and creates a sale with the provided data.
      * @return redirect to sale or renders sale form with validation errors
@@ -130,9 +128,33 @@ public class SalesController extends GBController {
     @Security.Authenticated(Secured.class)
     public final Result show(final int id) {
         Sale sale = Sale.findById(id);
+        return ok(views.html.sales.show.render(sale, currentUser()));
+    }
+
+    /**
+     * Sends a JSON object with all stats details needed for a dashboard
+     *
+     * @param id id of the sale
+     * @return stats JSON
+     */
+    @Security.Authenticated(Secured.class)
+    public final Result stats(final int id) {
+        Sale sale = Sale.findById(id);
+        return ok(sale.statsJson());
+    }
+
+    /**
+     * Shows the program dashboard.
+     *
+     * @param id id of the sale
+     * @return a webpage showing the items
+     */
+    @Security.Authenticated(Secured.class)
+    public final Result items(final int id) {
+        Sale sale = Sale.findById(id);
         List<Item> queryItems = queryItems(Item.class, sale.findItems(),
                 "name", "name", sale.items);
-        return ok(views.html.sales.show.render(sale, queryItems,
+        return ok(views.html.sales.items.render(sale, queryItems,
                 queryString(), currentUser()));
     }
 

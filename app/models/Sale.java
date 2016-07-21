@@ -1,13 +1,22 @@
 package models;
 
+import com.avaje.ebean.Ebean;
+import com.avaje.ebean.SqlRow;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import lib.Formatter;
 
 import com.avaje.ebean.ExpressionList;
 import com.avaje.ebean.Model;
 import com.avaje.ebean.annotation.DbJsonB;
 //import play.Logger;
+import play.Logger;
 import play.data.format.*;
 import play.data.validation.*;
+import play.libs.Json;
 
 import javax.persistence.*;
 import java.text.ParseException;
@@ -420,5 +429,124 @@ public class Sale extends Model {
      */
     public final boolean isClosed() {
         return this.isClosed;
+    }
+
+    /**
+     * IMPORTANT: THIS IS VULNERABLE TO SQL INJECTION. DO NOT ALLOW
+     * USER INPUT TO BE SENT TO THIS FUNCTION!!!
+     *
+     * Returns SQL rows aggregated and grouped by date
+     *
+     * @param selector what the query should select along with date
+     * @return a list of SQL rows
+     */
+    private final List<SqlRow> groupedByDay(String selector) {
+        String sql = "SELECT " + selector + ", date_trunc('day', CREATED_AT) "
+                + " as date FROM transactions WHERE sale_id = :id "
+                + "GROUP BY date_trunc('day', CREATED_AT);";
+        List<SqlRow> rows = Ebean.createSqlQuery(sql).setParameter("id", id)
+                .findList();
+        return rows;
+    }
+
+    /**
+     * Maps date to number of transactions made on that day
+     *
+     * @return map of dates and number of transactions
+     */
+    public final Map<String, Integer> transactionsPerDay() {
+        Map<String, Integer> datesMap = new HashMap<>();
+        for (SqlRow row : groupedByDay("count(*)")) {
+            datesMap.put(row.getString("date"), row.getInteger("count"));
+        }
+        return datesMap;
+    }
+
+    /**
+     * Maps date to number of transactions made since the sale started
+     *
+     * @return map of dates and total num of transactions to date
+     */
+    public final Map<String, Integer> transactionsOverTime() {
+        Map<String, Integer> datesMap = new HashMap<>();
+        int count = 0;
+        for (SqlRow row : groupedByDay("count(*)")) {
+            count += row.getInteger("count");
+            datesMap.put(row.getString("date"), count);
+        }
+        return datesMap;
+    }
+
+    /**
+     * Maps date to total revenue made on that day
+     *
+     * @return map of dates and total revenue
+     */
+    public final Map<String, Double> revenuePerDay() {
+        Map<String, Double> datesMap = new HashMap<>();
+        for (SqlRow row : groupedByDay("sum(VALUE)")) {
+            datesMap.put(row.getString("date"), row.getDouble("sum"));
+        }
+        return datesMap;
+    }
+
+    /**
+     * Maps date to number of transactions made since the sale started
+     *
+     * @return map of dates and total num of transactions to date
+     */
+    public final Map<String, Double> revenueOverTime() {
+        Map<String, Double> datesMap = new HashMap<>();
+        Double sum = 0.0;
+        for (SqlRow row : groupedByDay("sum(VALUE)")) {
+            sum += row.getInteger("sum");
+            datesMap.put(row.getString("date"), sum);
+        }
+        return datesMap;
+    }
+
+    /**
+     * Maps date to total revenue made on that day
+     *
+     * @return map of dates and total revenue
+     */
+    public final Map<String, Double> itemsPerDay() {
+        Map<String, Double> datesMap = new HashMap<>();
+        for (SqlRow row : groupedByDay("sum(NUM_ITEMS)")) {
+            datesMap.put(row.getString("date"), row.getDouble("sum"));
+        }
+        return datesMap;
+    }
+
+    /**
+     * Maps date to number of transactions made since the sale started
+     *
+     * @return map of dates and total num of transactions to date
+     */
+    public final Map<String, Double> itemsOverTime() {
+        Map<String, Double> datesMap = new HashMap<>();
+        Double sum = 0.0;
+        for (SqlRow row : groupedByDay("sum(NUM_ITEMS)")) {
+            sum += row.getInteger("sum");
+            datesMap.put(row.getString("date"), sum);
+        }
+        return datesMap;
+    }
+
+    /* JSON Stuff */
+
+    /**
+     * Converts stats into a JSON object
+     * @return a json object with all stats
+     */
+    public final JsonNode statsJson() {
+        ObjectNode json = Json.newObject();
+        json.putPOJO("itemsPerDay", itemsPerDay());
+        json.putPOJO("itemsOverTime", itemsOverTime());
+        json.putPOJO("revenuePerDay", revenuePerDay());
+        json.putPOJO("revenueOverTime", revenueOverTime());
+        json.putPOJO("transactionsPerDay", transactionsPerDay());
+        json.putPOJO("transactionsOverTime", transactionsOverTime());
+        return json;
     }
 }
