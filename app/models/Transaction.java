@@ -14,7 +14,7 @@ import java.util.List;
  * Represents a transaction between a customer and an item.
  *
  * @author Dean Papastrat
- * @version 1.0.0
+ * @version 1.0.2
  */
 @Entity
 @Table(name="transactions")
@@ -113,6 +113,19 @@ public class Transaction extends Model {
         return this.id;
     }
 
+    /* EMAIL */
+    
+    /**
+     * Creates an Email and attaches this transaction to it.
+     * Then sends the email via mailOut().
+     *
+     */
+    public void sendEmail() {
+        TransactionEmail em = new TransactionEmail(this);
+        em.mailOut();
+    }
+    
+    
     /* ADD AND REMOVE ITEMS */
 
     /**
