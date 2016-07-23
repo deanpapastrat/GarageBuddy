@@ -49,6 +49,8 @@ GET     /sales/:saleId/items/new    controllers.ItemsController.create(saleId: I
 POST    /sales/:saleId/items/new    controllers.ItemsController.postCreate(saleId: Integer)
 GET     /items/:id                  controllers.ItemsController.edit(id: Integer)
 POST    /items/:id                  controllers.ItemsController.postEdit(id: Integer)
+GET     /items/:id/bid              controllers.ItemsController.bid(id: Integer)
+POST    /items/:id/bid              controllers.ItemsController.postBid(id: Integer)
 GET     /items/:id/delete           controllers.ItemsController.delete(id: Integer)
 POST    /items/:id/delete           controllers.ItemsController.postDelete(id: Integer)
 GET     /items/:id/tag              controllers.ItemsController.tag(id: Integer)
@@ -64,6 +66,7 @@ GET     /transactions/:id/items     controllers.TransactionsController.items(id:
 GET     /transactions/:id/receipt   controllers.TransactionsController.receipt(id: Integer)
 
 GET     /transactions/:id/items/:itemId/add     controllers.TransactionsController.addItem(id: Integer, itemId: Integer)
+POST    /transactions/:id/items/:itemId/add     controllers.TransactionsController.addItem(id: Integer, itemId: Integer)
 GET     /transactions/:id/items/:itemId/remove  controllers.TransactionsController.removeItem(id: Integer, itemId: Integer)
 
 # TODO..future pages!!!

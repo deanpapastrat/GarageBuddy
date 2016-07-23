@@ -42,6 +42,9 @@ public class ItemsController extends GBController {
         } else {
             Item item = itemForm.get();
             item.createdBy = currentUser();
+            if(formParam("bidding").equals("on")) {
+                item.bidding = true;
+            }
             item.addToSale(sale); // Autosaves
             return redirect("/sales/"
                     + Integer.toString(item.sale.id) + "/items");
@@ -81,6 +84,36 @@ public class ItemsController extends GBController {
                     + Integer.toString(item.sale.id) + "/items");
         }
     }
+
+    /**
+     * Bid on an item in the database.
+     * @param id integer ID of the item to edit
+     * @return a webpage representing the bidding on the item
+     */
+    @Security.Authenticated(Secured.class)
+    public Result bid(int id) {
+        Item item = Item.findById(id);
+        return ok(views.html.items.bid.render(item, modelForm(item), currentUser()));
+    }
+
+    /**
+     * Edits an item with the provided bid data
+     * @param id integer ID of the item being edited
+     * @return redirect to item's sale page
+     */
+    @Security.Authenticated(Secured.class)
+    public Result postBid(int id) {
+        Item item = Item.findById(id);
+        double bid = Double.parseDouble(formParam("bid"));
+        if (bid > item.currentBid) {
+            item.currentBid = bid;
+            item.reservedBy = currentUser();
+            item.save();
+        }
+        return redirect("/sales/"
+                    + Integer.toString(item.sale.id));
+    }
+
 
     /**
      * Provides a confirmation for deletion of an item from the database.

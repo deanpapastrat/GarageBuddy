@@ -15,6 +15,9 @@ create table items (
   minprice                      float,
   purchased                     boolean,
   sold_for                      float,
+  bidding                       boolean,
+  reserved_by_email             varchar(255),
+  current_bid                   float,
   constraint pk_items primary key (id)
 );
 
@@ -65,6 +68,9 @@ create index ix_items_transaction_id on items (transaction_id);
 alter table items add constraint fk_items_sale_id foreign key (sale_id) references sales (id) on delete restrict on update restrict;
 create index ix_items_sale_id on items (sale_id);
 
+alter table items add constraint fk_items_reserved_by_email foreign key (reserved_by_email) references users (email) on delete restrict on update restrict;
+create index ix_items_reserved_by_email on items (reserved_by_email);
+
 alter table transactions add constraint fk_transactions_seller_email foreign key (seller_email) references users (email) on delete restrict on update restrict;
 create index ix_transactions_seller_email on transactions (seller_email);
 
@@ -88,6 +94,9 @@ drop index if exists ix_items_transaction_id;
 
 alter table if exists items drop constraint if exists fk_items_sale_id;
 drop index if exists ix_items_sale_id;
+
+alter table if exists items drop constraint if exists fk_items_reserved_by_email;
+drop index if exists ix_items_reserved_by_email;
 
 alter table if exists transactions drop constraint if exists fk_transactions_seller_email;
 drop index if exists ix_transactions_seller_email;

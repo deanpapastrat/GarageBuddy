@@ -1,4 +1,4 @@
-@(transaction: Transaction, addedItems: List[Item], availableItems: List[Item], currentUser: User)
+@(transaction: Transaction, itemForm: Form[Item], addedItems: List[Item], availableItems: List[Item], currentUser: User)
 @main("Transaction #" + transaction.id, "Sales") {
     @sales.nav(transaction.sale, "transactions", currentUser: User)
     <h3>
@@ -17,6 +17,7 @@
                     <th>Item Name</th>
                     <th>Price</th>
                     <th>Description</th>
+                    <th>Sold For</th>
                     <th>ID</th>
                     <th>Created By</th>
                     <th></th>
@@ -28,6 +29,7 @@
                     <td>@item.name</td>
                     <td>@item.formattedPrice()</td>
                     <td>@item.description</td>
+                    <td>@item.soldFor</td>
                     <td>@item.id</td>
                     <td>@item.createdBy.name</td>
                     <td>
@@ -56,6 +58,7 @@
                     <th>Item Name</th>
                     <th>Price</th>
                     <th>Description</th>
+                    <th>Sold For</th>
                     <th>ID</th>
                     <th>Created By</th>
                     <th></th>
@@ -63,22 +66,34 @@
             </thead>
             <tbody>
             @for(item <- availableItems) {
+
                 <tr>
+                    <form method="POST" action="/transactions/@transaction.id/items/@item.id/add">
                     <td>@item.name</td>
-                    <td>@item.formattedPrice()</td>
+                    <td>@if(item.currentBid > item.price) {@item.formattedBid()
+                        } else {@item.formattedPrice()}
+                    </td>
                     <td>@item.description</td>
+                    <td>
+                        <div class="form-group">
+                        <input class="form-control" type="number" name="soldFor" step=".01" min="@item.minprice"
+                        required placeholder="Sold For" value="@itemForm("soldFor").value()">
+                        </div>
+                    </td>
                     <td>@item.id</td>
                     <td>@item.createdBy.name</td>
                     <td>
-                        <a class="btn btn-xs btn-success" href="/transactions/@transaction.id/items/@item.id/add">
+                        <button type = "submit" class="btn btn-xs btn-success">
                             <i class="fa fa-plus">&nbsp;</i>
                             Add Item
-                        </a>
+                        </button>
                     </td>
+                    </form>
                 </tr>
             }
             </tbody>
         </table>
+        @common.flashNotification()
     } else {
         <div class="panel text-center">
             <div class="panel-body">

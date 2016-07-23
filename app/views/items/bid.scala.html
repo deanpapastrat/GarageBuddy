@@ -1,0 +1,42 @@
+@(item: Item, itemForm: Form[Item], currentUser: User)
+
+@main("Bid on Item", "Sales") {
+  <div class="page-header">
+    <h1>
+      Bid on @item.name
+    </h1>
+  </div>
+  <div class="row">
+    <div class="col-sm-8">
+      <form action="/items/@item.id/bid" method="POST">
+        @common.flashNotification()
+        @common.formErrors(itemForm.asInstanceOf[Form[Object]])
+        <div>
+          <label>Reserved By</label>
+          @if(item.reservedBy != null) {
+            <input readonly value="@item.reservedBy.name">
+            <input readonly value="@item.reservedBy.name">
+          } else {
+            <input readonly placeholder="No one has bid on this item.">
+          }
+        </div>
+        <div>
+          <label>Current Highest Bid</label>
+          @if(item.currentBid.!=(0)) {
+            <input readonly value="@item.currentBid">
+          } else {
+            <input readonly placeholder="No one has bid on this item.">
+          }
+        </div>
+        <div class= "form-group">
+          <label>Your Bid</label>
+          <input class="form-control" type="number" name="bid" step=".01" min="@item.minprice" required>
+        </div>
+        <div class="action-btns">
+          <button class="btn btn-success pull-right" type="submit">Bid</button>
+          <a class="btn btn-default pull-right" href="/sales/@item.sale.id/items">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+}
