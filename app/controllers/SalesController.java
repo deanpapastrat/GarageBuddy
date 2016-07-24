@@ -157,8 +157,8 @@ public class SalesController extends GBController {
         List<Item> queryItems = queryItems(Item.class, sale.findItems(),
                 "name", "name", sale.items);
         String twitterText = encodeURL("Currently viewing " + sale.name + " on GarageBuddy. Go to " +
-                            "garagebuddy.io/sales/" + Integer.toString(sale.id) + " to check it out!");
-        String fbURL = encodeURL("garagebuddy.io/sales/" + Integer.toString(sale.id));
+                            "garagebuddy.io/sales/" + Integer.toString(sale.id) + "/items to check it out!");
+        String fbURL = encodeURL("garagebuddy.io/sales/" + Integer.toString(sale.id) + "/items");
         return ok(views.html.sales.items.render(sale, queryItems,
                 queryString(), twitterText, fbURL, currentUser()));
     }
