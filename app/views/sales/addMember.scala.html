@@ -1,6 +1,6 @@
-@(page: String, nav: String, sale: Sale, roles: List[String], currentUser: User)
+@(sale: Sale, roles: List[String], currentUser: User)
 
-@main(page, nav) {
+@main("Add Member to " + sale.name, "Sales") {
 @sales.nav(sale, "members", currentUser: User)
     @if(sale.getUserRole(currentUser.email) == Sale.Role.GUEST) {
         <div class="page-header">
