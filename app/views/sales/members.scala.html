@@ -4,7 +4,11 @@
     @sales.nav(sale, "members", currentUser: User)
     <h2>
         Members<small> - Garage Sales suck without your friends. </small>
-        <a class="pull-right btn btn-success" href="/sales/@sale.id/addMember">Add Member</a>
+        @if(Permissions.canAssignRole(sale, currentUser)) {
+            <a class="pull-right btn btn-success" href="/sales/@sale.id/addMember">Add Member</a>
+        } else {
+            <a class="pull-right btn btn-success" disabled="true">Add Member</a>
+        }
     </h2>
     <table class="table table-striped">
         <thead>

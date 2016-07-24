@@ -35,7 +35,11 @@
         @for(item <- items) {
           <tr>
             <td>
-              <a href="/items/@item.id">@item.name</a>
+              @if(Permissions.canUpdateCatalog(sale, currentUser)) {
+                <a href="/items/@item.id">@item.name</a>
+              } else {
+                @item.name
+              }
             </td>
             <td>@item.formattedPrice()</td>
             <td>@item.description</td>
@@ -55,14 +59,18 @@
       </div>
     }
     @if(!sale.isClosed()) {
-      <a class="btn btn-success" href="/sales/@sale.id/items/new">
-        <i class="fa fa-plus">&nbsp;</i>
-        Add New Item
-      </a>
-      <a class="btn btn-default" href="/sales/@sale.id/tags" target="_blank">
-        <i class="fa fa-print">&nbsp;</i>
-        Print Tags
-      </a>
+      @if(Permissions.canUpdateCatalog(sale, currentUser)) {
+        <a class="btn btn-success" href="/sales/@sale.id/items/new">
+          <i class="fa fa-plus">&nbsp;</i>
+          Add New Item
+        </a>
+      }
+      @if(Permissions.canPrintTags(sale, currentUser)) {
+        <a class="btn btn-default" href="/sales/@sale.id/tags" target="_blank">
+          <i class="fa fa-print">&nbsp;</i>
+          Print Tags
+        </a>
+      }
       <div class="social-media">
         <a href="https://twitter.com/intent/tweet?text=@twitterText" class="icon-button twitter" target="_blank">
           <i class="fa fa-twitter icon-twitter"></i>
