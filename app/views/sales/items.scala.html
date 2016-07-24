@@ -1,4 +1,4 @@
-@(sale: Sale, items: List[Item], query: String, currentUser: User)
+@(sale: Sale, items: List[Item], query: String, twitterText: String, shareURL: String, currentUser: User)
 
 @main(sale.name, "Sales") {
   @sales.nav(sale, "items", currentUser: User)
@@ -63,6 +63,16 @@
         <i class="fa fa-print">&nbsp;</i>
         Print Tags
       </a>
+      <div class="social-media">
+        <a href="javascript:window.open('https://twitter.com/intent/tweet?text=@twitterText', 'Share on Twitter', 'width=450,height=700');"
+        class="icon-button twitter"><i class="icon-twitter"></i><span></span></a>
+
+        <a href="javascript:window.open('https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F@shareURL%2F&amp;src=sdkpreparse', 'Share on Facebook', 'width=450,height=700');"
+        class="icon-button facebook"><i class="icon-facebook"></i><span></span></a>
+
+        <a href="javascript:window.open('https://plus.google.com/share?url=@shareURL', 'Share on Google+', 'width=450,height=700');"
+        class="icon-button google-plus"><i class="icon-google-plus"></i><span></span></a>
+      </div>
     }
   } else {
     @if(!sale.isClosed()) {
