@@ -196,7 +196,7 @@ public class SalesController extends GBController {
 
     public Result report(int id) {
         Sale sale = Sale.findById(id);
-        return ok(views.html.sales.report.render(sale, currentUser()));
+        return ok(views.html.sales.report.render(sale, sale.transactions, currentUser()));
     }
 
     /**
