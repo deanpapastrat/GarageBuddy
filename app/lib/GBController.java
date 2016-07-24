@@ -8,6 +8,8 @@ import play.Logger;
 import play.data.DynamicForm;
 import play.data.FormFactory;
 import javax.inject.Inject;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -161,5 +163,15 @@ public abstract class GBController extends play.mvc.Controller {
      */
     public <T> play.data.Form<T> emptyModelForm(Class<T> klass) {
         return (play.data.Form<T>) formFactory.form(klass);
+    }
+
+    public String encodeURL(String url) {
+        String result = null;
+        try {
+            result = URLEncoder.encode(url, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            Logger.debug("URL couldn't be encoded: " + url);
+        }
+        return result;
     }
 }

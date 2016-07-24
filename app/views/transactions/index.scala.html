@@ -2,18 +2,19 @@
 
 @main(sale.name + ": Transactions", "Sales") {
   @sales.nav(sale, "transactions", currentUser: User)
-    @if((query != null && !query.isEmpty()) || (transactions != null && transactions.length > 0)) {
-        @common.searchForm("Want to find a transaction? Search for it by customer name, customer email, or id here:", "Search by customer name, email, or transaction id", query)
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Customer Name</th>
-                    <th>Seller</th>
-                    <th>Value</th>
-                    <th>Created At</th>
-                </tr>
-            </thead>
+
+  @if((query != null && !query.isEmpty()) || (transactions != null && transactions.length > 0)) {
+    @common.searchForm("Want to find a transaction? Search for it by customer name, customer email, or id here:", "Search by customer name, email, or transaction id", query)
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Customer Name</th>
+          <th>Seller</th>
+          <th>Value</th>
+          <th>Created At</th>
+        </tr>
+      </thead>
 
         @if(transactions != null && transactions.length > 0) {
             <tbody>
