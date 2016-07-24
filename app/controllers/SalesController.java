@@ -7,6 +7,7 @@ import play.mvc.*;
 import models.*;
 import views.html.sales.*;
 
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -155,9 +156,9 @@ public class SalesController extends GBController {
         Sale sale = Sale.findById(id);
         List<Item> queryItems = queryItems(Item.class, sale.findItems(),
                 "name", "name", sale.items);
-        String twitterText = "Currently%20viewing%20" + sale.name + "%20on%20GarageBuddy.%20Go%20to%20" +
-                            "www.garagebuddy.io/sales/" + Integer.toString(sale.id) + "%20to%20check%20it%20out!";
-        String fbURL = "garagebuddy.io/sales/" + Integer.toString(sale.id);
+        String twitterText = encodeURL("Currently viewing " + sale.name + " on GarageBuddy. Go to " +
+                            "garagebuddy.io/sales/" + Integer.toString(sale.id) + " to check it out!");
+        String fbURL = encodeURL("garagebuddy.io/sales/" + Integer.toString(sale.id));
         return ok(views.html.sales.items.render(sale, queryItems,
                 queryString(), twitterText, fbURL, currentUser()));
     }
@@ -176,7 +177,6 @@ public class SalesController extends GBController {
         return ok(views.html.sales.reportAll.render(sale.name, "All Financial Report", sale, trans, currentUser()));
     }
 
-
     public Result sellers(int id) {
         Sale sale = Sale.findById(id);
         List<User> sellers = sale.findSellers();
@@ -185,8 +185,6 @@ public class SalesController extends GBController {
         return ok(views.html.sales.sellers.render(sale.name, "Financial Report", sale, sellers, currentUser()));
         //return null;
     }
-
-
 
     public Result reportBySeller(String email, int id) {
         Sale sale = Sale.findById(id);
