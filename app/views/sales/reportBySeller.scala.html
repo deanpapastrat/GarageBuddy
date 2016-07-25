@@ -1,0 +1,66 @@
+@import com.avaje.ebean.SqlRow
+@import lib.Formatter
+@(page: String, nav:String, sale: Sale, report: List[SqlRow], total: Double, currentUser: User)
+
+@main(page, nav) {
+  @sales.nav(sale, "report", currentUser : User)
+  <hr class="spacer"/>
+  @if(report != null && report.length > 0) {
+    <table class="table table-striped">
+      <thead>
+        <h2>
+          Financial Report of Items Sold by @report.get(0).getString("owner")
+        </h2>
+        <tr>
+          <th>Item Sold</th>
+          <th>Item Description</th>
+          <th>Sold To</th>
+          <th>Price</th>
+          <th>Sold For</th>
+          <th>Item ID</th>
+          <th>Transaction ID</th>
+          <th>Sold At</th>
+        </tr>
+      </thead>
+      <tbody>
+      @for(row <- report) {
+        <tr>
+          <td>@row.getString("itemname")</td>
+          <td>@row.getString("description")</td>
+          <td>@row.getString("soldto")</td>
+          <td>$@row.getString("price")</td>
+          <td>$@row.getString("sold_for")</td>
+          <td>@row.getString("itemid")</td>
+          <td>@row.getString("transid")</td>
+          <td>@Formatter.time(row.getTimestamp("soldat").toLocalDateTime())</td>
+
+        </tr>
+      }
+        <tr>
+          <td>
+            <strong>Transaction Total</strong>
+          </td>
+          <td>
+            <strong>$@total</strong>
+          </td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  } else {
+    <div class="panel text-center">
+      <div class="panel-body">
+        <h3>No transactions have been recorded for this seller</h3>
+      </div>
+    </div>
+  }
+  <div class="action-btns">
+    <a class="btn btn-default pull-right" href="/sales/@sale.id/sellers">Back to Sellers</a>
+  </div>
+}
+

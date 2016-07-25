@@ -1,5 +1,8 @@
 package models;
 
+import com.avaje.ebean.*;
+import com.avaje.ebean.Query;
+import com.avaje.ebean.annotation.Sql;
 import com.avaje.ebean.Ebean;
 import com.avaje.ebean.SqlRow;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -21,11 +24,7 @@ import play.libs.Json;
 import javax.persistence.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Represents a sale in GarageBuddy.
@@ -237,6 +236,7 @@ public class Sale extends Model {
         }
 
         users.put(email, role.showPermission());
+        this.save();
         return true;
     }
 
@@ -381,6 +381,72 @@ public class Sale extends Model {
         return Sale.FIND.byId(id.toString());
     }
 
+
+    /**
+     * Find users in this sale that can sell items
+     * @return the list of sellers
+     */
+
+
+    public List<User> findSellers() {
+
+        List<String> sellerEmails = new ArrayList<>();
+        for (String email: this.users.keySet()) {
+            if (getUserPermission(email) >= 5) {
+                sellerEmails.add(email);
+            }
+        }
+        Query<User> query = Ebean.createQuery(User.class);
+        List<User> sellers= query.where().in("email", sellerEmails).findList();
+
+        return sellers;
+    }
+
+    /**
+     * Build the query to retrieve the financial report of items sold by a seller
+     * @param sellerEmail the email of the seller
+     * @param saleId the sale id
+     * @return the report of items sold by a seller
+     */
+
+    public List<SqlRow> findReport(String sellerEmail, int saleId) {
+        String sql = "SELECT * FROM (SELECT items.name AS itemname, items.id AS itemid, items.created_by_email as owneremail,\n" +
+                "items.description,items.price, items.sold_for, transactions.created_at AS soldat,\n" +
+                "transactions.customer_name AS soldTo, transactions.sale_id AS saleid, transactions.id AS transid\n" +
+                "FROM (items INNER JOIN transactions ON items.transaction_id = transactions.id) \n" +
+                "WHERE(items.created_by_email = :ownerEmail AND transactions.sale_id = :id)) AS output1,\n" +
+                "(SELECT users.name AS owner from users WHERE users.email = :userEmail) AS output2";
+
+        SqlQuery sqlQuery = Ebean.createSqlQuery(sql);
+        sqlQuery.setParameter("ownerEmail", sellerEmail);
+        sqlQuery.setParameter("id", saleId);
+        sqlQuery.setParameter("userEmail", sellerEmail);
+
+        List<SqlRow> report = sqlQuery.findList();
+
+        return report;
+
+    }
+
+    /**
+     * Build a query to  report the total of items sold by a specific seller
+     * @param email the email of the seller
+     * @param id the sale id
+     * @return the total by the seller
+     */
+    public Double reportTotal(String email, int id) {
+
+        String sql = "SELECT SUM(items.price) FROM (items INNER JOIN transactions ON items.transaction_id = transactions.id)\n" +
+                "WHERE (items.created_by_email = :email AND transactions.sale_id = :id)";
+        Double val = Ebean.createSqlQuery(sql).setParameter("email", email).setParameter("id", id).findUnique().getDouble("sum");
+        if (val == null) {
+            return 0.0;
+        } else {
+            return val;
+        }
+    }
+
+
     /**
      * Builds a query for items related to this sale.
      *
@@ -416,6 +482,7 @@ public class Sale extends Model {
     public final ExpressionList<Transaction> findTransactions() {
         return Transaction.find.where().eq("sale_id", this.id);
     }
+
     /**
      * Closes a Sale.
      */

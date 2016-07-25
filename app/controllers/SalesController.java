@@ -1,11 +1,13 @@
 package controllers;
 
+import com.avaje.ebean.SqlRow;
 import lib.GBController;
 import play.data.Form;
 import play.mvc.*;
 import models.*;
 import views.html.sales.*;
 
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Map;
@@ -155,6 +157,7 @@ public class SalesController extends GBController {
         List<Item> queryItems = queryItems(Item.class, sale.findItems(),
                 "name", "name", sale.items);
 <<<<<<< HEAD
+<<<<<<< HEAD
 
         String twitterText = "Currently%20viewing%20" + sale.name + "%20on%20GarageBuddy.%20Go%20to%20" +
                             "www.garagebuddy.io/sales/" + Integer.toString(sale.id) + "%20to%20check%20it%20out!";
@@ -165,6 +168,13 @@ public class SalesController extends GBController {
         return ok(views.html.sales.items.render(sale, queryItems,
                 queryString(), currentUser()));
 >>>>>>> refs/remotes/origin/master
+=======
+        String twitterText = encodeURL("Currently viewing " + sale.name + " on GarageBuddy. Go to " +
+                            "garagebuddy.io/sales/" + Integer.toString(sale.id) + "/items to check it out!");
+        String fbURL = encodeURL("garagebuddy.io/sales/" + Integer.toString(sale.id) + "/items");
+        return ok(views.html.sales.items.render(sale, queryItems,
+                queryString(), twitterText, fbURL, currentUser()));
+>>>>>>> refs/remotes/origin/master
     }
 
     /**
@@ -174,13 +184,35 @@ public class SalesController extends GBController {
      * @return a webpage showing the financial report
      */
     @Security.Authenticated(Secured.class)
-    public final Result report(final int id) {
+    public Result reportAll(int id) {
         Sale sale = Sale.findById(id);
         List<Transaction> trans = sale.transactions;
 
-        return ok(views.html.sales.report.render(sale, trans, currentUser()));
+        return ok(views.html.sales.reportAll.render(sale.name, "All Financial Report", sale, trans, currentUser()));
     }
 
+    public Result sellers(int id) {
+        Sale sale = Sale.findById(id);
+        List<User> sellers = sale.findSellers();
+        //Found items that are sold
+        //Find the created by
+        return ok(views.html.sales.sellers.render(sale.name, "Financial Report", sale, sellers, currentUser()));
+        //return null;
+    }
+
+    public Result reportBySeller(String email, int id) {
+        Sale sale = Sale.findById(id);
+        List<SqlRow> report = sale.findReport(email, id);
+        Double total = sale.reportTotal(email, id);
+
+        return ok(views.html.sales.reportBySeller.render(sale.name, "Financial Report", sale, report, total, currentUser()));
+        //return null;
+    }
+
+    public Result report(int id) {
+        Sale sale = Sale.findById(id);
+        return ok(views.html.sales.report.render(sale, sale.transactions, currentUser()));
+    }
 
     /**
      * Provides a confirmation for deletion of a sale from the database.
@@ -273,8 +305,8 @@ public class SalesController extends GBController {
 
 
     /**
-     * Adds a member (a user associated with a sale) to a given sale. The
-     * ember is associated with some role.
+     * Adds a member (a user associated with a sale) to a given sale. The member is associated
+     * with some role.
      *
      * TODO provide a user with a way of changing another users role on
      *

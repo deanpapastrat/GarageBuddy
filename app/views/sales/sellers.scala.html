@@ -1,0 +1,39 @@
+@(page: String, nav:String, sale: Sale, sellers: List[User], currentUser: User)
+
+@main(page, nav) {
+  @sales.nav(sale, "report", currentUser)
+  <hr class="spacer"/>
+  @if(sellers != null && sellers.length > 0) {
+    <table class="table table-striped">
+      <thead>
+        <h2>
+          Here are the sellers found in @sale.name<small> - Click 'seller name' to see their financial report </small>
+        </h2>
+        <tr>
+          <th>Seller Name</th>
+          <th>Seller Email</th>
+        </tr>
+      </thead>
+      <tbody>
+      @for( seller <- sellers) {
+        <tr>
+          <td>
+            <a href="/sales/@seller.email/@sale.id/reportBySeller">@seller.name</a>
+          </td>
+          <td>@seller.email</td>
+        </tr>
+      }
+      </tbody>
+    </table>
+  } else {
+    <div class="panel text-center">
+      <div class="panel-body">
+        <h3>No transactions have been recorded for @sale.name</h3>
+      </div>
+    </div>
+  }
+  <div class="action-btns">
+    <a class="btn btn-default pull-right" href="/sales/@sale.id/report">Back</a>
+  </div>
+}
+

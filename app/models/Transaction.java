@@ -28,6 +28,7 @@ public class Transaction extends Model {
     @Formats.DateTime(pattern="yyyy-MM-dd'T'HH:mm:ss.SSSZ")
     public LocalDateTime createdAt = LocalDateTime.now();
 
+
     @Constraints.Required
     public String customerName;
 
@@ -163,14 +164,24 @@ public class Transaction extends Model {
             return 0;
         }
 
-        String itemIds = "";
+//        String itemIds = "";
+//        for (int i = 0; i < itemsToAdd.size(); i++) {
+//            if (i != 0) {
+//                itemIds = (new StringBuffer()).append(itemIds).append(",").toString();
+//            }
+//
+//            itemIds = (new StringBuffer()).append(itemIds).append(Integer.toString(itemsToAdd.get(i).id)).toString();
+//        }
+
+        StringBuffer buf = new StringBuffer();
         for (int i = 0; i < itemsToAdd.size(); i++) {
             if (i != 0) {
-                itemIds = (new StringBuilder()).append(itemIds).append(",").toString();
+                buf.append(',');
             }
-
-            itemIds = (new StringBuilder()).append(itemIds).append(Integer.toString(itemsToAdd.get(i).id)).toString();
+            buf.append(Integer.toString(itemsToAdd.get(i).id));
         }
+        String itemIds = buf.toString();
+
         String sql = "UPDATE items SET transaction_id = :id WHERE id IN :items;";
         SqlUpdate update = Ebean.createSqlUpdate(sql);
         update.setParameter("id", this.id);
@@ -223,14 +234,23 @@ public class Transaction extends Model {
      * @return how many items were removed
      */
     private int removeItems(List<Item> itemsToRemove) {
-        String itemIds = "";
+//        String itemIds = "";
+//        for (int i = 0; i < itemsToRemove.size(); i++) {
+//            if (i != 0) {
+//                itemIds = (new StringBuilder()).append(itemIds).append(",").toString();
+//            }
+//
+//            itemIds = (new StringBuilder()).append(itemIds).append(Integer.toString(itemsToRemove.get(i).id)).toString();
+//        }
+        StringBuffer buf = new StringBuffer();
         for (int i = 0; i < itemsToRemove.size(); i++) {
             if (i != 0) {
-                itemIds = (new StringBuilder()).append(itemIds).append(",").toString();
+                buf.append(',');
             }
-
-            itemIds = (new StringBuilder()).append(itemIds).append(Integer.toString(itemsToRemove.get(i).id)).toString();
+            buf.append(Integer.toString(itemsToRemove.get(i).id));
         }
+        String itemIds = buf.toString();
+
         String sql = "UPDATE items SET transaction_id = :id, purchased = true WHERE transaction_id = :transactionId;";
         SqlUpdate update = Ebean.createSqlUpdate(sql);
         update.setParameter("id", null);

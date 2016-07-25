@@ -28,7 +28,12 @@
     } else {
         <li>
     }
-        <a href="/sales/@sale.id/sell">Sell</a>
+        @if(Permissions.canSellItems(sale, currentUser)) {
+            <a href="/sales/@sale.id/sell">Sell</a>
+        } else {
+            <a disabled="true">Sell</a>
+        }
+
     </li>
 
     @if(tab.equals("transactions")) {
@@ -36,7 +41,11 @@
     } else {
         <li>
     }
-        <a href="/sales/@sale.id/transactions">Transactions</a>
+        @if(Permissions.canCreateReceipts(sale, currentUser)) {
+            <a href="/sales/@sale.id/transactions">Transactions</a>
+        } else {
+            <a disabled="true">Transactions</a>
+        }
     </li>
 
       @if(tab.equals("report")) {
@@ -44,7 +53,12 @@
       } else {
           <li>
       }
-          <a href="/sales/@sale.id/report">Financial Report</a>
+        @if(Permissions.canAccessFinances(sale, currentUser)) {
+            <a href="/sales/@sale.id/report">Financial Report</a>
+        } else {
+            <a disabled="true">Financial Reports</a>
+        }
+
       </li>
 
     @if(tab.equals("members")) {
@@ -60,7 +74,12 @@
         } else {
     <li>
         }
-        <a href="/sales/@sale.id/edit">Settings</a>
+        @if(Permissions.canCloseSale(sale, currentUser)) {
+            <a href="/sales/@sale.id/edit">Settings</a>
+        } else {
+            <a disabled="true">Settings</a>
+        }
+
     </li>
 </ul>
 <hr class="spacer"/>
