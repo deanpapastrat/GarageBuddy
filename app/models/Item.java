@@ -82,6 +82,22 @@ public class Item extends Model {
     public double soldFor;  // amount that the item actually sold for
 
     /**
+     * Allow bidding?
+     */
+    public boolean bidding;
+
+    /**
+     * Which user has reserved the item
+     */
+    @ManyToOne
+    public User reservedBy;
+
+    /**
+     * What's the current highest bid?
+     */
+    public double currentBid;
+
+    /**
      * Helper to power finder functions down below.
      */
     public static final Finder<String, Item> FIND =
@@ -95,8 +111,8 @@ public class Item extends Model {
      * @param pName name of the item
      * @param pPrice sell price of the item
      */
-    public Item(final User pCreator, final String pName, final double pPrice) {
-        this(pCreator, pName, pPrice, "No Description");
+    public Item(final User pCreator, final String pName, final double pPrice, final boolean bidding) {
+        this(pCreator, pName, pPrice, "No Description", bidding);
     }
 
     /**
@@ -108,12 +124,13 @@ public class Item extends Model {
      * @param pDescription a brief description of the item
      */
     public Item(final User pCreator, final String pName,
-                final double pPrice, final String pDescription) {
+                final double pPrice, final String pDescription, final boolean bidding) {
         this.createdBy = pCreator;
         this.name = pName;
         this.price = pPrice;
         this.minprice = pPrice;
         this.description = pDescription;
+        this.bidding = bidding;
     }
 
     /**
@@ -273,6 +290,13 @@ public class Item extends Model {
     public final String formattedMinprice() {
         return Formatter.currency(minprice);
     }
+
+    /**
+     * Returns the current bid in a human-readable string format.
+     *
+     * @return the bid, with a dollar sign and to 2 decimal places
+     */
+    public final String formattedBid() { return Formatter.currency(currentBid); }
 
     /**
      * Format a number as a human-readable price.

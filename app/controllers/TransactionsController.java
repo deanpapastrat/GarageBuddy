@@ -106,7 +106,8 @@ public class TransactionsController extends GBController {
     @Security.Authenticated(Secured.class)
     public final Result items(final int id) {
         Transaction transaction = Transaction.findById(id);
-        return ok(views.html.transactions.items.render(transaction,
+        Form<Item> itemForm = modelForm(Item.class);
+        return ok(views.html.transactions.items.render(transaction, itemForm,
                 transaction.items, transaction.sale.findUnpurchasedItems()
                         .findList(), currentUser()));
     }
@@ -121,7 +122,16 @@ public class TransactionsController extends GBController {
     @Security.Authenticated(Secured.class)
     public final Result addItem(final int id, final int itemId) {
         Transaction transaction = Transaction.findById(id);
-        transaction.addItem(Item.findById(itemId), true);
+        Item item = Item.findById(itemId);
+        if (Double.parseDouble(formParam("soldFor")) >= item.minprice) {
+            item.soldFor = Double.parseDouble(formParam("soldFor"));
+            transaction.addItem(item, true);
+        }
+        else {
+            flash("error", "Cannot sell item for less than " +
+                    item.formattedMinprice() + ".");
+
+        }
         return redirect("/transactions/" + transaction.id + "/items");
     }
 

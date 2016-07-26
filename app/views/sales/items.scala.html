@@ -2,6 +2,7 @@
 
 @main(sale.name, "Sales") {
   @sales.nav(sale, "items", currentUser: User)
+  @common.flashNotification()
   @if((query != null && !query.isEmpty()) || (items != null && items.length > 0)) {
     <form class="form-search">
       <h5>Want to find an item? Search for it by name here:</h5>
@@ -27,6 +28,7 @@
           <th>ID</th>
           <th>Purchased</th>
           <th>Created By</th>
+          <th>Bid</th>
         </tr>
       </thead>
 
@@ -35,17 +37,20 @@
         @for(item <- items) {
           <tr>
             <td>
-              @if(Permissions.canUpdateCatalog(sale, currentUser)) {
-                <a href="/items/@item.id">@item.name</a>
-              } else {
-                @item.name
-              }
+              <a href="/items/@item.id">@item.name</a>
             </td>
-            <td>@item.formattedPrice()</td>
+            <td>@if(item.currentBid > item.price) {@item.formattedBid()
+            } else {@item.formattedPrice()}
+            </td>
             <td>@item.description</td>
             <td>@item.id</td>
             <td>@item.purchased.toString().capitalize</td>
             <td>@item.createdBy.name</td>
+            <td>
+              <a class="btn btn-success" @if(item.bidding == false){ disabled="true" } else{ href="/items/@item.id/bid"}>
+                Bid
+              </a>
+            </td>
           </tr>
         }
         </tbody>
