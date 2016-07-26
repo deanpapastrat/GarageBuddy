@@ -156,11 +156,25 @@ public class SalesController extends GBController {
         Sale sale = Sale.findById(id);
         List<Item> queryItems = queryItems(Item.class, sale.findItems(),
                 "name", "name", sale.items);
+<<<<<<< HEAD
+<<<<<<< HEAD
+
+        String twitterText = "Currently%20viewing%20" + sale.name + "%20on%20GarageBuddy.%20Go%20to%20" +
+                            "www.garagebuddy.io/sales/" + Integer.toString(sale.id) + "%20to%20check%20it%20out!";
+        String fbURL = "garagebuddy.io/sales/" + Integer.toString(sale.id);
+        return ok(views.html.sales.show.render(sale, queryItems,
+                queryString(), twitterText, fbURL, currentUser()));
+=======
+        return ok(views.html.sales.items.render(sale, queryItems,
+                queryString(), currentUser()));
+>>>>>>> refs/remotes/origin/master
+=======
         String twitterText = encodeURL("Currently viewing " + sale.name + " on GarageBuddy. Go to " +
                             "garagebuddy.io/sales/" + Integer.toString(sale.id) + "/items to check it out!");
         String fbURL = encodeURL("garagebuddy.io/sales/" + Integer.toString(sale.id) + "/items");
         return ok(views.html.sales.items.render(sale, queryItems,
                 queryString(), twitterText, fbURL, currentUser()));
+>>>>>>> refs/remotes/origin/master
     }
 
     /**
@@ -327,3 +341,11 @@ public class SalesController extends GBController {
 
 
 }
+
+
+
+
+
+
+
+

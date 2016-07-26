@@ -51,6 +51,8 @@ public class TransactionsController extends GBController {
      * Creates a transaction using data passed from the form submission and
      * either displays the form with validation errors or redirects to the
      * transaction display page.
+     * If the transaction completes successfully, sends an email to the users
+     * associated with the transaction.
      *
      * @param saleId id of the sale to create the transaction for
      * @return a redirect to the transaction's add item page
@@ -66,6 +68,7 @@ public class TransactionsController extends GBController {
             Transaction transaction = new Transaction(sale, currentUser());
             transaction.customerName = transactionForm.get().customerName;
             transaction.save();
+            transaction.sendEmail();
             return redirect("/transactions/" + transaction.id + "/items");
         }
     }
