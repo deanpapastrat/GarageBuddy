@@ -1,5 +1,9 @@
 package lib;
 
+import play.Logger;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -57,5 +61,22 @@ public class Formatter {
         }
         DecimalFormat df = new DecimalFormat("0.00");
         return "$" + df.format(number);
+    }
+
+    /**
+     * Encodes a given URL into a UTF-8 string so that special characters are
+     * escaped.
+     *
+     * @param url the url to encode
+     * @return the escaped url in UTF-8 format
+     */
+    public static String encodeURL(String url) {
+        String result = null;
+        try {
+            result = URLEncoder.encode(url, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            Logger.debug("URL couldn't be encoded: " + url);
+        }
+        return result;
     }
 }

@@ -2,9 +2,12 @@ package controllers;
 
 import lib.GBController;
 import play.data.Form;
+import play.libs.mailer.Email;
 import play.mvc.*;
 import models.*;
 import views.html.transactions.*;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -68,7 +71,6 @@ public class TransactionsController extends GBController {
             Transaction transaction = new Transaction(sale, currentUser());
             transaction.customerName = transactionForm.get().customerName;
             transaction.save();
-            transaction.sendEmail();
             return redirect("/transactions/" + transaction.id + "/items");
         }
     }
@@ -97,6 +99,46 @@ public class TransactionsController extends GBController {
         Transaction transaction = Transaction.findById(id);
         return ok(views.html.transactions.receipt.render(transaction,
                 transaction.items, currentUser()));
+    }
+
+    /**
+     * Displays a receipt for a transaction.
+     *
+     * @param id id of the transaction to show
+     * @return a webpage showing a receipt for the transaction
+     */
+    @Security.Authenticated(Secured.class)
+    public final Result emailReceipt(final int id) {
+        Transaction trans = Transaction.findById(id);
+        LocalDateTime generated = LocalDateTime.now();
+        String subjline = "GarageBuddy Sale '" + trans.sale.name + "' Transaction " + trans.id;
+        String bodyhead = "Transaction ID: " + trans.id + "\n";
+        String body1 = trans.seller.name  + " sold items to " + trans.customerName + ".\n";
+        StringBuilder items = new StringBuilder();
+        for (Item i : trans.items) {
+            items.append("\t" + i.name + "\t\t$" + i.price + "\n");
+        }
+        String body2 = items.toString();
+        String body3 = "Total: " + trans.numItems + " items for $" + trans.value + "\n";
+        String bodyfoot = "\nThanks for using GarageBuddy!\n" + "message generated at " + generated.toString() + "\n";
+
+        // build email
+        Email em = new Email()
+                .setSubject(subjline)
+                .setFrom("GarageBuddy <noreply@garagebuddy.io>")
+                .addTo(trans.seller.name + " <" + trans.seller.email + ">")
+                .setBodyText(bodyhead + body1 + body2 + body3 + bodyfoot);
+
+        if (trans.customer != null) {
+            em.addTo(trans.customer.name + " <" + trans.customer.email + ">");
+        }
+
+        // whoosh!
+        mailerClient.send(em);
+
+        flash("success", "Email receipt sent successfully.");
+        return ok(views.html.transactions.show.render(trans,
+                trans.items, currentUser()));
     }
 
     /**

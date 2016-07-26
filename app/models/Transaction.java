@@ -114,19 +114,6 @@ public class Transaction extends Model {
         return this.id;
     }
 
-    /* EMAIL */
-    
-    /**
-     * Creates an Email and attaches this transaction to it.
-     * Then sends the email via mailOut().
-     *
-     */
-    public void sendEmail() {
-        TransactionEmail em = new TransactionEmail(this);
-        em.mailOut();
-    }
-    
-    
     /* ADD AND REMOVE ITEMS */
 
     /**

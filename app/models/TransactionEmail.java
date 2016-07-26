@@ -1,9 +1,6 @@
 package models;
 
-import com.avaje.ebean.Model;
-
 import java.time.LocalDateTime;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -18,17 +15,17 @@ import play.libs.mailer.MailerClient;
  * @version 1.0.0
  */
 
-public class Email extends Model {
+public class TransactionEmail {
     @Inject MailerClient mailerClient;
     private final Transaction trans;
     private final LocalDateTime generated;
-    
+
     /**
      * Creates an Email.
      *
      * @param t The transaction that this email represents.
      */
-    public Email(final Transaction t) {
+    public TransactionEmail(final Transaction t) {
         this.trans = t;
         this.generated = LocalDateTime.now();
     }
@@ -38,30 +35,6 @@ public class Email extends Model {
      */
 
     public void mailOut() {
-        // preformat items list
-        for (Item i : trans.items) {
-            items.append("\t" + i.name + "\t\t$" + i.soldFor "\n");
-        }
-        
         // make message parts
-        String subjline = "GarageBuddy Sale '" + trans.sale.name + "' Transaction " + trans.id;
-        String bodyhead = "Transaction ID: " + trans.id + "\n";
-        String body1 = trans.seller.name  + " sold items to " + trans.customer.name + ".\n";
-        StringBuilder items = new StringBuilder();
-        String body2 = items.toString();
-        String body3 = "Total: " + trans.numItems + " items for $" + trans.value + "\n";
-        String bodyfoot = "\nThanks for using GarageBuddy!\n" + "message generated at " + generated.toString() + "\n";
-        
-        // build email
-        Email em = new Email()
-            .setSubject(subjline)
-            .setFrom("GarageBuddy <noreply@garagebuddy.com>")
-            .addTo(trans.seller.name + " <" + trans.seller.email + ">")
-            .addTo(trans.customer.name + " <" + trans.customer.email + ">")
-            .setBodyText(bodyhead + body1 + body2 + body3 + bodyfoot);
-            
-        // whoosh!
-        mailerClient.send(em);
     }
-   
 }

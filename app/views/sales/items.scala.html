@@ -1,4 +1,4 @@
-@(sale: Sale, items: List[Item], query: String, twitterText: String, shareURL: String, currentUser: User)
+@(sale: Sale, items: List[Item], query: String, currentUser: User)
 
 @main(sale.name, "Sales") {
   @sales.nav(sale, "items", currentUser: User)
@@ -77,17 +77,17 @@
         </a>
       }
       <div class="social-media">
-        <a href="https://twitter.com/intent/tweet?text=@twitterText" class="icon-button twitter" target="_blank">
+        <a href="@sale.twitterShareUrl()" class="icon-button twitter" target="_blank">
           <i class="fa fa-twitter icon-twitter"></i>
           <span></span>
         </a>
 
-        <a href="https://www.facebook.com/sharer/sharer.php?u=http%3A%2F%2F@shareURL%2F&amp;src=sdkpreparse" class="icon-button facebook" target="_blank">
+        <a href="@sale.facebookShareUrl()" class="icon-button facebook" target="_blank">
           <i class="fa fa-facebook icon-facebook"></i>
           <span></span>
         </a>
 
-        <a href="https://plus.google.com/share?url=@shareURL" class="icon-button google-plus" target="_blank">
+        <a href="@sale.googleShareUrl()" class="icon-button google-plus" target="_blank">
           <i class="fa fa-google icon-google-plus"></i>
           <span></span>
         </a>

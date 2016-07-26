@@ -56,14 +56,15 @@ POST    /items/:id/delete           controllers.ItemsController.postDelete(id: I
 GET     /items/:id/tag              controllers.ItemsController.tag(id: Integer)
 
 # Transactions Routes
-GET     /sales/:id/transactions     controllers.TransactionsController.index(id: Integer)
-GET     /sales/:id/transactions/new controllers.TransactionsController.create(id: Integer)
-POST    /sales/:id/transactions/new controllers.TransactionsController.postCreate(id: Integer)
-GET     /transactions/:id           controllers.TransactionsController.show(id: Integer)
-GET     /transactions/:id/delete    controllers.TransactionsController.delete(id: Integer)
-POST    /transactions/:id/delete    controllers.TransactionsController.postDelete(id: Integer)
-GET     /transactions/:id/items     controllers.TransactionsController.items(id: Integer)
-GET     /transactions/:id/receipt   controllers.TransactionsController.receipt(id: Integer)
+GET     /sales/:id/transactions         controllers.TransactionsController.index(id: Integer)
+GET     /sales/:id/transactions/new     controllers.TransactionsController.create(id: Integer)
+POST    /sales/:id/transactions/new     controllers.TransactionsController.postCreate(id: Integer)
+GET     /transactions/:id               controllers.TransactionsController.show(id: Integer)
+GET     /transactions/:id/delete        controllers.TransactionsController.delete(id: Integer)
+POST    /transactions/:id/delete        controllers.TransactionsController.postDelete(id: Integer)
+GET     /transactions/:id/items         controllers.TransactionsController.items(id: Integer)
+GET     /transactions/:id/receipt       controllers.TransactionsController.receipt(id: Integer)
+GET     /transactions/:id/emailReceipt  controllers.TransactionsController.emailReceipt(id: Integer)
 
 GET     /transactions/:id/items/:itemId/add     controllers.TransactionsController.addItem(id: Integer, itemId: Integer)
 POST    /transactions/:id/items/:itemId/add     controllers.TransactionsController.addItem(id: Integer, itemId: Integer)

@@ -5,6 +5,7 @@
         Transaction Summary - #@transaction.id
     </h3>
     <hr class="spacer"/>
+    @common.flashNotification()
     <div class="row">
         <div class="col-sm-5">
             <table class="table table-bordered">
@@ -79,8 +80,13 @@
                 <i class="fa fa-print">&nbsp;</i>
                 Print Receipt
             </a>
+            <a class="btn btn-default" href="/transactions/@transaction.id/emailReceipt">
+                <i class="fa fa-paper-plane">&nbsp;</i>
+                Email Receipt
+            </a>
+
             @if(!transaction.sale.isClosed()) {
-                <a class="btn btn-danger" href="/transactions/@transaction.id/delete">
+                <a class="btn btn-danger" href="/transactions/@transaction.id/emailReceipt">
                     <i class="fa fa-times">&nbsp;</i>
                     Cancel Transaction
                 </a>

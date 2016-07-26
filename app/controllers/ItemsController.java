@@ -42,7 +42,7 @@ public class ItemsController extends GBController {
         } else {
             Item item = itemForm.get();
             item.createdBy = currentUser();
-            if(formParam("bidding").equals("on")) {
+            if(formParam("bidding") != null && formParam("bidding").equals("on")) {
                 item.bidding = true;
             }
             item.addToSale(sale); // Autosaves

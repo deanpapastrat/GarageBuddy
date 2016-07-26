@@ -368,7 +368,36 @@ public class Sale extends Model {
         }
     }
 
+    /* SOCIAL SHARING */
 
+    /**
+     * Creates a link to share the post on Facebook
+     *
+     * @return a url
+     */
+    public final String facebookShareUrl() {
+        return Formatter.encodeURL("https://www.facebook.com/sharer/sharer.php?src=sdkpreparse&u=" +
+                "http://garagebuddy.io/sales/" + Integer.toString(id) + "/items");
+    }
+
+    /**
+     * Creates a link to share the post on Google+
+     *
+     * @return a url
+     */
+    public final String googleShareUrl() {
+        return Formatter.encodeURL("https://plus.google.com/share?url=http://garagebuddy.io/sales/" + Integer.toString(id) + "/items");
+    }
+
+    /**
+     * Creates a link to share the post on Twitter
+     *
+     * @return a url
+     */
+    public final String twitterShareUrl() {
+        return Formatter.encodeURL("Currently viewing " + name + " on GarageBuddy. Go to " +
+                "http://garagebuddy.io/sales/" + Integer.toString(id) + "/items to check it out!");
+    }
 
     /* PREBUILT QUERIES */
 

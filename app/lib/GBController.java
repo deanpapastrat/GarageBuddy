@@ -7,6 +7,8 @@ import controllers.Secured;
 import play.Logger;
 import play.data.DynamicForm;
 import play.data.FormFactory;
+import play.libs.mailer.MailerClient;
+
 import javax.inject.Inject;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -24,6 +26,12 @@ public abstract class GBController extends play.mvc.Controller {
      */
     @Inject
     protected FormFactory formFactory;
+
+    /**
+     * Provides mailer client to all sub-controllers
+     */
+    @Inject
+    protected MailerClient mailerClient;
 
     /**
      * Cache for request parameter parsing
@@ -163,15 +171,5 @@ public abstract class GBController extends play.mvc.Controller {
      */
     public <T> play.data.Form<T> emptyModelForm(Class<T> klass) {
         return (play.data.Form<T>) formFactory.form(klass);
-    }
-
-    public String encodeURL(String url) {
-        String result = null;
-        try {
-            result = URLEncoder.encode(url, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            Logger.debug("URL couldn't be encoded: " + url);
-        }
-        return result;
     }
 }
