@@ -292,6 +292,15 @@ public class Item extends Model {
     }
 
     /**
+     * Returns the sold forprice in a human-readable string format.
+     *
+     * @return the sold for price, with a dollar sign and to 2 decimal places
+     */
+    public final String formattedSoldFor() {
+        return Formatter.currency(soldFor);
+    }
+
+    /**
      * Returns the current bid in a human-readable string format.
      *
      * @return the bid, with a dollar sign and to 2 decimal places

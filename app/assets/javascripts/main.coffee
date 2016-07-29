@@ -2,6 +2,41 @@ class GarageBuddy
   constructor: ->
     console.log("(GarageBuddy) Loaded scripts for 1.0.0-alpha8")
 
+class GarageBuddy.BarcodeReader
+  @config:
+    debug:
+      drawBoundingBox: true
+      drawScanline: true
+      showFrequency: false
+      showPattern: false
+    halfSample: true
+    inputStream:
+      type: "ImageStream"
+      constraints:
+        facingMode: 'environment'
+        width: 640
+    locate: true
+    multiple: false
+    patchSize: 'medium'
+    readers: ['code_128_reader']
+
+  constructor: ({@el, @id}) ->
+    @inputEl = @el
+    @inputEl.on 'change', @inputChanged
+
+  inputChanged: (e) =>
+    target = e.currentTarget
+    if target.files && target.files.length
+      @decode URL.createObjectURL(target.files[0])
+
+  decode: (src) =>
+    config = $.extend @config, src: src
+    Quagga.decodeSingle(config, @executeBarcode)
+
+  executeBarcode: (result) =>
+    code = result.codeResult?.code
+    window.location.href = "/transactions/#{@id}/items/#{code}/add"
+
 class GarageBuddy.SalesCharts
   constructor: ({@id, @el}) ->
     $.get("/sales/#{@id}/stats")

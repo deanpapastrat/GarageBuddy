@@ -76,22 +76,6 @@
           Print Tags
         </a>
       }
-      <div class="social-media">
-        <a href="@sale.twitterShareUrl()" class="icon-button twitter" target="_blank">
-          <i class="fa fa-twitter icon-twitter"></i>
-          <span></span>
-        </a>
-
-        <a href="@sale.facebookShareUrl()" class="icon-button facebook" target="_blank">
-          <i class="fa fa-facebook icon-facebook"></i>
-          <span></span>
-        </a>
-
-        <a href="@sale.googleShareUrl()" class="icon-button google-plus" target="_blank">
-          <i class="fa fa-google icon-google-plus"></i>
-          <span></span>
-        </a>
-      </div>
     }
   } else {
     @if(!sale.isClosed()) {
@@ -119,6 +103,6 @@
         </p>
       </div>
     }
-
   }
+  @sales.socialMedia(sale)
 }

@@ -55,8 +55,8 @@ Main Components
 }
 
 .tag-list > li {
-width: 33.3333333333%;
-float: left;
+    width: 33.3333333333%;
+    float: left;
 }
 
 
@@ -67,11 +67,13 @@ float: left;
 
 
 .tag-list > li {
-    width: 32.3333333333%;
-    float: left;
-    margin-right: 1.5%;
+    border: 1px solid #999;
     border-radius: 4px 4px 6px 6px;
+    height: 400px;
+    margin-right: 25px;
+    width: 300px;
 }
+
 .tag-list > li:last-of-type {
     margin-right: 0;
 }
@@ -191,24 +193,9 @@ float: left;
 }
 
 .barcode {
-    font-size: 3.5rem;
-    height: 0%;
-    width: 80%;
-    padding: 0.7em 0.6em;
-    text-align: center;
-    overflow: hidden;
-    //text-overflow: ellipsis;
-    font-color: black;
-    transform : scale(1,1.8);
-    -webkit-transform:scale(1,1.8); /* Safari and Chrome */
-    -moz-transform:scale(1,1.8); /* Firefox */
-    -ms-transform:scale(1,1.8); /* IE 9+ */
-    -o-transform:scale(1,1.8); /* Opera */
-
-
+    display: block;
+    margin: 5px auto;
 }
-
-
 
 //currently not used...
 

@@ -11,7 +11,7 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
         <script src="http://code.highcharts.com/highcharts.js"></script>
-        <script src="@routes.Assets.versioned("javascripts/underscore-min.js")"></script>
+        <script src="@routes.Assets.versioned("javascripts/dependencies.min.js")"></script>
         <script src="@routes.Assets.versioned("javascripts/main.js")"></script>
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta property="og:site_name" content="GarageBuddy" />
@@ -28,7 +28,7 @@
                         <i class="fa fa-bars"></i>
                     </button>
                 </div>
-                <div id="collapsible-nav">
+                <div id="collapsible-nav" class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         @for(tab <- Array("Home","Sales", "Users", "Profile")) {
                             @if(tab.equals(nav)) {

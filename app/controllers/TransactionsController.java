@@ -168,14 +168,20 @@ public class TransactionsController extends GBController {
     public final Result addItem(final int id, final int itemId) {
         Transaction transaction = Transaction.findById(id);
         Item item = Item.findById(itemId);
-        if (Double.parseDouble(formParam("soldFor")) >= item.minprice) {
+        boolean soldForPresent = formParam("soldFor") != null;
+        if (soldForPresent && Double.parseDouble(formParam("soldFor")) >= item.minprice) {
             item.soldFor = Double.parseDouble(formParam("soldFor"));
+            item.price = item.soldFor;
+            item.save();
             transaction.addItem(item, true);
-        }
-        else {
+        } else if (soldForPresent) {
             flash("error", "Cannot sell item for less than " +
                     item.formattedMinprice() + ".");
 
+        } else {
+            item.soldFor = item.price;
+            item.save();
+            transaction.addItem(item, true);
         }
         return redirect("/transactions/" + transaction.id + "/items");
     }

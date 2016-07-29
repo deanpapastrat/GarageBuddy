@@ -1,3 +1,4 @@
+@import lib.Formatter
 @(transaction: Transaction, itemForm: Form[Item], addedItems: List[Item], availableItems: List[Item], currentUser: User)
 @main("Transaction #" + transaction.id, "Sales") {
     @sales.nav(transaction.sale, "transactions", currentUser: User)
@@ -8,6 +9,14 @@
             Finished Adding
         </a>
     </h3>
+    <hr class="spacer"/>
+    <h4>Add Items By Barcode</h4>
+    <label class="btn btn-info btn-file">
+        <input type="file" id="quagga-input" class="hidden">
+        <i class="fa fa-barcode">&nbsp;</i>
+        Scan Barcode
+    </label>
+    <script>new GarageBuddy.BarcodeReader({el: $('#quagga-input'), id:"@transaction.id"})</script>
     <hr class="spacer"/>
     <h4>Added Items</h4>
     @if(addedItems != null && addedItems.length > 0) {
@@ -29,7 +38,7 @@
                     <td>@item.name</td>
                     <td>@item.formattedPrice()</td>
                     <td>@item.description</td>
-                    <td>@item.soldFor</td>
+                    <td>@item.formattedSoldFor()</td>
                     <td>@item.id</td>
                     <td>@item.createdBy.name</td>
                     <td>
